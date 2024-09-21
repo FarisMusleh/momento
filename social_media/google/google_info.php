@@ -12,6 +12,7 @@
 			$google_account_info = $google_oauth->userinfo->get();
 			$email = $google_account_info->email;
 			$name = $google_account_info->name;
+			$profile = $google_account_info->picture;
 			$token = JWT::encode(
 					array(
 						'iat'	=> time(),
@@ -19,7 +20,8 @@
 						'exp'	=> time() + 3600,
 						'data'	=> array(
 							'name'	=> $name,
-							'email'	=> $email
+							'email'	=> $email,
+							'picture' => $profile
 						)
 					),
 					$privateKey,'RS256'

@@ -10,6 +10,7 @@
 	else{
 		header('location:login.php');
 	}
+	echo '<img src = "'.$decoded->data->picture.'" style = "border:solid green;" /><br>';
 	echo "Welcome, " . $decoded->data->name . "! Your email is " . $decoded->data->email;
 	echo '<br><a href = "logout.php">Logout</a>';
 	/*if (isset($_SESSION['email']) && isset($_SESSION['name'])) {
