@@ -37,129 +37,110 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<link rel="stylesheet" href="css/home.css">
 </head>
-<body>
-    <div class="container">
-        <!-- First Box -->
-        <div class="box1">
-            <video autoplay muted loop>
-                <source src="img\background.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="overlay">
-				<img src="img\mobile-logo.webp" alt="Description of image">
-				<p>WELCOME TO MOMENTO<br>This is a piece of art</p>
+	<body>
+		<div class="container">
+			<!-- First Box -->
+			<div class="box1">
+				<video autoplay muted loop>
+					<source src="img\background.mp4" type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
+				<div class="overlay">
+					<img src="img\mobile-logo.webp" alt="Description of image">
+					<p>WELCOME TO MOMENTO<br>This is a piece of art</p>
+				</div>
 			</div>
-        </div>
 
-        <!-- Second Box -->
-        <div class="box2">
-            <h1>MOMENTO</h1>
-            <p>Fashionista • Traveller • Lifestyle Blogger • Nature</p>
-            <div class="box2-child">
-				<div class="image-container">
-					<img src="img\p1.jpeg" class="responsive-image">
-					<button class="image-button">Art</button>
+			<!-- Second Box -->
+			<div class="box2">
+				<div class="box2-child">
+						<div>
+							<h1>MOMENTO</h1>
+							<p>Fashionista • Traveller • Lifestyle Blogger • Nature</p>
+						</div>
+						<div class = "images-box2">
+							<div class="image-container">
+								<img src="img\p1.jpeg" class="responsive-image">
+								<button class="image-button">Art</button>
+							</div>
+							<div class="image-container">
+								<img src="img\p2.jpg" class="responsive-image">
+								<button class="image-button">Tower</button>
+							</div>
+							<div class="image-container">
+								<img src="img\p3.jpg" class="responsive-image">
+								<button class="image-button">Architecture</button>
+							</div>
+							<div class="image-container">
+								<img src="img\p4.jpeg" class="responsive-image">
+								<button class="image-button">Nature</button>
+							</div>
+							<div class="image-container">
+								<img src="img\p5.png" class="responsive-image">
+								<button class="image-button">Nature</button>
+							</div>
+						</div>
 				</div>
-				<div class="image-container">
-					<img src="img\p2.jpg" class="responsive-image">
-					<button class="image-button">Tower</button>
+			</div>
+			<!-- Third Box -->
+			<div class="box3">
+				<div class = "container-box3">
+				<h1>test</h1>
+					<div class = "images-box3">
+						<div class="image-wrapper">
+							<img src="img/p1.jpeg" class="circle-image">
+							<div>Description for Image 1</div>
+						</div>
+						<div class="image-wrapper">
+							<img src="img/p2.jpg" class="circle-image">
+							<div>Description for Image 2</div>
+						</div>
+					</div>
 				</div>
-				<div class="image-container">
-					<img src="img\p3.jpg" class="responsive-image">
-					<button class="image-button">Architecture</button>
-				</div>
-				<div class="image-container">
-					<img src="img\p4.jpeg" class="responsive-image">
-					<button class="image-button">Nature</button>
-				</div>
-				<div class="image-container">
-					<img src="img\p5.png" class="responsive-image">
-					<button class="image-button">Nature</button>
-				</div>
-            </div>
-        </div>
-        <!-- Third Box -->
-        <div class="box3">
-            Div 3
-        </div>
-    </div>
-	<!--Footer-->
-	<div class="footer">
-		<div class="about">
-			<fieldset><legend style="color: rgb(180, 149, 62);">About Us</legend>
-			<p>We are a lifestyle brand dedicated to fashion and travel. Join us on our journey!</p>
-			</fieldset>
-		</div>
-		<div class="social-media">
-			<fieldset>
-			<legend style="color:  rgb(180, 149, 62);">Social Media</legend>
-			<div>
-				<a href="https://www.facebook.com">
-					<i class="fab fa-facebook-f"></i>
-					<span>Facebook</span>
-				</a>
 			</div>
-			<div>
-				<a href="https://www.instagram.com">
-					<i class="fab fa-instagram"></i>
-					<span>Instagram</span>
-				</a>
+		</div>	
+		<!--Footer-->
+		<div class="footer">
+			<div class="about">
+				<fieldset>
+					<legend style="color: rgb(180, 149, 62);">About Us</legend>
+					<p>We are a lifestyle brand dedicated to fashion and travel. Join us on our journey!</p>
+				</fieldset>
 			</div>
-			<div>
-				<a href="https://www.linkedin.com">
-					<i class="fab fa-linkedin-in"></i>
-					<span>LinkedIn</span>
-				</a>
-			</div>
-			<div>
-				<a href="https://www.whatsapp.com">
-					<i class="fab fa-whatsapp"></i>
-					<span>WhatsApp</span>
-				</a>
-			</div>
-			</fieldset>
-		</div>
-	</div>
-	<div class="copyright">
-		© 2024 MOOMENTO. All rights reserved.
-	</div>
-	<!-- Footer 
-	<div class="footer">
-		<div class="about">
-			<h2>About Us</h2>
-			<p>We are a lifestyle brand dedicated to fashion and travel. Join us on our journey!</p>
-		</div>
-		<div class="vertical-line"></div>
-		<div class="social-media">
-			<h2>Our Social Media</h2>
-			<div>
-				<a href="https://www.facebook.com">
-					<i class="fab fa-facebook-f"></i>
-					<span>Facebook</span>
-				</a>
-			</div>
-			<div>
-				<a href="https://www.instagram.com">
-					<i class="fab fa-instagram"></i>
-					<span>Instagram</span>
-				</a>
-			</div>
-			<div>
-				<a href="https://www.linkedin.com">
-					<i class="fab fa-linkedin-in"></i>
-					<span>LinkedIn</span>
-				</a>
-			</div>
-			<div>
-				<a href="https://www.whatsapp.com">
-					<i class="fab fa-whatsapp"></i>
-					<span>WhatsApp</span>
-				</a>
+			<div class="social-media">
+				<fieldset>
+					<legend style="color:  rgb(180, 149, 62);">Social Media</legend>
+					<div>
+						<a href="https://www.facebook.com">
+							<i class="fab fa-facebook-f"></i>
+							<span>Facebook</span>
+						</a>
+					</div>
+					<div>
+						<a href="https://www.instagram.com">
+							<i class="fab fa-instagram"></i>
+							<span>Instagram</span>
+						</a>
+					</div>
+					<div>
+						<a href="https://www.linkedin.com">
+							<i class="fab fa-linkedin-in"></i>
+							<span>LinkedIn</span>
+						</a>
+					</div>
+					<div>
+						<a href="https://www.whatsapp.com">
+							<i class="fab fa-whatsapp"></i>
+							<span>WhatsApp</span>
+						</a>
+					</div>
+				</fieldset>
 			</div>
 		</div>
-	</div>
-	-->
-</body>
+		<div class="copyright">
+			&copy; 2024 MOMENTO. All rights reserved.
+		</div>
+	</body>
 </html>
 <script>
 	document.getElementById("toggle").addEventListener("click", function() {
