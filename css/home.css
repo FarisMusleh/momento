@@ -14,6 +14,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	font-display: swap;
 }
 body {
 	height: 100vh;
@@ -28,7 +29,7 @@ body {
 	align-items:center;
 	position:fixed;
 	z-index:5;
-	background-color:#222;
+	background-color:#591C21;
 	color:white;
 	width:100vw;
 	height: 10vh;
@@ -80,7 +81,6 @@ body {
 	transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
 	user-select: none;
 	-webkit-user-select: none;
-	touch-action: manipulation;
 	width: auto;
 	will-change: transform,opacity;
 	z-index: 0;
@@ -247,6 +247,7 @@ body {
 	align-items:center;
 	font-size:2em;
 }
+/*
 .footer {
 	display: flex;
 	justify-content: space-between;
@@ -294,4 +295,81 @@ body {
 	border-top: 1px solid #fff;
 	padding-top: 10px;
 	margin: 0;
+}
+*/
+.footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 100%;
+	padding: 40px 20px;
+	background-color:#591C21;
+	color:#D7C9AA;
+	font-size: 2.2em;
+	height:fit-content;
+}
+
+.footer .about {
+	flex: 1;
+	padding-right: 20px;
+	color:#D7C9AA;
+	font-family: 'os', Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+fieldset{
+	padding: 3em;
+	height: 500px;
+	overflow: hidden;
+	width: 100%;
+	margin-right: 50px;
+}
+.footer .about h2 {
+	padding-right: 20px;
+	color:#F0F3F5;
+	font-weight:400;
+	font-family: 'os', Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.footer .social-media {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	font-family: 'os', Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.social-media div {
+	display: flex;
+	align-items: center;
+	margin: 10px 0;
+	width: 100%;
+}
+.social-media div:not(:last-child) {
+	border-bottom: 1px solid #fff;
+	padding-bottom: 10px;
+}
+.social-media a {
+	text-decoration: none;
+	color: #D7C9AA;
+}
+.social-media h2{
+	color:#F0F3F5;
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	font-weight:400;
+}
+.copyright {
+	text-align: center;
+	font-size: 0.9em;
+	background-color:#044040;
+	color: azure;
+	border-top: 1px solid #fff;
+	padding-top: 10px;
+    font-weight:bolder;
+	padding-bottom: 0;
+}
+.description {
+	text-align: center;
+	color: rgb(180, 149, 62);
+	margin: 20px 0;
+	z-index: 3;
+	position: relative;
+	padding: 15px;
+	font-family: 'os', Times, serif;
 }

@@ -20,7 +20,6 @@
 						<div>Add Account</div>
 						<div>Settings</div>
 						<div>Profile</div>
-						
 					</div>
 				</div>
 				<a href = 'logout.php'>LOGOUT</a>
@@ -84,7 +83,47 @@
             Div 3
         </div>
     </div>
-	<!-- Footer -->
+	<!--Footer-->
+	<div class="footer">
+		<div class="about">
+			<fieldset><legend style="color: rgb(180, 149, 62);">About Us</legend>
+			<p>We are a lifestyle brand dedicated to fashion and travel. Join us on our journey!</p>
+			</fieldset>
+		</div>
+		<div class="social-media">
+			<fieldset>
+			<legend style="color:  rgb(180, 149, 62);">Social Media</legend>
+			<div>
+				<a href="https://www.facebook.com">
+					<i class="fab fa-facebook-f"></i>
+					<span>Facebook</span>
+				</a>
+			</div>
+			<div>
+				<a href="https://www.instagram.com">
+					<i class="fab fa-instagram"></i>
+					<span>Instagram</span>
+				</a>
+			</div>
+			<div>
+				<a href="https://www.linkedin.com">
+					<i class="fab fa-linkedin-in"></i>
+					<span>LinkedIn</span>
+				</a>
+			</div>
+			<div>
+				<a href="https://www.whatsapp.com">
+					<i class="fab fa-whatsapp"></i>
+					<span>WhatsApp</span>
+				</a>
+			</div>
+			</fieldset>
+		</div>
+	</div>
+	<div class="copyright">
+		© 2024 MOOMENTO. All rights reserved.
+	</div>
+	<!-- Footer 
 	<div class="footer">
 		<div class="about">
 			<h2>About Us</h2>
@@ -119,6 +158,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 </body>
 </html>
 <script>

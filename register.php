@@ -111,11 +111,11 @@
 									<div class="maxl">
 									<label class="radio inline">
 										<input name = "user_gender" type="radio" name="gender" checked="" value = "0">
-										<span> Male </span>
+										<span style="color:#F0F3F5;"> Male </span>
 									</label>
 									<label class="radio inline">
 										<input name = "user_gender" type="radio" name="gender" value = "1">
-										<span>Female </span>
+										<span style="color:#F0F3F5;">Female </span>
 									</label>
 									</div>
 								</div>
@@ -153,11 +153,11 @@
 									<div class="maxl">
 										<label class="radio inline">
 											<input name = "photographer_gender" type="radio" name="gender" checked="" value = "0">
-											<span> Male </span>
+											<span style="color:#F0F3F5;"> Male </span>
 										</label>
 										<label class="radio inline">
 											<input name = "photographer_gender" type="radio" name="gender" value = "1">
-											<span>Female </span>
+											<span style="color:#F0F3F5;"> Female </span>
 										</label>
 									</div>								
 								</div>

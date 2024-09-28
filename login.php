@@ -85,9 +85,9 @@
                     <div class="form-group">
                         <input name = "password" type="password" class="form-control" placeholder="Your Password *" required/>
                     </div>
-                    <div class="form-group" style = "margin-left:20px;">
+                    <div class="form-group" style = "margin-left:25px;">
                         <input name="remember" value="1" type="checkbox" class="form-check-input" />
-                        <label class="form-check-label" style = "font-weight:bold" for="rememberMe">Remember Me</label>
+                        <label class="form-check-label" style = "color:white;" for="rememberMe">Remember Me</label>
                     </div>
                     <input type="submit" class="btnLogin" value="Login"/>
 					
