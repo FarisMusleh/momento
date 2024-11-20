@@ -54,7 +54,7 @@
 <body class = 'bg-dark'>
 	<div class="d-flex align-items-center vh-100" style = "z-index:-2;">
 		<div class = 'p-5 h-auto w-50 min-w-custom bg-light mx-auto border-animation' style = 'min-width:400px;border:#f0ad4e solid;'>
-			<h1 class = 'text-center unselect'>MOMENTO</h1>
+			<h1 class = 'text-center unselect'>MOOMENTO</h1>
 			<form method = "post" action = "class-login.php">
 				<!--EMAIL-->
 				<div class="form-floating mb-3 mt-4">

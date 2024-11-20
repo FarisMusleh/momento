@@ -15,7 +15,7 @@
 	session_unset();
 	session_destroy(); 
 	setcookie('token', "", time() - 3600, "/", "", true, true);
-	header("Location: account/login.php");
+	header("Location: index.php");
 	exit();
 	}catch(Exception $e){
 		echo 'Logout error: ' . $e->getMessage();

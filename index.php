@@ -1,373 +1,20 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <title>Momento</title>
-
-    <style>
-     
-        body{
-            box-sizing: border-box;
-
-        }
-      /* Scrollbar width for the entire page */
-html {
-  scrollbar-width: thin;
- /* For Firefox */
-  scrollbar-color: #2d2d2d #1a1a1a; /* Thumb color and track color */
-}
-
-/* Customizing the scrollbar for WebKit-based browsers (Chrome, Edge, etc.) */
-::-webkit-scrollbar {
- 
-  width: 10px; /* Width of the scrollbar */
-  height: 10px; /* Height for horizontal scrollbar */
-}
-
-::-webkit-scrollbar-track {
-  background: #1a1a1a; /* Background of the track */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #2d2d2d; /* Color of the thumb */
-  border-radius: 10px; /* Rounded corners for the thumb */
-  border: 2px solid #1a1a1a; /* Optional: gives a gap around the thumb */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #444; /* Change thumb color on hover */
-}
-img{
-    transition:0.5s;
-}
-img:hover {
-    transform: scale(1);
-    opacity:0.8;
-    transition:0.5s;
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
-}
-
-@media (max-width: 991px) {
-        .header {
-            height: fit-content !important; 
-        }
-    }
-    .video-overlay-container {
-      position: relative;
-    }
-    .video-overlay-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      background-color: rgba(0, 0, 0, 0.0);
-      padding: 100px 100px;
-      border-radius: 8px;
-      text-align: center;
-    
-    
-      
-    }
-     /* start of Animation */ 
-
-   .anim {
-      animation-name: slide;
-      animation-duration: 5s;
-      animation-delay: 0.5s;
-      animation-iteration-count: 3;
-      animation-direction: alternate;
-      
- 
-    }
-  
-  
-    @keyframes slide {
-      0% {
-        transform: translateX(0);
-      }
-      33%{
-        transform:  rotate(180deg)
-      }
-      66%{
-        transform: rotate(360deg)
-      }
-      100%{
-        transform: translateX(0);
-
-      }
-    }
-
-    /* End of Animation */ 
-.wrapper {
-  display: inline-flex;
-  list-style: none;
-  height: 120px;
-  width: 100%;
-  padding-top: 40px;
-  font-family: "Poppins", sans-serif;
-  justify-content: center;
-}
-
-.wrapper .icon {
-  position: relative;
-  background: #fff;
-  border-radius: 50%;
-  margin: 10px;
-  width: 50px;
-  height: 50px;
-  font-size: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .tooltip {
-  position: absolute;
-  top: 0;
-  font-size: 14px;
-  background: #fff;
-  color: #fff;
-  padding: 5px 8px;
-  border-radius: 5px;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .tooltip::before {
-  position: absolute;
-  content: "";
-  height: 8px;
-  width: 8px;
-  background: #fff;
-  bottom: -3px;
-  left: 50%;
-  transform: translate(-50%) rotate(45deg);
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.wrapper .icon:hover .tooltip {
-  top: -45px;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.wrapper .icon:hover span,
-.wrapper .icon:hover .tooltip {
-  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
-}
-
-.wrapper .facebook:hover,
-.wrapper .facebook:hover .tooltip,
-.wrapper .facebook:hover .tooltip::before {
-  background: #1877f2;
-  color: #fff;
-}
-
-.wrapper .twitter:hover,
-.wrapper .twitter:hover .tooltip,
-.wrapper .twitter:hover .tooltip::before {
-  background: #1da1f2;
-  color: #fff;
-}
-
-.wrapper .instagram:hover,
-.wrapper .instagram:hover .tooltip,
-.wrapper .instagram:hover .tooltip::before {
-  background: #46030f;
-  color: #fff;
-}
-
-
-
-/* ************ */
-  
-/* hints */ 
-.item-hints {
-  --purple: #720c8f;
-  cursor: pointer;
-  display: flex;
-  justify-content: flex-start;
-  padding-right: 170px;
-}
-.item-hints .hint {
-  margin: 150px auto;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.item-hints .hint-dot {
-  z-index: 3;
-  border: 1px solid #ffe4e4;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  -webkit-transform: translate(-0%, -0%) scale(0.95);
-  transform: translate(-0%, -0%) scale(0.95);
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-.item-hints .hint-radius {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -125px 0 0 -125px;
-  opacity: 0;
-  visibility: hidden;
-  -webkit-transform: scale(0);
-  transform: scale(0);
-}
-.item-hints .hint[data-position="1"] .hint-content {
-  top: 85px;
-  left: 50%;
-  margin-left: 56px;
-}
-.item-hints .hint-content {
-  width: 300px;
-  position: absolute;
-  z-index: 5;
-  padding: 35px 0;
-  opacity: 0;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  color: #fff;
-  visibility: hidden;
-  pointer-events: none;
-}
-.item-hints .hint:hover .hint-content {
-  position: absolute;
-  z-index: 5;
-  padding: 35px 0;
-  opacity: 1;
-  -webkit-transition: opacity 0.7s ease, visibility 0.7s ease;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  color: #fff;
-  visibility: visible;
-  pointer-events: none;
-}
-.item-hints .hint-content::before {
-  width: 0px;
-  bottom: 29px;
-  left: 0;
-  content: "";
-  background-color: #fff;
-  height: 1px;
-  position: absolute;
-  transition: width 0.4s;
-}
-.item-hints .hint:hover .hint-content::before {
-  width: 180px;
-  transition: width 0.4s;
-}
-.item-hints .hint-content::after {
-  -webkit-transform-origin: 0 50%;
-  transform-origin: 0 50%;
-  -webkit-transform: rotate(-225deg);
-  transform: rotate(-225deg);
-  bottom: 29px;
-  left: 0;
-  width: 80px;
-  content: "";
-  background-color: #fff;
-  height: 1px;
-  position: absolute;
-  opacity: 1;
-  -webkit-transition: opacity 0.5s ease;
-  transition: opacity 0.5s ease;
-  -webkit-transition-delay: 0s;
-  transition-delay: 0s;
-}
-.item-hints .hint:hover .hint-content::after {
-  opacity: 1;
-  visibility: visible;
-}
-.item-hints .hint[data-position="4"] .hint-content {
-  bottom: 85px;
-  left: 50%;
-  margin-left: 56px;
-}
-/* end of hints  */
-.satistic
-{border:3px solid rgb(0, 0, 0);
-   outline-style:ridge;
-   outline-offset: -16px;
-    outline-color:#000000; 
-    font-size:50px;
-    height: 300px;
-    box-shadow: 5px 6px 5px rgb(231, 166, 43);}
-   
-
-
-
-
-
-    </style>
-    
-
+	<title>Momento</title>
 
 </head>
 <body> 
-    
-    <nav class="navbar header navbar-expand-lg bg-primary" data-bs-theme="dark" style="height: 70px;" >
-        <div class="container-fluid">
-          <a class="navbar-brand " href="#">Moomento<i class="bi bi-star-fill"></i></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <a class="nav-link " href="#">Home
-                  <span class="visually-hidden">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#Categories">categories</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Explore</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="account/register.php">Sign in </a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a>
-                </div>
-              </li>
-            </ul>
-            <form class="d-flex">
-              <input class="form-control me-sm-2" type="search" placeholder="Search"/>
-              <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </nav>
 
-<!--  end of Navbar  by waleed 😊  --> 
+<?php require("header.php"); ?>    
+
 <div class="container-fluid"  >
 
     <div class="row">
@@ -458,7 +105,7 @@ img:hover {
         
             <div class="col-md-4  text-center p-3"   >
              
-        <img src="img/adam_rouhana.png" alt="Adam Rouhana" width="300px" height="300px"  class="rounded-circle anim" style="border:2px solid black; outline:2px solid black;outline-offset: -7px;"/>
+        <img src="img/adam_rouhana.jpg" alt="Adam Rouhana" width="300px" height="300px"  class="rounded-circle anim" style="border:2px solid black; outline:2px solid black;outline-offset: -7px;"/>
         <h3 class="pt-2 "><a href="https://adamrouhana.com/"  class="text-warning">Adam Rouhana</a> </h3>
         <p class="text-light">The Photographer Searching for Freedom in Palestine</p>
      </div>
@@ -484,7 +131,7 @@ img:hover {
   <h1 class="text-center text-light bg-dark p-4" id="Statistics">Statistics</h1>
 </div>
 
-      <div class="container-fluid bg-primary p-3  text-primary">
+      <div class="container-fluid bg-primary p-3  text-primary" id = "counter-section">
                 <div class="row p-2 py-5" >
                 <div class="col-md-4" >
                   <div class="container text-center bg-dark text-light  py-3 px-3 satistic" >
@@ -492,7 +139,7 @@ img:hover {
                         <path d="M5 8c0-1.657 2.343-3 4-3V4a4 4 0 0 0-4 4"/>
                         <path d="M12.318 3h2.015C15.253 3 16 3.746 16 4.667v6.666c0 .92-.746 1.667-1.667 1.667h-2.015A5.97 5.97 0 0 1 9 14a5.97 5.97 0 0 1-3.318-1H1.667C.747 13 0 12.254 0 11.333V4.667C0 3.747.746 3 1.667 3H2a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h.682A5.97 5.97 0 0 1 9 2c1.227 0 2.367.368 3.318 1M2 4.5a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0M14 8A5 5 0 1 0 4 8a5 5 0 0 0 10 0"/>
                       </svg>
-        <div class="text-center" style="font-weight:bolder;" >500 </div>
+        <div class="text-center" style="font-weight:bolder;" id = "photographers-num">0</div>
         <span style="font-weight:bolder;">Photographer</span>
       </div>
 
@@ -502,7 +149,7 @@ img:hover {
         <svg xmlns="http://www.w3.org/2000/svg" width="75px" height="75px" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
           </svg>
-        <div class="text-center" style="font-weight:bolder" >500</div>
+        <div class="text-center" style="font-weight:bolder" id = "users-num">0</div>
         <span style="font-weight:bolder">Users</span>
       </div>
     </div>
@@ -512,7 +159,7 @@ img:hover {
             <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
             <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
           </svg>
-        <div class="text-center"style="font-weight:bolder;" >500</div>
+        <div class="text-center"style="font-weight:bolder;" id = "photos-num">0</div>
         <span style="font-weight:bolder;">Photos</span>
     </div>
       </div>
@@ -653,3 +300,53 @@ img:hover {
 
 </body>
 </html>
+
+	<script>
+	function countUp(element, start, end, duration) {
+  const range = end - start;
+  const increment = range / (duration / 16);
+  let current = start;
+
+  function updateCounter() {
+    current += increment;
+    if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+      current = end;
+      element.textContent = Math.round(current);
+      return;
+    }
+    element.textContent = Math.round(current);
+    requestAnimationFrame(updateCounter);
+  }
+
+  updateCounter();
+}
+
+const phgCount = document.getElementById("photographers-num");
+const userCount = document.getElementById("users-num");
+const phCount = document.getElementById("photos-num");
+
+// Function to start animation when section is visible
+function observeSection() {
+  const counterSection = document.querySelector("#counter-section");
+
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+			countUp(phgCount, 0, 800, 4000);
+			countUp(userCount, 0, 2000, 4000);
+			countUp(phCount, 0, 100, 4000);// Start animation
+			observer.disconnect(); // Stop observing after animation starts
+        }
+      });
+    },
+    { threshold: 0.5 } // Trigger when 50% of the section is visible
+  );
+
+  observer.observe(counterSection);
+}
+
+// Initialize observation
+observeSection();
+
+</script>
