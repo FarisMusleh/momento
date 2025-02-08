@@ -1,0 +1,9 @@
+@media (max-width: 991px) {
+    .header {
+        height: fit-content !important; 
+    }
+}
+h4:hover{
+color: rgb(209, 166, 26);
+
+}

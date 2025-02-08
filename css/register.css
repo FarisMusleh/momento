@@ -1,9 +1,14 @@
+@font-face{
+	font-family: 'os';
+	src: url('fonts/os.ttf');
+}
 body{
-	background: -webkit-linear-gradient(left, #7f2a3c, #DEA47E);
+    background: #591C21;
 }
 .register{
-	padding: 3%;
-	height:100vh;
+    padding: 3%;
+    height:100vh;
+
 }
 .register-left{
 text-align: center;
@@ -17,7 +22,8 @@ border-radius: 1.5rem;
 padding: 10px;
 width: 80%;
 background: #81ADC8;
-font-weight: bold;
+font-family:'os';
+font-weight: light;
 color: #383d41;
 margin-top: 30%;
 margin-bottom: 3%;
@@ -25,7 +31,8 @@ cursor: pointer;
 box-shadow:0px 0px 5px black;
 }
 .register-right{
-box-shadow:0px 0px 5px black;
+box-shadow:0px 0px 4px 2px azure;
+background-color:#044040;
 }
 .register-left img{
 margin-top: 15%;
@@ -58,7 +65,8 @@ border: none;
 border-radius: 1.5rem;
 padding: 2%;
 color: #383d41;
-font-weight: 600;
+font-family:'os';
+font-weight: light;
 width: 50%;
 cursor: pointer;
 background-color:#81ADC8;
@@ -85,17 +93,17 @@ transition:0.5s;
 border: none;
 }
 .register .nav-tabs .nav-link.active {
-	padding-left: 20px;  /* Adds padding to the left */
-	padding-right: 20px; /* Adds padding to the right */
-	color: #81ADC8;
-	border: 2px solid #81ADC8;
-	border-top-left-radius: 1.5rem;
-	border-bottom-left-radius: 1.5rem;
+    padding-left: 20px;  /* Adds padding to the left /
+    padding-right: 20px; / Adds padding to the right */
+    color: #81ADC8;
+    border: 2px solid #81ADC8;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
 }
 
 .register-heading{
 text-align: center;
 margin-top: 8%;
 margin-bottom: -15%;
-color: #495057;
+color:#F0F3F5;
 }
