@@ -1,15 +1,19 @@
-<?php session_start(); ?>
+<?php 
+	session_start(); 
+	require('pdo.php');
+	if(isset($_SESSION['data'])){
+		$data = $_SESSION['data'];
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="css/home.css">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
 	<title>Momento</title>
-
 </head>
 <body> 
 
@@ -96,33 +100,53 @@
           </div>
         </div>
 
-
+<!--PHOTOGRAPHERS-->
         <div class="row m-0 p-0">
 			<h1 class="bg-dark text-center text-light p-4 m-2" id="Photographers">Photographers </h1>
-      
         </div>
-        <div class="row m-0 p-0 bg-primary" style="display: flex;">
-        
-            <div class="col-md-4  text-center p-3"   >
-             
-        <img src="img/adam_rouhana.jpg" alt="Adam Rouhana" width="300px" height="300px"  class="rounded-circle anim" style="border:2px solid black; outline:2px solid black;outline-offset: -7px;"/>
-        <h3 class="pt-2 "><a href="https://adamrouhana.com/"  class="text-warning">Adam Rouhana</a> </h3>
-        <p class="text-light">The Photographer Searching for Freedom in Palestine</p>
-     </div>
-      <div class="col-md-4  text-center p-3" >
-        <img src="img/Boushra.jpeg" alt="Boushra mutawakel" width="300px" height="300px" class="rounded-circle anim" style="border:2px solid rgb(0, 0, 0); outline:2px solid black;outline-offset: -7px;"/>
-        <h3 class="pt-2"> <a href="https://boushraart.com/"  class="text-warning">Boushra mutawakel</a></h3>
-        <p class="text-light">Yemeni photographer.Her work concerns the international perception of Arabs and Muslims.</p>
-      </div>
-    
-        <div class="col-md-4  text-center p-3 " >
-        <img src="img/Steve_McCurry.jpg" alt="Steve McCurry" width="300px" height="300px" class="rounded-circle anim" style="border:2px solid black; outline:2px solid black;outline-offset: -7px;"/>
-        <h3 class="pt-2"> <a href="https://www.stevemccurry.com/"  class="text-warning">Steve McCurry</a></h3>
-        <p class="text-light">American photographer.Renowned for his vibrant color photography and profound human connection</p>
-      </div>
-       
-      
-      </div>
+        <div class="container-fluid bg-primary py-4">
+        <div class="row d-flex flex-wrap my-5 text-center">
+          <div class="col-md-4 mx-auto">
+              <div class="card1 ms-5">
+              <div class="background">
+                  <img src="img/adam_rouhana.jpg" height="300px" width="300px">
+              </div>
+           
+            </div>
+            <div class="text-light text-center pt-5 fs-3 text-break"><h1> <a href="https://adamrouhana.com/"  class="text-warning">Adam Rouhana</a></h1>
+              <p class="text-light">The Photographer Searching for Freedom in Palestine</p>
+
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card1 ms-5">
+              <div class="background">
+                  <img src="img/Steve_McCurry.jpg" height="300px" width="300px">
+              </div>
+         
+            </div>
+            <div class="text-light text-center pt-5 fs-3 text-break"><h1 class="text-warning"><a href="https://www.stevemccurry.com/"  class="text-warning">Steve McCurry</a></h1>
+            <p class="text-light">American photographer.Renowned for his vibrant color photography and profound human connection</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card1 ms-5">
+              <div class="background ">
+                  <img src="img/ph1.jpg" height="300px" width="300px">
+              </div>
+           
+            </div>
+     
+            <div class="text-light text-center pt-5 fs-3 text-break">
+              <h1 class="text-warning"><a href="https://www.andreasgursky.com/en"  class="text-warning">Andreas Gursky</a></h1>
+              <p class="text-light">German photographer. He is known for his large format architecture and landscape
+                 colour photographs</p>
+
+            </div>
+          </div>
+          </div>
+     
+          </div>
      
 
 
@@ -130,41 +154,49 @@
  <div class="row mt-2  ">
   <h1 class="text-center text-light bg-dark p-4" id="Statistics">Statistics</h1>
 </div>
-
-      <div class="container-fluid bg-primary p-3  text-primary" id = "counter-section">
-                <div class="row p-2 py-5" >
-                <div class="col-md-4" >
-                  <div class="container text-center bg-dark text-light  py-3 px-3 satistic" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="75px" height="75px" fill="currentColor" class="bi bi-camera2" viewBox="0 0 16 16">
-                        <path d="M5 8c0-1.657 2.343-3 4-3V4a4 4 0 0 0-4 4"/>
-                        <path d="M12.318 3h2.015C15.253 3 16 3.746 16 4.667v6.666c0 .92-.746 1.667-1.667 1.667h-2.015A5.97 5.97 0 0 1 9 14a5.97 5.97 0 0 1-3.318-1H1.667C.747 13 0 12.254 0 11.333V4.667C0 3.747.746 3 1.667 3H2a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h.682A5.97 5.97 0 0 1 9 2c1.227 0 2.367.368 3.318 1M2 4.5a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0M14 8A5 5 0 1 0 4 8a5 5 0 0 0 10 0"/>
-                      </svg>
-        <div class="text-center" style="font-weight:bolder;" id = "photographers-num">0</div>
-        <span style="font-weight:bolder;">Photographer</span>
+<div class="container-fluid bg-primary" id = "counter-section">
+  <div class=" d-flex flex-wrap gap-5 justify-content-center py-5">
+    
+      <div class="outer mt-2">
+          <div class="dot"></div>
+          <div class="card2">
+            <div class="ray"></div>
+            <div class="text" id = "photographers-num">0</div>
+            <div>Photographer</div>
+            <div class="line topl"></div>
+            <div class="line leftl"></div>
+            <div class="line bottoml"></div>
+            <div class="line rightl"></div>
+          </div>
+        </div>
+  
+      <div class="outer mt-2">
+          <div class="dot"></div>
+          <div class="card2">
+            <div class="ray"></div>
+            <div class="text" id = "users-num">0</div>
+            <div>users</div>
+            <div class="line topl"></div>
+            <div class="line leftl"></div>
+            <div class="line bottoml"></div>
+            <div class="line rightl"></div>
+          </div>
+        </div>
+  
+      <div class="outer mt-2">
+          <div class="dot"></div>
+          <div class="card2">
+            <div class="ray"></div>
+            <div class="text" id = "photos-num">0</div>
+            <div>Picture</div>
+            <div class="line topl"></div>
+            <div class="line leftl"></div>
+            <div class="line bottoml"></div>
+            <div class="line rightl"></div>
+          </div>
+        </div>
       </div>
-
-    </div>
-    <div class="col-md-4">
-      <div class="container text-center bg-light py-3 px-2 satistic" >
-        <svg xmlns="http://www.w3.org/2000/svg" width="75px" height="75px" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-          </svg>
-        <div class="text-center" style="font-weight:bolder" id = "users-num">0</div>
-        <span style="font-weight:bolder">Users</span>
-      </div>
-    </div>
-    <div class="col-md-4">
-        <div class="container text-center bg-light py-3 px-2 satistic" >
-            <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
-            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-            <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
-          </svg>
-        <div class="text-center"style="font-weight:bolder;" id = "photos-num">0</div>
-        <span style="font-weight:bolder;">Photos</span>
-    </div>
-      </div>
-    </div>
-</div>
+  </div>
 <!-- *********************   Tips start -->
 <div class="row mt-2">
   
@@ -281,12 +313,6 @@
 
     </div> 
 
-
-
-
-
-
-
             </div> <!--End of right Section  col-md-10 😊--> 
         
         
@@ -325,6 +351,14 @@ const phgCount = document.getElementById("photographers-num");
 const userCount = document.getElementById("users-num");
 const phCount = document.getElementById("photos-num");
 
+<?php
+	$stmt1 = $pdo->query("SELECT COUNT(*) FROM images");
+    $images = $stmt1->fetchColumn();
+	$stmt2 = $pdo->query("SELECT COUNT(*) FROM `user-profiles`");
+    $userProfiles = $stmt2->fetchColumn();
+	$stmt3 = $pdo->query("SELECT COUNT(*) FROM `business-profiles`");
+    $businessProfiles = $stmt3->fetchColumn();
+?>
 // Function to start animation when section is visible
 function observeSection() {
   const counterSection = document.querySelector("#counter-section");
@@ -333,9 +367,9 @@ function observeSection() {
     (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-			countUp(phgCount, 0, 800, 4000);
-			countUp(userCount, 0, 2000, 4000);
-			countUp(phCount, 0, 100, 4000);// Start animation
+			countUp(phgCount, 0, <?=$businessProfiles?>, 1000);
+			countUp(userCount, 0, <?=$userProfiles?>, 1000);
+			countUp(phCount, 0, <?=$images?>, 1000);// Start animation
 			observer.disconnect(); // Stop observing after animation starts
         }
       });

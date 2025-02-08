@@ -11,13 +11,13 @@ class register {
 
     public function create($data) {
 		try {
-			$username = $data['username'];
-			$email = $data['email'];
-			$password = $data['password'];
+			$username = !empty($data['username']) ? $data['username'] : null;
+			$email = !empty($data['email']) ? $data['email'] : null;
+			$password = !empty($data['password']) ? $data['password'] : null;
 			$hashed = password_hash($password, PASSWORD_DEFAULT);
-			$account = $data['account'];
+			$account = $data['account'] ?? null;
 			$provider = "local";
-			$gender = $data['gender'];
+			$gender = $data['gender'] ?? null;
 			// Insert into accounts table
 			$sql_1 = $this->pdo->prepare('insert into accounts(username, email, password, `account-type`, provider) values(?, ?, ?, ?, ?)');
 			$sql_1->execute([$username, $email, $hashed, $account, $provider]);
@@ -33,11 +33,10 @@ class register {
 				$sql_2->execute([$lastId,$gender]);
 			}
 			
-
 			$_SESSION['create_success'] = "Account Created!";
 			header("Location: login.php");
 			exit();
-
+			
 		} catch (PDOException $e) {
 			if ($e->getCode() == 23000) {
 				$_SESSION['duplicate_error'] = "Email already registered!";

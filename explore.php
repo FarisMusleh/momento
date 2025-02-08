@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php 
+	session_start(); 
+	require('pdo.php');
+	if(isset($_SESSION['data'])){
+		$data = $_SESSION['data'];
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +20,7 @@
     <body>
 	<?php require("header.php"); ?>    
 
-    <div class="container-fluid ">
+    <div class="container-fluid">
         <div class=" row d-flex flex-row">
 <div class="col-md-2 m-0 p-0 bg-warning shadow-lg  px-2 ">
  <div class="row d-flex flex-md-column text-start fw-bolder gy-md-2 " >

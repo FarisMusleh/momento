@@ -33,8 +33,14 @@ if (isset($_POST['upload'])) {
     } else {
         echo "File upload failed.";
     }
+	try{
 	$sql = $pdo->prepare('insert into images(`user-id`,url) values(?,?)');
 	$sql->execute(array($data['id'],$targetFilePath));
+	}catch(Exception $e){
+		echo "Error: ".$e;
+		exit();
+	}
 	header('location:profile.php');
+	exit();
 }
 ?>

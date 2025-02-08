@@ -43,8 +43,30 @@
 		user-select: none;
 	}
 	</style>
+	<link href="../css/toaster.css" rel="stylesheet"/>
+	<script src="../js/toaster.js"/>
 </head>
 <body class = 'bg-dark'>
+<div class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!');</script>
 	<div class="d-flex align-items-center vh-100 vw-100 flex-row justify-content-around">
 		<div class = 'p-5 py-4 h-auto min-w-custom bg-light' style = 'width:500px;min-width:400px;'>
 			<h2 class = 'text-center unselect'>Create a user account</h2>
@@ -58,19 +80,19 @@
 				</div>
 				<!--USERNAME-->
 				<div class="form-floating mb-3">
-					<input type="text" class="form-control" id="username" placeholder="Username" name = "username" autocomplete="username">
+					<input type="text" class="form-control" id="username" placeholder="Username" name = "username" autocomplete="username" required>
 					<label for="username">Username</label>
 					<div class="" id = "username-status"></div>
 				</div>
 				<!--EMAIL-->
 				<div class="form-floating mb-3">
-					<input type="email" class="form-control" id="email" placeholder="name@example.com" name = "email" autocomplete="email">
+					<input type="email" class="form-control" id="email" placeholder="name@example.com" name = "email" autocomplete="email" required>
 					<label for="email">Email address</label>
 				</div>
 				<!--PASSWORD-->
 				<div class="form-floating">
-					<input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off" name = "password">
-					<label for="password">Password</label>
+					<input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off" name = "password" required>
+					<label for="password" class = "form-label">Password</label>
 				</div>
 				<!--GENDER-->
 				<div class = "d-flex gap-3 mt-3 unselect">
@@ -86,7 +108,7 @@
 				<!--REGISTER-->
 				<div class = "d-flex align-items-center justify-content-center">
 					<button type="submit" class="btn btn-primary rounded-0 mt-4 w-100" name = "enter">REGISTER</button>
-				</div>
+				</div>		
 			</form>
 			<small>Already have momento account?<a href = "login.php">login</a></small>
 		</div>
