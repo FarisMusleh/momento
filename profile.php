@@ -1,5 +1,7 @@
 <?php
-	session_start();
+	if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+	}
 	if(!isset($_SESSION['data'])){
 		header('location:index.php');
 		exit();
@@ -21,10 +23,10 @@
 <body class = "bg-primary">
 	<?php require('header.php') ?>
 
-    <div class="container-fluid bg-primary">
+    <div class="container-fluid bg-white">
 <div class="col-md-12">
     <div class="row">
-   <div class="card bg-primary text-light shadow text-center " style="min-height: fit-content;">
+   <div class="card bg-white text-dark shadow text-center " style="min-height: fit-content;">
           <div class="profile-thumbnail mx-auto mt-n6 pt-4">
               <img src="<?=$data['picture']?>" class="card-img-top rounded-circle border-0" alt="Jose Portrait" width = "200" height = "200">
           </div>
@@ -96,8 +98,8 @@
 		foreach($rows as $row){
 	?>
 	<div class="col-md-4 my-2">
-		<div class="card bg-warning">
-			<div class="card-img-top p-1">
+		<div class="card">
+			<div class="p-1">
 				<img src="<?=$row['url']?>" alt="Arch" width="100%" height="300px">
 			</div>
 			<div class="card-title"> 

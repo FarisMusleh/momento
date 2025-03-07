@@ -6,15 +6,51 @@
 	<title>Document</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link href="Pacifico/Pacifico-Regular">
 	<style>
+	.navSticky{
+		position: sticky;
+		text-align: center;
+		top:0;
+		z-index:1020;
+		padding-top:10px; 
+		padding-bottom:10px;
+	}
+	.dropdown-button{
+		position:relative;
+	}
+  .dropdown-content {
+		border-radius: 5px;
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		top: 67px; 
+		right: 30px;
+		background-color: white;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+		border: 1px solid #ddd;
+		min-width:150px;
+		width:350px;
+		height:220px;
+		padding: 10px;
+		z-index: 123123;
+		transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .dropdown-button:hover + .dropdown-content, .dropdown-content:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+  .DropDownFlex{
+		display: flex;
+		flex-direction: column; 
+		justify-content: center;
+		align-items: center;
+  }
   .login{
-        
-          background:rgb(31, 29, 29);
-          border-radius: 20px;
-          cursor: pointer; 
-          margin-top:5px;
-          transition: background 0.3s ease; 
-          width:100px
-        
+	  background:rgb(31, 29, 29);
+	  border-radius: 20px;
+	  cursor: pointer; 
+	  margin-top:5px;
+	  transition: background 0.3s ease; 
+	  width:100px;
       }
     .login:hover{
         background:rgb(80, 78, 78);
@@ -43,32 +79,58 @@
 	</style>
  </head>
  <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light navSticky">
         <div class="container-fluid">
-            <a class="navbar-brand display-10" href="index.php" style=" font-family: Dancing Script, cursive;">Moomento</a>
+            <a class="navbar-brand fs-3" href="index.php" style="font-family: Dancing Script, cursive;font-size:20px;">Momento</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto gap-4">
+            <div class="collapse navbar-collapse " id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-4 align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="explore.php">Explore</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Hire a Designer</a>
+                        <a class="nav-link" href="explore.php">EXPLORE</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Find Jobs</a>
+                        <a class="nav-link" href="#">HIRE A DESIGNER</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="#">FIND JOBS</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sign up</a>
+                        <a class="nav-link" href="#">PROFILE</a>
                     </li>
-                    <li class="login">
-                        <a class="nav-link text-white text-center" href="#">Login</a>
-                    </li>
+					<?php
+					if(!isset($_SESSION['data'])){
+						echo '	<li class="nav-item">
+									<a class="nav-link" href="account/login.php">Sign up</a>
+								</li>
+								<li class="login">
+									<a class="nav-link text-white text-center" href="account/register.php">Login</a>
+								</li>';
+					}
+					else{ 
+					?>
+					<ul>
+					<div class = "dropdown-button"><img style = "border-radius:50%;margin-right:20px;" src = "<?=$data['picture']?>" width = '55' height = '55'></div>
+					<div class = "dropdown-content">
+						<div class = "DropDownFlex">
+							<img style = "border-radius:50%;" src = "<?=$data['picture']?>" width = '55' height = '55'>
+							<div style = "font-weight: 900;margin-top:5px;text-transform: capitalize;"><?=$data['first-name']?></div>
+						</div>
+						<div style = "padding:0 20px;margin-top:20px;">
+							<div style ="justify-content:left;text-align:left;">
+								<a href = "profile.php">Settings</a>
+							</div>
+							<hr style = "opacity:0.2; color:gray;">
+							<div style ="text-align:left;">
+								<a href = "logout.php">Sign Out</a>
+							</div>
+						</div>
+					</div>
+					</ul>
+					<?php
+					}
+					?>
                 </ul>
             </div>
         </div>

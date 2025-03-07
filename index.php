@@ -1,5 +1,7 @@
 <?php 
-	session_start(); 
+	if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+	}
 	require('pdo.php');
 	if(isset($_SESSION['data'])){
 		$data = $_SESSION['data'];
@@ -251,6 +253,81 @@
   z-index: 1000; /* Ensure it's on top of other content */
 }
 
+
+
+		.search-dropdown {
+            position: absolute;
+			right:60px;
+			top:3px;
+			background-color: transparent;
+			text-align:left;
+        }
+
+        .search-dropdown-btn {
+            background: white;
+            padding: 10px 18px;
+            font-size: 16px;
+            border: 0px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+		
+        .search-dropdown-btn:hover {
+            background: rgb();
+        }
+
+        .arrow {
+            width: 7px;
+            height: 7px;
+            border-left: 2px solid #333;
+            border-bottom: 2px solid #333;
+            transform: rotate(-45deg);
+            transition: transform 0.3s ease;
+        }
+
+        .search-dropdown.active .arrow {
+            transform: rotate(135deg);
+        }
+
+        .search-dropdown-content {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+
+        .search-dropdown-content a {
+            display: block;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.3s;
+        }
+
+        .search-dropdown-content a:hover {
+            background: #f5f5f5;
+        }
+
+        .search-dropdown.active .search-dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+
  </style>
 </head>
 <body>
@@ -267,7 +344,21 @@
             <div class="container mt-5">
         <div class="search-container">
             <input class="search-input" type="search" placeholder="What are you looking for?" aria-label="Search">
-            <button class="search-button" type="submit">Search</button>
+            			<div class="search-dropdown">
+					<button class="search-dropdown-btn">
+						Shots
+						<span class="arrow"></span>
+					</button>
+					<div class="search-dropdown-content">
+						<a href="#">Shots</a>
+						<a href="#">Photographers</a>
+					</div>
+				</div>
+            <button class="search-button" type="submit">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+				</svg>
+			</button>
         </div>
     </div>
         </div>
@@ -494,4 +585,22 @@ function showLoader() {
 function hideLoader() {
   document.querySelector('.loader-container').style.display = 'none';
 }
+</script>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const dropdown = document.querySelector(".search-dropdown");
+		const btn = document.querySelector(".search-dropdown-btn");
+
+		btn.addEventListener("click", function (event) {
+			event.stopPropagation();
+			dropdown.classList.toggle("active");
+		});
+
+		document.addEventListener("click", function (event) {
+			if (!dropdown.contains(event.target)) {
+				dropdown.classList.remove("active");
+			}
+		});
+	});
 </script>
