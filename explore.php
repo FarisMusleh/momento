@@ -150,107 +150,74 @@
 </div>
 
     <div class="row">
-      <div class="col-md-3 mt-3">
-        <!-- Photographer Card -->
-        <div class="card photographer-card">
-          <!-- Profile Image -->
-          <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top">
-          <!-- Card Body -->
-          <div class="card-body">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">
-              Professional photographer specializing in portrait, wedding, and landscape photography. 
-              Based in New York City.
-            </p>
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-md-block">
-              <a href="#" class="btn btn-primary">Portfolio</a>
-              <a href="#" class="btn btn-outline-primary">Contact</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mt-3">
-        <!-- Photographer Card -->
-        <div class="card photographer-card">
-          <!-- Profile Image -->
-          <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top">
-          <!-- Card Body -->
-          <div class="card-body">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">
-              Professional photographer specializing in portrait, wedding, and landscape photography. 
-              Based in New York City.
-            </p>
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-md-block">
-              <a href="#" class="btn btn-primary">Portfolio</a>
-              <a href="#" class="btn btn-outline-primary">Contact</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mt-3">
-        <!-- Photographer Card -->
-        <div class="card photographer-card">
-          <!-- Profile Image -->
-          <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top">
-          <!-- Card Body -->
-          <div class="card-body">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">
-              Professional photographer specializing in portrait, wedding, and landscape photography. 
-              Based in New York City.
-            </p>
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-md-block">
-              <a href="#" class="btn btn-primary">Portfolio</a>
-              <a href="#" class="btn btn-outline-primary">Contact</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mt-3">
-        <!-- Photographer Card -->
-        <div class="card photographer-card">
-          <!-- Profile Image -->
-          <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top">
-          <!-- Card Body -->
-          <div class="card-body">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">
-              Professional photographer specializing in portrait, wedding, and landscape photography. 
-              Based in New York City.
-            </p>
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-md-block">
-              <a href="#" class="btn btn-primary">Portfolio</a>
-              <a href="#" class="btn btn-outline-primary">Contact</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mt-3">
-        <!-- Photographer Card -->
-        <div class="card photographer-card">
-          <!-- Profile Image -->
-          <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top">
-          <!-- Card Body -->
-          <div class="card-body">
-            <h5 class="card-title">John Doe</h5>
-            <p class="card-text">
-              Professional photographer specializing in portrait, wedding, and landscape photography. 
-              Based in New York City.
-            </p>
-            <!-- Buttons -->
-            <div class="d-grid gap-2 d-md-block">
-              <a href="#" class="btn btn-primary">Portfolio</a>
-              <a href="#" class="btn btn-outline-primary">Contact</a>
-            </div>
-          </div>
-        </div>
+<!--*************** new card ********************-->
+     <div class="col-md-3 mt-3">
+  <!-- Photographer Card -->
+  <div class="card photographer-card position-relative bg-light bg-opacity-50 border-0 rounded-4 shadow-lg"
+       style="backdrop-filter: blur(10px);">
+    
+    <!-- Image Container -->
+    <div class="position-relative">
+      <!-- Background Image -->
+      <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top rounded-4" style="opacity:0.7">
+      
+      <!-- Centered Profile Image -->
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <img src="img/test.jpg" alt="Profile Picture" 
+             class="rounded-circle border border-white shadow-lg" 
+             style="width: 100px; height: 100px; object-fit: cover;">
       </div>
     </div>
+
+    <!-- Card Body -->
+    <div class="card-body text-center">
+      <h5 class="card-title">John Doe</h5>
+      <p class="card-text">
+        Professional photographer specializing in portrait, wedding, and landscape photography. 
+        Based in New York City.
+      </p>
+      <!-- Buttons -->
+      <div class="d-grid gap-2 d-md-block">
+        <a href="#" class="btn btn-primary">Portfolio</a>
+        <a href="#" class="btn btn-outline-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+     <div class="col-md-3 mt-3">
+  <!-- Photographer Card -->
+  <div class="card photographer-card position-relative bg-light bg-opacity-50 border-0 rounded-4 shadow-lg"
+       style="backdrop-filter: blur(10px);">
+    
+    <!-- Image Container -->
+    <div class="position-relative">
+      <!-- Background Image -->
+      <img src="img/war.jpg" alt="Photographer Profile" class="card-img-top rounded-4" style="opacity:0.7">
+      
+      <!-- Centered Profile Image -->
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <img src="img/test.jpg" alt="Profile Picture" 
+             class="rounded-circle border border-white shadow-lg" 
+             style="width: 100px; height: 100px; object-fit: cover;">
+      </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body text-center">
+      <h5 class="card-title">John Doe</h5>
+      <p class="card-text">
+        Professional photographer specializing in portrait, wedding, and landscape photography. 
+        Based in New York City.
+      </p>
+      <!-- Buttons -->
+      <div class="d-grid gap-2 d-md-block">
+        <a href="#" class="btn btn-primary">Portfolio</a>
+        <a href="#" class="btn btn-outline-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+   
 
 
   <!-- Font Awesome for Icons -->
