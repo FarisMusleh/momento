@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momento</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link href="Pacifico/Pacifico-Regular">
+    <link href="Pacifico/Pacifico-Regular">
     <style>
 	.hero-section {
 		padding: 100px 0;
@@ -254,21 +254,28 @@
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as $row) {
 			echo '<div class="col-md-3 mt-3">
-			<div class="card photographer-card">
-			  <img src="'.$row["picture"].'" width = "50" height = "50" alt="Photographer Profile" class="card-img-top">
-			  <div class="card-body">
-				<h5 class="card-title">'.$row["first-name"].$row["last-name"].'</h5>
-				<p class="card-text">'
-				  .$row['description'].
-				  '
-				</p>
-				<div class="d-grid gap-2 d-md-block">
-				  <a href="#" class="btn btn-primary">Portfolio</a>
-				  <a href="#" class="btn btn-outline-primary">Contact</a>
-				</div>
-			  </div>
-			</div>
-		  </div>';
+				  <div class="card photographer-card position-relative bg-light bg-opacity-50 border-0 rounded-4 shadow-lg"
+					   style="backdrop-filter: blur(10px);">
+					<div class="position-relative">
+					  <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top rounded-4" style="opacity:0.7">
+					  <div class="position-absolute top-50 start-50 translate-middle">
+						<img src="'.$row["picture"].'" alt="Profile Picture" 
+							 class="rounded-circle border border-white shadow-lg" 
+							 style="width: 100px; height: 100px; object-fit: cover;">
+					  </div>
+					</div>
+					<div class="card-body text-center">
+					  <h5 class="card-title">'.$row["first-name"].$row["last-name"].'</h5>
+					  <p class="card-text">
+						'.$row["description"].'
+					  </p>
+					  <div class="d-grid gap-2 d-md-block">
+						<a href="#" class="btn btn-primary">Portfolio</a>
+						<a href="#" class="btn btn-outline-primary">Contact</a>
+					  </div>
+					</div>
+				  </div>
+				</div>';
 			}
 			?>
     </div>
@@ -276,7 +283,6 @@
 
   <!-- Font Awesome for Icons -->
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
 		const dropdown = document.querySelector(".search-dropdown");

@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link href="Pacifico/Pacifico-Regular">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	
 	<style>
 	.navSticky{
 		position: sticky;
@@ -29,8 +30,9 @@
 		border: 1px solid #ddd;
 		min-width:150px;
 		width:350px;
-		height:220px;
+		height:auto;
 		padding: 10px;
+		padding-bottom:30px;
 		z-index: 123123;
 		transition: opacity 0.3s ease, visibility 0.3s ease;
   }
@@ -78,7 +80,6 @@
         }
 	</style>
  </head>
- <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light navSticky">
         <div class="container-fluid">
             <a class="navbar-brand fs-3" href="index.php" style="font-family: Dancing Script, cursive;font-size:20px;">Momento</a>
@@ -96,30 +97,31 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">FIND JOBS</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">PROFILE</a>
-                    </li>
 					<?php
 					if(!isset($_SESSION['data'])){
 						echo '	<li class="nav-item">
-									<a class="nav-link" href="account/login.php">Sign up</a>
+									<a class="nav-link" href="account/register.php">Sign up</a>
 								</li>
 								<li class="login">
-									<a class="nav-link text-white text-center" href="account/register.php">Login</a>
+									<a class="nav-link text-white text-center" href="account/login.php">Login</a>
 								</li>';
 					}
 					else{ 
 					?>
 					<ul>
-					<div class = "dropdown-button"><img style = "border-radius:50%;margin-right:20px;" src = "<?=$data['picture']?>" width = '55' height = '55'></div>
+					<div class = "dropdown-button"><img style = "border-radius:50%;margin-right:20px;object-fit: cover;border-radius:100%;height:55px;width:55px;" src = "<?=$data['picture']?>" width = '55' height = '55'></div>
 					<div class = "dropdown-content">
 						<div class = "DropDownFlex">
-							<img style = "border-radius:50%;" src = "<?=$data['picture']?>" width = '55' height = '55'>
+							<img style = "border-radius:50%;object-fit: cover;border-radius:100%;height:55px;width:55px;" src = "<?=$data['picture']?>" width = '55' height = '55'>
 							<div style = "font-weight: 900;margin-top:5px;text-transform: capitalize;"><?=$data['first-name']?></div>
 						</div>
 						<div style = "padding:0 20px;margin-top:20px;">
 							<div style ="justify-content:left;text-align:left;">
-								<a href = "profile.php">Settings</a>
+								<a href = "profile.php">Profile</a>
+							</div>
+							<hr style = "opacity:0.2; color:gray;">
+							<div style ="justify-content:left;text-align:left;">
+								<a href = "edit-profile.php">Settings</a>
 							</div>
 							<hr style = "opacity:0.2; color:gray;">
 							<div style ="text-align:left;">
@@ -136,9 +138,6 @@
         </div>
     </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
- </body>
- </html>
 
 
 

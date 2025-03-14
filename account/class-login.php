@@ -25,18 +25,19 @@ class account {
 			$pic = null;
 			$business = null;
             if ($acc && password_verify($password, $acc['password'])) {
+				$stmtu = $this->pdo->prepare("SELECT picture,location from accounts where id = ?");
+				$stmtu->execute(array($acc['id']));
+				$result = $stmtu->fetch(PDO::FETCH_ASSOC);
+				$pic = $result['picture'];				
+				$location = $result['location'];
 				if($acc['account-type']=='user'){
-					$stmtu = $this->pdo->prepare("SELECT picture from `user-profiles` where id = ?");
-					$stmtu->execute(array($acc['id']));
-					$user = $stmtu->fetch(PDO::FETCH_ASSOC);
-					$pic = $user['picture'];
+					$_SESSION['data'] = array('id'=>$acc['id'],'username'=>$acc['username'],'email'=>$acc['email'],'picture'=>$pic);
 				}elseif($acc['account-type']=='business'){
-					$stmtb = $this->pdo->prepare("SELECT picture,`first-name`,`last-name`,title,description from `business-profiles` where id = ?");
+					$stmtb = $this->pdo->prepare("SELECT `first-name`,`last-name`,title,description from `business-profiles` where id = ?");
 					$stmtb->execute(array($acc['id']));
 					$business = $stmtb->fetch(PDO::FETCH_ASSOC);
-					$pic = $business['picture'];
+					$_SESSION['data'] = array('id'=>$acc['id'],'username'=>$acc['username'],'email'=>$acc['email'],'picture'=>$pic,'title'=>$business['title'],'desc'=>$business['description'],'first-name'=>$business['first-name'],'last-name'=>$business['last-name']);
 				}
-				$_SESSION['data'] = array('id'=>$acc['id'],'username'=>$acc['username'],'email'=>$acc['email'],'picture'=>$pic,'title'=>$business['title'],'desc'=>$business['description'],'first-name'=>$business['first-name'],'last-name'=>$business['last-name']);
                 header("Location: ../index.php");
                 exit();
             } else {

@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moomento</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link href="Pacifico/Pacifico-Regular">
+	<link href="Pacifico/Pacifico-Regular">
      <style>
         .hero-section {
             padding: 100px 0;
@@ -91,8 +91,8 @@
             background:rgb(31, 29, 29);
             color: white;
             border: none;
-            padding:   10px 20px ;
-            border-radius: 30px;
+            padding:   10px 15px ;
+            border-radius: 100%;
             cursor: pointer;
             transition: background 0.3s ease;
         }
@@ -499,7 +499,7 @@
                         <a href="#">Advertising</a>
                         <a href="#">Blog</a>
                         <a href="#">About</a>
-                        <a href="#">Support</a>
+                        <a href="support.html">Support</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center">
@@ -518,74 +518,6 @@
             </div>
         </div>
     </footer>
-  <!-- Bootstrap 5 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	<script>
-	function countUp(element, start, end, duration) {
-  const range = end - start;
-  const increment = range / (duration / 16);
-  let current = start;
-
-  function updateCounter() {
-    current += increment;
-    if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-      current = end;
-      element.textContent = Math.round(current);
-      return;
-    }
-    element.textContent = Math.round(current);
-    requestAnimationFrame(updateCounter);
-  }
-
-  updateCounter();
-}
-
-const phgCount = document.getElementById("photographers-num");
-const userCount = document.getElementById("users-num");
-const phCount = document.getElementById("photos-num");
-
-<?php
-	$stmt1 = $pdo->query("SELECT COUNT(*) FROM images");
-    $images = $stmt1->fetchColumn();
-	$stmt2 = $pdo->query("SELECT COUNT(*) FROM `user-profiles`");
-    $userProfiles = $stmt2->fetchColumn();
-	$stmt3 = $pdo->query("SELECT COUNT(*) FROM `business-profiles`");
-    $businessProfiles = $stmt3->fetchColumn();
-?>
-// Function to start animation when section is visible
-function observeSection() {
-  const counterSection = document.querySelector("#counter-section");
-
-  const observer = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-			countUp(phgCount, 0, <?=$businessProfiles?>, 1000);
-			countUp(userCount, 0, <?=$userProfiles?>, 1000);
-			countUp(phCount, 0, <?=$images?>, 1000);// Start animation
-			observer.disconnect(); // Stop observing after animation starts
-        }
-      });
-    },
-    { threshold: 0.5 } // Trigger when 50% of the section is visible
-  );
-
-  observer.observe(counterSection);
-}
-
-// Initialize observation
-observeSection();
-// Show the loader
-function showLoader() {
-  document.querySelector('.loader-container').style.display = 'flex';
-  setTimeout(hideLoader, 3000); 
-}
-
-// Hide the loader
-function hideLoader() {
-  document.querySelector('.loader-container').style.display = 'none';
-}
-</script>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {

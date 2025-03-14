@@ -13,25 +13,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <title>Profile</title>
-
+    
 </head>
-<body class = "bg-primary">
+<body class = "bg-light">
 	<?php require('header.php') ?>
 
     <div class="container-fluid bg-white">
 <div class="col-md-12">
     <div class="row">
-   <div class="card bg-white text-dark shadow text-center " style="min-height: fit-content;">
-          <div class="profile-thumbnail mx-auto mt-n6 pt-4">
-              <img src="<?=$data['picture']?>" class="card-img-top rounded-circle border-0" alt="Jose Portrait" width = "200" height = "200">
-          </div>
+   <div class="card bg-white text-dark text-center " style="min-height: fit-content;">
+          <div class="profile-thumbnail mx-auto mt-n6 pt-4 position-relative rounded-circle">
+              <img src="<?=$data['picture']?>" class="card-img-top rounded-circle border-0" alt="..." width = "140" height = "140" style = "object-fit: cover;border-radius:100%;height:140px;width:140px;">
+			  <div>
+				  <!-- Profile Picture Upload -->
+				<form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
+					<input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
+					<button type="button" class="btn btn-light text-dark hover-dark edit-img-btn" onclick="triggerFileInput('profileFile');">+</button>
+					
+					<!-- Modal -->
+					<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body text-center"   style = "margin: auto;">
+									<img id="profilePreviewImg" src="#" class="card-img-top border-0" style="display: none;border-radius:100%;width:140px;height:140;object-fit: cover;" height = "140" width = "140">
+								</div>
+								<div class="modal-footer">
+									<button type="submit" name="uploadProfile" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButton(this)">Save Profile Picture</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			  </div>
+		  </div>
+		  
           <div class="card-body">
-              <h3 class="h5 card-title mb-2"><?=$data['first-name']?> <?=$data['last-name']?></h3>
+              <h3 class="h5 card-title mb-2 profile-name"><?=$data['first-name']?> <?=$data['last-name']?></h3>
               <span class="card-subtitle text-gray fw-normal"><?=$data['title']?></span>
                
               <p class="card-text my-2"><?=$data['desc']?></p>
@@ -78,60 +101,161 @@
                   </svg>
                 </li>
               </ul>
+			  <div>
+				<a class="btn btn-light text-dark border-dark hover-dark" style = "width:150px;" href = "edit-profile.php">Edit Profile</a>
+			  </div>
+			  <div class = "mt-2">
+				<!--Upload file-->
+				<form id="uploadForm" action="upload.php" method="POST" enctype="multipart/form-data">
+				<input type="file" name="file" id="file" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="image" required>
+				<button type="button" class="btn btn-light text-dark border-dark hover-dark" onclick="triggerFileInput('file');" style="width:150px;">Upload</button>
+				
+				<!-- Modal -->
+				<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body text-center"   style = "margin: auto;">
+								<img id="previewImg" src="#" class="img-fluid rounded" style="max-height: 300px; display: none;">
+							</div>
+							<div class="modal-body text-center">
+								<input type="text" placeholder="Title" name="title" class="form-control form-control-sm" style="border:solid black 1px;">
+							</div>                            
+							<div class="modal-body text-center">
+								<textarea placeholder="Description" name="description" style="width: 100%;"></textarea>
+							</div>                                    
+							<div class="modal-footer">
+								<button type="submit" name="upload" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButton(this)">Upload</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			  </div>
             </div>
       </div>
-</div><!--end of first row-->
-    <form action = "upload.php" method="post" enctype="multipart/form-data">
-        <label for="file">Choose a file:</label>
-        <input type="file" name="file" id="file">
-        <button type="submit" name="upload">Upload</button>
-    </form>
-<div class="row">
-<div class=" d-flex flex-wrap ">
-<div class = "container-fluid">
-	<div class="row">
+	</div>
+	</div>
+</div>
+<div class="container-fluid bg-light p-2">
+	<div style="column-count:3" class="flex p-4">
     <?php
+		function is_valid_image($url){
+			if (empty($url)) {
+				return false;
+			}
+		if (!filter_var($url, FILTER_VALIDATE_URL)) {
+			return file_exists($url);
+		}
+		$headers = @get_headers($url);
+		return $headers && strpos($headers[0], '200') !== false;
+		}
+		//pdo
 		require('pdo.php');
+		//Query
 		$stmt = $pdo->prepare('select url from images where `user-id` = ?');
 		$stmt->execute(array($data['id']));
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		foreach($rows as $row){
+			if (!is_valid_image($row['url']) || !file_exists($row['url'])){
+				continue;
+			}
 	?>
-	<div class="col-md-4 my-2">
-		<div class="card">
-			<div class="p-1">
-				<img src="<?=$row['url']?>" alt="Arch" width="100%" height="300px">
-			</div>
-			<div class="card-title"> 
-			</div>
-		</div>  
-    </div>
+		
+			<img style = "border: 2px solid black;border-radius:10px;" src="<?=htmlspecialchars($row['url'])?>" class="card-img-top mb-3"  alt="..." onerror="this.closest('.card-img-top').remove();">
+		
 	<?php
 		}
 	?>
+		</div>
 	</div>
-</div>
 
-</div>
-</div>
-
-</div>
-</div>
-
-
-
-
-
-
-
-  
-
-
-
-
-
-</div><!-- end of col-md-12-->
 </div>
    
 </body>
+
+<script>
+function triggerFileInput(inputId) {
+    document.getElementById(inputId).click();
+}
+
+function previewImage(input) {
+    var file = input.files[0];
+    if (!file) return;
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var fileType = input.getAttribute("data-type");
+
+        if (fileType === "profile") {
+            // Get the profile image element
+            var profileImg = document.getElementById('profilePreviewImg');
+
+            // Reset the previous image and hide it
+            profileImg.style.display = 'none'; // Hide the image initially
+            profileImg.src = ''; // Reset the image source
+
+            // Set the new image source and show it
+            profileImg.src = e.target.result;
+            profileImg.style.display = 'block'; // Show the new image
+
+            // Ensure the modal is shown properly by initializing the modal again
+            var profileModal = new bootstrap.Modal(document.getElementById('profileImageModal'));
+            profileModal.show();
+
+            // Clear the modal image when the modal is closed
+            $('#profileImageModal').on('hidden.bs.modal', function () {
+                profileImg.src = ''; // Clear the image source
+                profileImg.style.display = 'none'; // Hide the image
+            });
+
+        } else {
+            // Get the generic image element
+            var genericImg = document.getElementById('previewImg');
+
+            // Reset the previous image and hide it
+            genericImg.style.display = 'none'; // Hide the image initially
+            genericImg.src = ''; // Reset the image source
+
+            // Set the new image source and show it
+            genericImg.src = e.target.result;
+            genericImg.style.display = 'block'; // Show the new image
+
+            // Ensure the modal is shown properly by initializing the modal again
+            var genericModal = new bootstrap.Modal(document.getElementById('imageModal'));
+            genericModal.show();
+
+            // Clear the modal image when the modal is closed
+            $('#imageModal').on('hidden.bs.modal', function () {
+                genericImg.src = ''; // Clear the image source
+                genericImg.style.display = 'none'; // Hide the image
+            });
+        }
+    };
+
+    reader.readAsDataURL(file);
+}
+function disableButton(btn) {
+  btn.disabled = true;
+  var ImageInput = document.createElement('input');
+  ImageInput.type = 'hidden';
+  ImageInput.name = 'upload';
+  ImageInput.value = 'true';
+  document.getElementById('uploadForm').appendChild(ImageInput);
+  document.getElementById('uploadForm').submit();  
+  ///
+  var ProfileInput = document.createElement('input');
+  ProfileInput.type = 'hidden';
+  ProfileInput.name = 'uploadProfile';
+  ProfileInput.value = 'true'; 
+  document.getElementById('profileUploadForm').appendChild(ProfileInput);
+  document.getElementById('profileUploadForm').submit(); 
+  
+
+}
+
+    </script>
 </html>

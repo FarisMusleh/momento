@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momento Help Center</title>
+    <style>
+        :root {
+            --primary-color: #4a154b;
+            --secondary-color: #611f69;
+            --text-color: #333333;
+            --light-gray: #f6f6f6;
+            --mid-gray: #e0e0e0;
+            --border-color: #ddd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .search-container {
+            margin: 50px auto;
+            text-align: center;
+            max-width: 700px;
+        }
+        
+        .search-container h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .search-bar {
+            display: flex;
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-bar input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .category-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .category-card h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .category-card ul {
+            list-style-type: none;
+        }
+        
+        .category-card li {
+            margin-bottom: 10px;
+        }
+        
+        .category-card li a {
+            color: var(--text-color);
+            transition: color 0.2s ease;
+        }
+        
+        .category-card li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .category-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background-color: var(--light-gray);
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .footer-column ul {
+            list-style-type: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 8px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--mid-gray);
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .search-container h1 {
+                font-size: 24px;
+            }
+        }
+        
+        /* Icon placeholders */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Momento</div>
+            <nav>
+                <a href="#">Contact Support</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="search-container">
+            <h1>How can we help you?</h1>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for articles, tutorials, and more...">
+                <button>🔍</button>
+            </div>
+        </div>
+        
+        <div class="categories">
+            <div class="category-card">
+                <div class="category-icon">📱</div>
+                <h2>Getting Started</h2>
+                <ul>
+                    <li><a href="#">Creating your Momento account</a></li>
+                    <li><a href="#">Setting up your first project</a></li>
+                    <li><a href="#">Understanding the dashboard</a></li>
+                    <li><a href="#">Momento basics tutorial</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">💳</div>
+                <h2>Billing & Subscriptions</h2>
+                <ul>
+                    <li><a href="#">Subscription plans comparison</a></li>
+                    <li><a href="#">Managing your subscription</a></li>
+                    <li><a href="#">Payment methods</a></li>
+                    <li><a href="#">Invoices and receipts</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🔒</div>
+                <h2>Account Security</h2>
+                <ul>
+                    <li><a href="#">Two-factor authentication</a></li>
+                    <li><a href="#">Password management</a></li>
+                    <li><a href="#">Login history</a></li>
+                    <li><a href="#">Privacy settings</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🚀</div>
+                <h2>Advanced Features</h2>
+                <ul>
+                    <li><a href="#">Project collaboration</a></li>
+                    <li><a href="#">Integrations with other tools</a></li>
+                    <li><a href="#">API documentation</a></li>
+                    <li><a href="#">Custom workflows</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">📊</div>
+                <h2>Reporting & Analytics</h2>
+                <ul>
+                    <li><a href="#">Understanding your dashboard</a></li>
+                    <li><a href="#">Creating custom reports</a></li>
+                    <li><a href="#">Data visualization options</a></li>
+                    <li><a href="#">Exporting your analytics</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🛠️</div>
+                <h2>Troubleshooting</h2>
+                <ul>
+                    <li><a href="#">Common issues and solutions</a></li>
+                    <li><a href="#">Error messages explained</a></li>
+                    <li><a href="#">Connection problems</a></li>
+                    <li><a href="#">App performance</a></li>
+                    <li><a href="#">View all articles</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Momento</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                
+                
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2025 Momento. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
