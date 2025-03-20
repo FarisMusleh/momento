@@ -69,7 +69,14 @@ if (isset($_POST['uploadProfile']) && isset($_FILES['profileFile'])) {
 
         // Output success message
         echo "File uploaded successfully.";
-        header('Location: profile.php');
+		$stmt = $pdo->prepare('select account_type from accounts where id = ?');
+		$stmt->execute([$data['id']]);
+		$result = $stmt->fetch();
+		if($result['account_type']=="user"){
+			header('Location: edit-profile.php');
+		}elseif($result['account_type']=="business"){
+			header('Location: profile.php');
+		}
         exit;
     } else {
         echo "File upload failed.";

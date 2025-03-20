@@ -1,3 +1,6 @@
+ <?php
+	require('pdo.php');
+ ?>
  <!DOCTYPE html>
  <html lang="en">
  <head>
@@ -25,8 +28,8 @@
 		position: absolute;
 		top: 67px; 
 		right: 30px;
-		background-color: white;
-		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+		background-color: #fef;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 		border: 1px solid #ddd;
 		min-width:150px;
 		width:350px;
@@ -34,11 +37,14 @@
 		padding: 10px;
 		padding-bottom:30px;
 		z-index: 123123;
-		transition: opacity 0.3s ease, visibility 0.3s ease;
+		transform: translateY(20px);
+		transition: opacity 0.3s ease, visibility 0s 0.3s, transform 0.3s ease;
   }
   .dropdown-button:hover + .dropdown-content, .dropdown-content:hover {
     opacity: 1;
     visibility: visible;
+	transform: translateY(0); /* Move the element to its original position */
+    transition: opacity 0.3s ease, visibility 0s 0s, transform 0.3s ease;
   }
   .DropDownFlex{
 		display: flex;
@@ -78,6 +84,9 @@
         .navbar-nav .nav-item .nav-link.active::after {
             width: 100%; /* Full width for active link */
         }
+		.text-hover-a:hover{
+			opacity:0.5;
+		}
 	</style>
  </head>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light navSticky">
@@ -89,7 +98,7 @@
             <div class="collapse navbar-collapse " id="navbarNav">
                 <ul class="navbar-nav ms-auto gap-4 align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="explore.php">EXPLORE</a>
+                        <a class="nav-link" href="explorephotos.php">EXPLORE</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">HIRE A DESIGNER</a>
@@ -113,19 +122,37 @@
 					<div class = "dropdown-content">
 						<div class = "DropDownFlex">
 							<img style = "border-radius:50%;object-fit: cover;border-radius:100%;height:55px;width:55px;" src = "<?=$data['picture']?>" width = '55' height = '55'>
-							<div style = "font-weight: 900;margin-top:5px;text-transform: capitalize;"><?=$data['first-name']?></div>
+							<div style = "font-weight: 900;margin-top:5px;text-transform: capitalize;"><?php
+							
+							$stmt = $pdo->prepare('select account_type from accounts where id = ?');
+							$stmt->execute(array($_SESSION['data']['id']));
+							$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+							if($account_type['account_type']=='user'){
+								echo $_SESSION['data']['name'];
+							}elseif($account_type['account_type']=='business'){
+								echo $_SESSION['data']['business_name'];
+							}
+							
+							?></div>
 						</div>
 						<div style = "padding:0 20px;margin-top:20px;">
+							<?php
+								if($account_type['account_type']==='business'){
+							?>
+									<div style ="justify-content:left;text-align:left;">
+										<a href = "profile.php" class = "text-dark text-decoration-none text-hover-a">Profile</a>
+									</div>
+									<hr style = "opacity:0.2; color:gray;">
+							<?php
+								}
+							?>
+							
 							<div style ="justify-content:left;text-align:left;">
-								<a href = "profile.php">Profile</a>
-							</div>
-							<hr style = "opacity:0.2; color:gray;">
-							<div style ="justify-content:left;text-align:left;">
-								<a href = "edit-profile.php">Settings</a>
+								<a href = "edit-profile.php" class = "text-dark text-decoration-none text-hover-a">Settings</a>
 							</div>
 							<hr style = "opacity:0.2; color:gray;">
 							<div style ="text-align:left;">
-								<a href = "logout.php">Sign Out</a>
+								<a href = "logout.php" class = "text-dark text-decoration-none text-hover-a">Sign Out</a>
 							</div>
 						</div>
 					</div>

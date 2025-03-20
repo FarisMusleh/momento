@@ -3,7 +3,10 @@
 	require('pdo.php');
 	if(isset($_SESSION['data'])){
 		$data = $_SESSION['data'];
+	}else{
+		exit();
 	}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +28,7 @@
         .nav-links a, .nav-item .nav-link {
             color: #777 !important;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 400;
             font-size: 16px;
             margin-right: 20px;
             transition: color 0.3s ease;
@@ -34,14 +37,10 @@
             color: #212529 !important;
         }
         .btn-action {
-            background-color: #212529 !important;
-            color: white !important;
-            border: none;
             position: absolute;
             bottom: 20px;
-            right: 20px;
+            right: 10px;
             padding: 10px 15px;
-            border-radius: 5px;
             width: auto;
         }
         .btn-action:hover {
@@ -78,10 +77,9 @@
             border-radius: 50%;
         }
         .content-section {
-            background-color: #212529;
-            padding: 20px;
+            background-color: white;
             border-radius: 5px;
-            color: #FFFFFF;
+            color: #000;
             position: relative;
             padding-bottom: 60px;
         }
@@ -139,6 +137,7 @@
             border-top-right-radius: 10px;
         }
         .modal-footer {
+			
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
         }
@@ -178,6 +177,20 @@
         .nav-links a:hover {
             background-color: #f8f9fa;
         }
+		
+	  .hover-dark:hover {
+		background-color: black !important;
+		color: white !important;
+		border-color: black !important;
+		transition: all 0.3s ease !important;
+  }
+  .hover-dark{
+	  font-size: 14px !important;
+	  font-weight: 500 !important;
+	  text-align: center !important;
+	  transition: all 0.3s ease !important;
+	  
+  }	
     </style>
     <script>
         function showSection(sectionId, title, element) {
@@ -238,7 +251,6 @@
 
         function deleteAccount() {
             // Logic for account deletion, e.g., making an API call to delete the account
-            alert("Your account has been deleted.");
             const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
             deleteModal.hide();
         }
@@ -250,96 +262,175 @@
     <?php
 		require("header.php");
 	?>
-
+	
     <!-- Main Content -->
-    <div class="container mt-5">
+    <div class="container mt-5 col-md-6">
+		<div style = "margin-left:10px;margin-bottom:20px;display:flex;flex-direction:row;align-items: center;font-size:21px;">
+		<div style = "position:relative;">
+		<img src = "<?=$data['picture']?>" width = "55" height = "55" style = "object-fit: cover;border-radius:100%;height:55px;width:55px;margin-right:20px;">
+		<form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
+			<input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
+			<button type="button" style = "position:absolute;font-size:14px;border-radius:50%;top:35px;right:20px;width:25px;height:25px;padding: 0;" class="btn btn-dark" onclick="triggerFileInput('profileFile');">+</button>
+			
+			<!-- Modal -->
+			<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body text-center"   style = "margin: auto;">
+							<img id="profilePreviewImg" src="#" class="card-img-top border-0" style="display: none;border-radius:100%;width:140px;height:140;object-fit: cover;" height = "140" width = "140">
+						</div>
+						<div class="modal-footer">
+							<button id = "profile_picture_upload_button" type="submit" name="uploadProfile" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButtonProfilePicture(this)">Save Profile Picture</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		</div>
+		<div style = "text-transform: capitalize;">
+		<?php
+		$stmt = $pdo->prepare('select account_type from accounts where id = ?');
+		$stmt->execute(array($_SESSION['data']['id']));
+		$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+		$name = null;
+		if($account_type['account_type']=='user'){
+			$name = $_SESSION['data']['name'];
+			echo $_SESSION['data']['name'];
+		}elseif($account_type['account_type']=='business'){
+			$name = $_SESSION['data']['business_name'];
+			echo $_SESSION['data']['business_name'];
+		}
+		?>
+		</div>
+		<div style = "margin:0 10px;opacity:0.3;">/</div>
+		<div id="section-title">General</div>
+
+		</div>
+		
         <div class="row">
             <div class="col-md-3">
                 <ul class="nav flex-column">
                     <li class="nav-item"><a href="#" class="nav-link active-link" onclick="showSection('general', 'General', this)">General</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('edit-profile', 'Edit Profile', this)">Edit Profile</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('password', 'Password', this)">Password</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('social-profiles', 'Social Profiles', this)">Social Profiles</a></li>
-                </ul>
+                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('edit-profile', 'Edit Profile', this)">Edit Profile</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('password', 'Password', this)">Password</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('social-profiles', 'Social Profiles', this)">Social Profiles</a></li>
+					<!-- Delete Account Button -->
+					<li class="nav-item"><button class="nav-link text-danger" style="background: none; border: none;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color:red !important;" onclick="confirmDelete()">Delete Account</button></li>
+				</ul>
 
-                <!-- Horizontal line -->
-                <hr>
+                
 
-                <!-- Delete Account Button -->
-                <button class="btn text-danger ps-0" style="background: none; border: none;" onclick="confirmDelete()">Delete Account</button>
+                
             </div>
-
-            <div class="col-md-9">
-                <h3 id="section-title">General</h3>
-
-                <div id="general" class="content-section">
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control">
-                    </div>
-                    <p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-                    <button class="btn btn-action" onclick="saveChanges('General')">Save Changes</button>
-                </div>
-
-                <div id="edit-profile" class="content-section" style="display: none;">
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" value="Qusai Odeh">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Location</label>
-                        <input type="text" class="form-control" value="Jordan">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Bio</label>
-                        <textarea class="form-control" rows="3"></textarea>
-                    </div>
-                    <p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-                    <button class="btn btn-action" onclick="saveChanges('Edit Profile')">Save Changes</button>
-                </div>
-
-                <div id="password" class="content-section" style="display: none;">
-                    <div class="mb-3">
-                        <label class="form-label">Old Password</label>
-                        <input type="password" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">New Password</label>
-                        <input type="password" class="form-control" id="new-password">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirm-password">
-                    </div>
-                    <button class="btn btn-action" onclick="changePassword()">Change Password</button>
-                    <p id="password-success" style="color: lightgreen; display: none;">Password changed successfully!</p>
-                </div>
-
+            <div class="col-md-8" style = "font-weight:500;font-size:17px;">
+                
+				<form action = "update-profile.php" method = "POST">
+					<?php
+						$stmt = $pdo->prepare('select username,email,location,account_type from accounts where id = ?');
+						$stmt->execute([$data['id']]);
+						$result = $stmt->fetch(PDO::FETCH_ASSOC);
+						
+						if($result['account_type']=="user"){
+							$sql = $pdo->prepare('select name,social_links,bio from user_profiles where id = ?');
+							$sql->execute([$data['id']]);
+							$info = $sql->fetch(PDO::FETCH_ASSOC);
+							$name = $info['name'];
+							$bio = $info['bio'];
+							$social_links = json_decode($info['social_links'], true);
+							
+						}elseif($result['account_type']=="business"){
+							$sql = $pdo->prepare('select business_name,social_links,bio from business_profiles where id = ?');
+							$sql->execute([$data['id']]);
+							$info = $sql->fetch(PDO::FETCH_ASSOC);
+							$name = $info['business_name'];
+							$bio = $info['bio'];
+							$social_links = json_decode($info['social_links'], true);
+						}
+					?>
+					<input type="hidden" name="section" value="general">
+					<div id="general" class="content-section" >
+						<div class="mb-3" >
+							<label class="form-label">Username</label>
+							<input name = "username" type="text" class="form-control" value = "<?=$result['username']??""?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Email</label>
+							<input name = "email" type="email" class="form-control" value = "<?=$result['email']??""?>">
+						</div>
+						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
+						<button type = "submit" class="btn btn-action btn-light text-dark border-dark hover-dark" onclick="saveChanges('General')">Save Changes</button>
+					</div>
+				</form>	
+				
+				<form action = "update-profile.php" method = "POST">
+					<input type="hidden" name="section" value="edit">
+					<div id="edit-profile" class="content-section" style="display: none;">
+						<div class="mb-3">
+							<label class="form-label">Name</label>
+							<input name = "name" type="text" class="form-control" value="<?=$name?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Location</label>
+							<input name = "location" type="text" class="form-control" value="<?=$result['location']??""?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Bio</label>
+							<textarea name = "bio" class="form-control" rows="3" value = "<?=$bio?>"></textarea>
+						</div>
+						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
+						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" onclick="saveChanges('Edit Profile')">Save Changes</button>
+					</div>
+				</form>
+				
+				<form action = "update-profile.php" method = "POST">
+					<input type="hidden" name="section" value="password">
+					<div id="password" class="content-section" style="display: none;">
+						<div class="mb-3">
+							<label class="form-label">Old Password</label>
+							<input name = "old_password" type="password" class="form-control">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">New Password</label>
+							<input name = "new_password" type="password" class="form-control" id="new-password">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Confirm Password</label>
+							<input type="password" class="form-control" id="confirm-password">
+						</div>
+						<button type = "submit" class="btn btn-action" onclick="changePassword()">Change Password</button>
+						<p id="password-success" style="color: lightgreen; display: none;">Password changed successfully!</p>
+					</div>
+				</form>
+				
                 <!-- Social Profiles Section -->
-                <div id="social-profiles" class="content-section" style="display: none;">
-                    <div class="mb-3">
-                        <label class="form-label">Facebook</label>
-                        <input type="url" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Twitter</label>
-                        <input type="url" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">LinkedIn</label>
-                        <input type="url" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Instagram</label>
-                        <input type="url" class="form-control">
-                    </div>
-                    <p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-                    <button class="btn btn-action" onclick="saveChanges('Social Profiles')">Save Changes</button>
-                </div>
+				<form action = "update-profile.php" method = "POST">
+					<input type="hidden" name="section" value="socials">
+					<div id="social-profiles" class="content-section" style="display: none;">
+						<div class="mb-3">
+							<label class="form-label">Facebook</label>
+							<input name = "facebook" type="url" class="form-control" value = "<?=$social_links['facebook']??""?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Twitter</label>
+							<input name = "twitter" type="url" class="form-control" value = "<?=$social_links['twitter']??""?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">LinkedIn</label>
+							<input name = "linked-in" type="url" class="form-control" value = "<?=$social_links['linked-in']??""?>">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Instagram</label>
+							<input name = "instagram" type="url" class="form-control" value = "<?=$social_links['instagram']??""?>">
+						</div>
+						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
+						<button type = "submit" class="btn btn-action" style = "" onclick="saveChanges('Social Profiles')">Save Changes</button>
+					</div>
+				</form>
             </div>
         </div>
     </div>
@@ -357,11 +448,86 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+					<form action = "delete-account.php" method = "POST">
+                    <button type="submit" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+					</form>
                 </div>
             </div>
         </div>
     </div>
 
 </body>
+<script>
+function triggerFileInput(inputId) {
+    document.getElementById(inputId).click();
+}
+
+function previewImage(input) {
+    var file = input.files[0];
+    if (!file) return;
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var fileType = input.getAttribute("data-type");
+
+        if (fileType === "profile") {
+            // Get the profile image element
+            var profileImg = document.getElementById('profilePreviewImg');
+
+            // Reset the previous image and hide it
+            profileImg.style.display = 'none'; // Hide the image initially
+            profileImg.src = ''; // Reset the image source
+
+            // Set the new image source and show it
+            profileImg.src = e.target.result;
+            profileImg.style.display = 'block'; // Show the new image
+
+            // Show the modal
+            var profileModal = new bootstrap.Modal(document.getElementById('profileImageModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            profileModal.show();
+
+            // Clear the image and hide it when the modal is closed
+            $('#profileImageModal').on('hidden.bs.modal', function () {
+                profileImg.src = ''; // Clear the image source
+                profileImg.style.display = 'none'; // Hide the image
+                // Manually reset aria-hidden for the modal (fixes some issues)
+                $('#profileImageModal').attr('aria-hidden', 'true');
+            });
+
+        } else {
+            // Get the generic image element
+            var genericImg = document.getElementById('previewImg');
+
+            // Reset the previous image and hide it
+            genericImg.style.display = 'none'; // Hide the image initially
+            genericImg.src = ''; // Reset the image source
+
+            // Set the new image source and show it
+            genericImg.src = e.target.result;
+            genericImg.style.display = 'block'; // Show the new image
+
+            // Show the modal
+            var genericModal = new bootstrap.Modal(document.getElementById('imageModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            genericModal.show();
+
+            // Clear the image and hide it when the modal is closed
+            $('#imageModal').on('hidden.bs.modal', function () {
+                genericImg.src = ''; // Clear the image source
+                genericImg.style.display = 'none'; // Hide the image
+                // Manually reset aria-hidden for the modal (fixes some issues)
+                $('#imageModal').attr('aria-hidden', 'true');
+            });
+        }
+    };
+
+    reader.readAsDataURL(file);
+}
+</script>
+
 </html>

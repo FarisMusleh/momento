@@ -19,24 +19,27 @@ class account {
     public function login($email, $password) {
         try {
             // Prepare the statement
-            $stmt = $this->pdo->prepare("SELECT id,username,email,password,`account-type` FROM accounts WHERE email = :email AND provider = 'local'");
+            $stmt = $this->pdo->prepare("SELECT id,username,email,password,account_type,picture,location FROM accounts WHERE email = :email AND provider = 'local'");
             $stmt->execute(['email' => $email]);
-            $acc = $stmt->fetch(PDO::FETCH_ASSOC);
-			$pic = null;
+            $account = $stmt->fetch(PDO::FETCH_ASSOC);
+			$picture = null;
 			$business = null;
-            if ($acc && password_verify($password, $acc['password'])) {
-				$stmtu = $this->pdo->prepare("SELECT picture,location from accounts where id = ?");
-				$stmtu->execute(array($acc['id']));
-				$result = $stmtu->fetch(PDO::FETCH_ASSOC);
-				$pic = $result['picture'];				
-				$location = $result['location'];
-				if($acc['account-type']=='user'){
-					$_SESSION['data'] = array('id'=>$acc['id'],'username'=>$acc['username'],'email'=>$acc['email'],'picture'=>$pic);
-				}elseif($acc['account-type']=='business'){
-					$stmtb = $this->pdo->prepare("SELECT `first-name`,`last-name`,title,description from `business-profiles` where id = ?");
-					$stmtb->execute(array($acc['id']));
-					$business = $stmtb->fetch(PDO::FETCH_ASSOC);
-					$_SESSION['data'] = array('id'=>$acc['id'],'username'=>$acc['username'],'email'=>$acc['email'],'picture'=>$pic,'title'=>$business['title'],'desc'=>$business['description'],'first-name'=>$business['first-name'],'last-name'=>$business['last-name']);
+            if ($account && password_verify($password, $account['password'])) {
+				//User Information
+				if($account['account_type']=='user'){
+					$stmt = $this->pdo->prepare("SELECT name from user_profiles where id = ?");
+					$stmt->execute(array($account['id']));
+					$user = $stmt->fetch(PDO::FETCH_ASSOC);
+					$_SESSION['data'] = array('id'=>$account['id'],'username'=>$account['username'],'email'=>$account['email'],
+					'picture'=>$account['picture'],'name'=>$user['name']);
+				}
+				//Business Information
+				elseif($account['account_type']=='business'){
+					$stmt = $this->pdo->prepare("SELECT business_name from business_profiles where id = ?");
+					$stmt->execute(array($account['id']));
+					$business = $stmt->fetch(PDO::FETCH_ASSOC);
+					$_SESSION['data'] = array('id'=>$account['id'],'username'=>$account['username'],'email'=>$account['email'],'picture'=>$account['picture'],
+					'location'=>$account['location'],'business_name'=>$business['business_name']);
 				}
                 header("Location: ../index.php");
                 exit();

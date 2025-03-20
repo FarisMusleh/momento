@@ -249,7 +249,7 @@
 
     <div class="row">
 		<?php
-			$stmt = $pdo->prepare('select `first-name`,`last-name`,picture,description from `business-profiles` order by rand() limit 20');
+			$stmt = $pdo->prepare('select business_name,bio,location,accounts.picture from business_profiles join accounts on business_profiles.id = accounts.id order by rand() limit 20');
 			$stmt->execute();
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as $row) {
@@ -265,9 +265,9 @@
 					  </div>
 					</div>
 					<div class="card-body text-center">
-					  <h5 class="card-title">'.$row["first-name"].$row["last-name"].'</h5>
+					  <h5 class="card-title">'.$row["business_name"].'</h5>
 					  <p class="card-text">
-						'.$row["description"].'
+						'.$row["bio"].'
 					  </p>
 					  <div class="d-grid gap-2 d-md-block">
 						<a href="#" class="btn btn-primary">Portfolio</a>

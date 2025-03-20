@@ -16,21 +16,20 @@ class register {
 			$password = !empty($data['password']) ? $data['password'] : null;
 			$hashed = password_hash($password, PASSWORD_DEFAULT);
 			$account = $data['account'] ?? null;
-			$provider = "local";
 			$gender = $data['gender'] ?? null;
 			// Insert into accounts table
-			$sql_1 = $this->pdo->prepare('insert into accounts(username, email, password, `account-type`, provider) values(?, ?, ?, ?, ?)');
-			$sql_1->execute([$username, $email, $hashed, $account, $provider]);
+			$sql = $this->pdo->prepare("insert into accounts(username, email, password, account_type, provider) values(?, ?, ?, ?, 'local')");
+			$sql->execute([$username, $email, $hashed, $account]);
 
-			$lastId = $this->pdo->lastInsertId();
+			$last_id = $this->pdo->lastInsertId();
 
 			// Insert into profile table
 			if($account==="user"){
-				$sql_2 = $this->pdo->prepare("insert into `user-profiles`(id,gender) values(?,?)");
-				$sql_2->execute([$lastId,$gender]);
+				$sql = $this->pdo->prepare("insert into user_profiles(id,gender) values(?,?)");
+				$sql->execute([$last_id,$gender]);
 			}elseif($account==="business"){
-				$sql_2 = $this->pdo->prepare("insert into `business-profiles`(id,gender) values(?,?)");
-				$sql_2->execute([$lastId,$gender]);
+				$sql = $this->pdo->prepare("insert into business_profiles(id,gender) values(?,?)");
+				$sql->execute([$last_id,$gender]);
 			}
 			
 			$_SESSION['create_success'] = "Account Created!";

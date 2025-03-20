@@ -80,13 +80,13 @@
 				</div>
 				<!--USERNAME-->
 				<div class="form-floating mb-3">
-					<input type="text" class="form-control" id="username" placeholder="Username" name = "username" autocomplete="username" required>
+					<input type="text" class="form-control" id="username" placeholder="Username" name = "username" autocomplete="username" value = "" required>
 					<label for="username">Username</label>
 					<div class="" id = "username-status"></div>
 				</div>
 				<!--EMAIL-->
 				<div class="form-floating mb-3">
-					<input type="email" class="form-control" id="email" placeholder="name@example.com" name = "email" autocomplete="email" required>
+					<input type="email" class="form-control" id="email" placeholder="name@example.com" name = "email" value = "" autocomplete="email" required>
 					<label for="email">Email address</label>
 				</div>
 				<!--PASSWORD-->

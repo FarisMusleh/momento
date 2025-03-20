@@ -90,8 +90,8 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     if (move_uploaded_file($filePath, $targetFilePath)) {
         // Save the image details to the database
         try {
-            $sql = $pdo->prepare('INSERT INTO images (`user-id`, url, label) VALUES (?, ?, ?)');
-            $sql->execute([$data['id'], $targetFilePath, implode(', ', $topLabels)]);
+            $sql = $pdo->prepare('INSERT INTO images (user_id, url, description, label) VALUES (?, ?, ?, ?)');
+            $sql->execute([$data['id'], $targetFilePath, $_POST['description'], implode(', ', $topLabels)]);
         } catch (Exception $e) {
             echo "Database Error: " . $e->getMessage();
             exit;

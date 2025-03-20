@@ -53,7 +53,7 @@
 </head>
 <body class = 'bg-dark'>
 	<div class="d-flex align-items-center vh-100" style = "z-index:-2;">
-		<div class = 'p-5 h-auto w-50 min-w-custom bg-light mx-auto border-animation' style = 'min-width:400px;border:#f0ad4e solid;max-width:600px;'>
+		<div class = 'p-4 h-auto w-50 min-w-custom bg-light mx-auto border-animation' style = 'min-width:400px;max-width:600px;'>
 			<h1 class = 'text-center unselect'>MOMENTO</h1>
 			<form method = "post" action = "class-login.php">
 				<!--EMAIL-->
@@ -71,15 +71,13 @@
 					<input class="form-check-input" name="remember" value="1" type="checkbox" id="remember" checked="">
 					<label class="form-check-label unselect" for="remember">Remember me</label>
 				</div>
-				<!--LOGIN-->
-				<div class = "d-flex align-items-center justify-content-center">
-					<button type="submit" class="btn btn-primary rounded-0 mt-4 w-100" name = "enter">LOGIN</button>
-				</div>
-			</form>
+
+			
 			<!--SOCIALS-->
-			<div class = "d-flex justify-content-between">
-				<button type="button" class="btn btn-outline-secondary rounded-0 mt-2" style="width: 48%;" onclick="location.href='social-media/authentication.php/?auth=google'"><img src = "img/google.svg" width = "20" height = "18" class = "social-media">GOOGLE</button>
-				<button type="button" class="btn btn-outline-info rounded-0 mt-2" style="width: 48%;" onclick="location.href='social-media/authentication.php/?auth=facebook'"><img src = "img/facebook.svg" width = "30" height = "30" class = "social-media">FACEBOOK</button>
+			<div class = "d-flex justify-content-between mt-4">
+				<button type="submit" class="btn btn-primary rounded-0 w-50" name = "enter">LOGIN</button>
+			</form>	
+				<button type="button" class="btn btn-outline-secondary rounded-0" style="width: 48%;" onclick="location.href='social-media/authentication.php/?auth=google'"><img src = "img/google.svg" width = "20" height = "18" class = "social-media">GOOGLE</button>
 			</div>
 			<small>Don't have momento account?<a href = "register.php">create</a></small>
 		</div>
