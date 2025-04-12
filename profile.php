@@ -15,6 +15,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <title>Profile</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- GOOGLE-FONTS -->
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<!--CSS-->
+    <link rel="stylesheet" href="css/header.css">
     
 </head>
 <body class = "bg-light">
@@ -54,7 +61,22 @@
 		  </div>
 		  
           <div class="card-body">
-              <h3 class="h5 card-title mb-2 profile-name"><?=$data['business_name']?></h3>
+              <h3 class="h5 card-title mb-2 profile-name"><?php
+				$stmt = $pdo->prepare('select account_type from accounts where id = ?');
+				$stmt->execute(array($_SESSION['data']['id']));
+				$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($account_type['account_type']=='user'){
+					$profileData = $pdo->prepare('select name from user_profiles where id = ?');
+					$profileData->execute([$_SESSION['data']['id']]);
+					$name = $profileData->fetch(PDO::FETCH_ASSOC);
+					echo $name['name'];
+				}elseif($account_type['account_type']=='business'){
+					$profileData = $pdo->prepare('select business_name from business_profiles where id = ?');
+					$profileData->execute([$_SESSION['data']['id']]);
+					$name = $profileData->fetch(PDO::FETCH_ASSOC);
+					echo $name['business_name'];
+				}
+			  ?></h3>
               <?php
 				$stmt = $pdo->prepare('select bio from business_profiles where id = ?');
 				$stmt->execute(array($data['id']));
@@ -302,4 +324,6 @@ function disableButtonProfilePicture() {
 }
 
     </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </html>

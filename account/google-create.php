@@ -1,3 +1,85 @@
+<?php
+session_start();
+require '../../pdo.php';
+
+// Redirect if already logged in
+if (isset($_SESSION['data'])) {
+    header('Location: ../../index.php');
+    exit();
+}
+
+// Redirect if Google session is missing
+if (!isset($_SESSION['google'])) {
+    header('Location: ../login.php');
+    exit();
+}
+
+// Check if required POST data is received
+if (isset($_POST['username'], $_POST['acc-type'])) {
+    $username  = $_POST['username'];
+    $type      = $_POST['acc-type'];
+    $location  = $_POST['location'] ?? null;
+    $phone     = $_POST['phone'] ?? null;
+    $dob       = $_POST['dob'] ?? null;
+
+    // Get Google data from session
+    $googleData  = $_SESSION['google'];
+    $email       = $googleData['email'];
+    $name        = $googleData['name'];
+    $provider    = $googleData['provider'];
+    $providerId  = $googleData['providerId'];
+    $picture     = $googleData['picture'];
+
+    // Insert into accounts table
+    $stmtAccount = $pdo->prepare("
+        INSERT INTO accounts (username, email, provider_id, provider, account_type, picture)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $stmtAccount->execute([$username, $email, $providerId, $provider, $type, $picture]);
+
+    $lastId = $pdo->lastInsertId();
+
+    if ($type === 'user') {
+		$stmtProfile = $pdo->prepare("
+			INSERT INTO user_profiles (id, name)
+			VALUES (?, ?)
+		");
+		$stmtProfile->execute([$lastId, $name]);
+		$_SESSION['data'] = [
+			'id' => $lastId,
+			'email'    => $email,
+			'name'     => $name,
+			'username' => $username,
+			'type'     => $type,
+			'picture' => $picture
+		];
+    } elseif ($type === 'business') {
+		$stmtProfile = $pdo->prepare("
+			INSERT INTO business_profiles (id, business_name)
+			VALUES (?, ?)
+		");
+		$stmtProfile->execute([$lastId, $name]);		
+        $_SESSION['data'] = [
+			'id' => $lastId,
+			'email'    => $email,
+			'business_name'     => $name,
+			'username' => $username,
+			'type'     => $type,
+			'picture' => $picture
+		];
+    }
+
+    // Clean up and redirect
+    unset($_SESSION['google']);
+    header('Location: ../../index.php');
+    exit();
+}
+?>
+
+
+
+
+
 <!DOCTYPE html> 
 <html lang="en">
 <head>
@@ -80,10 +162,10 @@
     <div class="container">
         <div class="logo">Momento</div>
        
-        <form id="registrationForm">
+        <form id="registrationForm" method = "post">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required><span id = 'username-status'></span>
             </div>
             <div class="form-group">
                 <label for="dob">Date of Birth</label>
@@ -95,10 +177,10 @@
                 
             </div>
             <div class="form-group">
-                <label for="accountType">Account Type</label>
-                <select id="accountType" name="accountType" required>
+                <label for="acc-type">Account Type</label>
+                <select id="acc-type" name="acc-type" required>
                     <option value="">Select Account Type</option>
-                    <option value="personal">Personal</option>
+                    <option value="user">Personal</option>
                     <option value="business">Business</option>
                 </select>
             </div>
@@ -133,3 +215,28 @@
     </div>
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#username').on('input', function(){
+			let temp = $(this).val();
+			
+			if(temp.length > 0){
+				$('#username-status').text("...");
+				setTimeout(function() {
+					$.ajax({
+						url: '../check-username.php',
+						type: 'post',
+						data: {key:temp},
+						success: function(response){
+							$('#username-status').text(response);
+						}
+					});
+				},900);
+			}else{
+				$('#username-status').text('');
+			}
+		});
+	});
+</script>

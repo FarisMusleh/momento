@@ -31,7 +31,7 @@ class account {
 					$stmt->execute(array($account['id']));
 					$user = $stmt->fetch(PDO::FETCH_ASSOC);
 					$_SESSION['data'] = array('id'=>$account['id'],'username'=>$account['username'],'email'=>$account['email'],
-					'picture'=>$account['picture'],'name'=>$user['name']);
+					'picture'=>$account['picture']);
 				}
 				//Business Information
 				elseif($account['account_type']=='business'){
@@ -39,7 +39,7 @@ class account {
 					$stmt->execute(array($account['id']));
 					$business = $stmt->fetch(PDO::FETCH_ASSOC);
 					$_SESSION['data'] = array('id'=>$account['id'],'username'=>$account['username'],'email'=>$account['email'],'picture'=>$account['picture'],
-					'location'=>$account['location'],'business_name'=>$business['business_name']);
+					'location'=>$account['location']);
 				}
                 header("Location: ../index.php");
                 exit();

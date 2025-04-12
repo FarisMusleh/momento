@@ -10,5 +10,5 @@
 	}
 	$stmt = $pdo->prepare('delete from accounts where id = ?');
 	$stmt->execute([$data['id']]);
-
+	header('location: logout.php');
 ?>

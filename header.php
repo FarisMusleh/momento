@@ -1,171 +1,313 @@
- <?php
-	require('pdo.php');
- ?>
- <!DOCTYPE html>
- <html lang="en">
- <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	
-	<style>
-	.navSticky{
-		position: sticky;
-		text-align: center;
-		top:0;
-		z-index:1020;
-		padding-top:10px; 
-		padding-bottom:10px;
-	}
-	.dropdown-button{
-		position:relative;
-	}
-  .dropdown-content {
-		border-radius: 5px;
-		opacity: 0;
-		visibility: hidden;
-		position: absolute;
-		top: 67px; 
-		right: 30px;
-		background-color: #fef;
-		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-		border: 1px solid #ddd;
-		min-width:150px;
-		width:350px;
-		height:auto;
-		padding: 10px;
-		padding-bottom:30px;
-		z-index: 123123;
-		transform: translateY(20px);
-		transition: opacity 0.3s ease, visibility 0s 0.3s, transform 0.3s ease;
-  }
-  .dropdown-button:hover + .dropdown-content, .dropdown-content:hover {
-    opacity: 1;
-    visibility: visible;
-	transform: translateY(0); /* Move the element to its original position */
-    transition: opacity 0.3s ease, visibility 0s 0s, transform 0.3s ease;
-  }
-  .DropDownFlex{
-		display: flex;
-		flex-direction: column; 
-		justify-content: center;
-		align-items: center;
-  }
-  .login{
-	  background:rgb(31, 29, 29);
-	  border-radius: 20px;
-	  cursor: pointer; 
-	  margin-top:5px;
-	  transition: background 0.3s ease; 
-	  width:100px;
-      }
-    .login:hover{
-        background:rgb(80, 78, 78);
-      }
-/* Custom styles for the navbar underline */
-        .navbar-nav .nav-item .nav-link {
-            position: relative;
-            padding-bottom: 5px; /* Space for the underline */
-        }
-        .navbar-nav .nav-item .nav-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 0;
-            height: 2px;
-            background-color:rgb(0, 0, 0); /* Color of the underline */
-            transition: width 0.3s ease; /* Smooth transition for the underline */
-        }
-        .navbar-nav .nav-item .nav-link:hover::after {
-            width: 100%; /* Full width on hover */
-        }
-        .navbar-nav .nav-item .nav-link.active::after {
-            width: 100%; /* Full width for active link */
-        }
-		.text-hover-a:hover{
-			opacity:0.5;
-		}
-	</style>
- </head>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light navSticky">
-        <div class="container-fluid">
-            <a class="navbar-brand fs-3" href="index.php" style="font-family: Dancing Script, cursive;font-size:20px;">Momento</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse " id="navbarNav">
-                <ul class="navbar-nav ms-auto gap-4 align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="explorephotos.php">EXPLORE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">HIRE A DESIGNER</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">FIND JOBS</a>
-                    </li>
-					<?php
-					if(!isset($_SESSION['data'])){
-						echo '	<li class="nav-item">
-									<a class="nav-link" href="account/register.php">Sign up</a>
-								</li>
-								<li class="login">
-									<a class="nav-link text-white text-center" href="account/login.php">Login</a>
-								</li>';
-					}
-					else{ 
-					?>
-					<ul>
-					<div class = "dropdown-button"><img style = "border-radius:50%;margin-right:20px;object-fit: cover;border-radius:100%;height:55px;width:55px;" src = "<?=$data['picture']?>" width = '55' height = '55'></div>
-					<div class = "dropdown-content">
-						<div class = "DropDownFlex">
-							<img style = "border-radius:50%;object-fit: cover;border-radius:100%;height:55px;width:55px;" src = "<?=$data['picture']?>" width = '55' height = '55'>
-							<div style = "font-weight: 900;margin-top:5px;text-transform: capitalize;"><?php
-							
-							$stmt = $pdo->prepare('select account_type from accounts where id = ?');
-							$stmt->execute(array($_SESSION['data']['id']));
-							$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
-							if($account_type['account_type']=='user'){
-								echo $_SESSION['data']['name'];
-							}elseif($account_type['account_type']=='business'){
-								echo $_SESSION['data']['business_name'];
-							}
-							
-							?></div>
+<?php
+    require_once('pdo.php');
+?>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<nav class="navbar navbar-expand-lg nav-sticky" id = "navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand fs-3 momento-logo" href="index.php">Momento</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto gap-4 align-items-center">
+				<!-- CHAT-ICON -->
+				<div class="message-icon-container">
+					<div class="message-icon" id="messageIcon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+						</svg>
+						<div class="notification-badge" id="notificationBadge">1</div>
+					</div>
+					<div class="message-tooltip" id="messageTooltip">
+						<div class="message-preview-item unread">
+							<div class="message-preview-sender">John Doe</div>
+							<div class="message-preview-text">Hey there! Just wanted to check in about the project...</div>
 						</div>
-						<div style = "padding:0 20px;margin-top:20px;">
-							<?php
-								if($account_type['account_type']==='business'){
-							?>
-									<div style ="justify-content:left;text-align:left;">
-										<a href = "profile.php" class = "text-dark text-decoration-none text-hover-a">Profile</a>
-									</div>
-									<hr style = "opacity:0.2; color:gray;">
-							<?php
-								}
-							?>
-							
-							<div style ="justify-content:left;text-align:left;">
-								<a href = "edit-profile.php" class = "text-dark text-decoration-none text-hover-a">Settings</a>
-							</div>
-							<hr style = "opacity:0.2; color:gray;">
-							<div style ="text-align:left;">
-								<a href = "logout.php" class = "text-dark text-decoration-none text-hover-a">Sign Out</a>
-							</div>
+						<div class="message-preview-item">
+							<div class="message-preview-sender">Jane Smith</div>
+							<div class="message-preview-text">Can we schedule a meeting for next week?</div>
+						</div>
+						<div class="message-preview-item">
+							<div class="message-preview-sender">Robert Martin</div>
+							<div class="message-preview-text">The documents you requested are attached.</div>
 						</div>
 					</div>
-					</ul>
-					<?php
-					}
-					?>
-                </ul>
-            </div>
+				</div>
+				<!-- END-CHAT-ICON -->
+                <li class="nav-item"><a class="nav-link" href="gallery.php">GALLERY</a></li>
+                <li class="nav-item"><a class="nav-link" href="photographers.php">PHOTOGRAPHERS</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">FIND JOBS</a></li>
+				
+
+
+
+                <?php if (!isset($_SESSION['data'])): ?>
+                    <li class="nav-item"><a class="nav-link" href="account/register.php">Sign up</a></li>
+                    <li class="login"><a class="btn text-white text-center" href="account/login.php">Login</a></li>
+                <?php else: ?>
+                    <ul class="list-unstyled m-0 p-0">
+                        <div class="dropdown-button">
+                            <img src="<?= $data['picture'] ?>" class="dropdown-img">
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="DropDownFlex">
+                                <img src="<?= $data['picture'] ?>" class="dropdown-img">
+                                <div class="dropdown-name">
+                                    <?php
+                                        $stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
+                                        $stmt->execute([$_SESSION['data']['id']]);
+                                        $account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                        if ($account_type['account_type'] === 'user') {
+                                            $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
+                                            $profileData->execute([$_SESSION['data']['id']]);
+                                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
+                                            echo $name['name'];
+                                        } elseif ($account_type['account_type'] === 'business') {
+                                            $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?');
+                                            $profileData->execute([$_SESSION['data']['id']]);
+                                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
+                                            echo $name['business_name'];
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="dropdown-section">
+                                <?php if ($account_type['account_type'] === 'business'): ?>
+                                    <a href="profile.php" class="dropdown-link">Profile</a>
+                                    <hr class="dropdown-divider">
+                                <?php endif; ?>
+                                <a href="edit-profile.php" class="dropdown-link">Settings</a>
+                                <hr class="dropdown-divider">
+                                <a href="logout.php" class="dropdown-link">Sign Out</a>
+                            </div>
+                        </div>
+                    </ul>
+                <?php endif; ?>
+            </ul>
         </div>
-    </nav>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </div>
+</nav>
 
 
 
-			
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const siteLogo = document.getElementById('siteLogo');
+            const messageTooltip = document.getElementById('messageTooltip');
+            const messageIcon = document.getElementById('messageIcon');
+            const inboxContainer = document.getElementById('inboxContainer');
+            const homeContent = document.getElementById('homeContent');
+            const chatContainer = document.getElementById('chatContainer');
+            const backToHome = document.getElementById('backToHome');
+            const backToInbox = document.getElementById('backToInbox');
+            const messageItems = document.querySelectorAll('.message-item');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatAvatar = document.getElementById('chatAvatar');
+            const chatContactName = document.getElementById('chatContactName');
+            const previewItems = document.querySelectorAll('.message-preview-item');
+            
+            // Store conversation history
+            const conversations = {
+                'John Doe': [
+                    { type: 'received', text: 'Hey there! Just wanted to check in about the project.' },
+                    { type: 'received', text: 'Do you have any updates on the timeline?' }
+                ],
+                'Jane Smith': [
+                    { type: 'received', text: 'Can we schedule a meeting for next week?' },
+                    { type: 'sent', text: 'Sure, how about Tuesday at 2pm?' },
+                    { type: 'received', text: 'That works for me. I\'ll send a calendar invite.' }
+                ],
+                'Robert Martin': [
+                    { type: 'received', text: 'The documents you requested are attached.' },
+                    { type: 'sent', text: 'Thanks, I appreciate it.' },
+                    { type: 'received', text: 'No problem. Let me know if you need anything else.' }
+                ]
+            };
+            
+            let currentContact = '';
+            
+            // Function to load conversation for a specific contact
+            function loadConversation(contact) {
+                // Clear existing messages
+                chatMessages.innerHTML = '';
+                
+                // Add messages from the conversation history
+                if (conversations[contact]) {
+                    conversations[contact].forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = `message-bubble message-${message.type}`;
+                        messageElement.textContent = message.text;
+                        chatMessages.appendChild(messageElement);
+                    });
+                }
+                
+                // Scroll to the bottom of the chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to send a message
+            function sendMessage() {
+                const messageText = messageInput.value.trim();
+                if (!messageText) return;
+                
+                // Create a message object
+                const message = {
+                    type: 'sent',
+                    text: messageText
+                };
+                
+                // Add message to the conversation
+                if (!conversations[currentContact]) {
+                    conversations[currentContact] = [];
+                }
+                conversations[currentContact].push(message);
+                
+                // Add message to chat display
+                const messageElement = document.createElement('div');
+                messageElement.className = `message-bubble message-sent`;
+                messageElement.textContent = messageText;
+                chatMessages.appendChild(messageElement);
+                
+                // Clear input
+                messageInput.value = '';
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate a response after a delay (for demo purposes)
+                if (currentContact === 'John Doe') {
+                    setTimeout(() => {
+                        const response = {
+                            type: 'received',
+                            text: 'Thanks for the update. Looking forward to seeing the progress!'
+                        };
+                        conversations[currentContact].push(response);
+                        
+                        const responseElement = document.createElement('div');
+                        responseElement.className = `message-bubble message-received`;
+                        responseElement.textContent = response.text;
+                        chatMessages.appendChild(responseElement);
+                        
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            }
+            
+            // Event Listeners
+            
+            // Show message tooltip on hover over message icon
+            messageIcon.addEventListener('mouseenter', function() {
+                messageTooltip.style.display = 'block';
+            });
+            
+            messageIcon.addEventListener('mouseleave', function() {
+                messageTooltip.style.display = 'none';
+            });
+            
+            // Logo click to show home
+            siteLogo.addEventListener('click', function() {
+                homeContent.style.display = 'block';
+                inboxContainer.style.display = 'none';
+                chatContainer.style.display = 'none';
+            });
+            
+            // Message icon click to show inbox
+            messageIcon.addEventListener('click', function() {
+                homeContent.style.display = 'none';
+                inboxContainer.style.display = 'block';
+                chatContainer.style.display = 'none';
+                
+                // Clear notification badge
+                notificationBadge.style.display = 'none';
+            });
+            
+            // Back to home link
+            backToHome.addEventListener('click', function(e) {
+                e.preventDefault();
+                homeContent.style.display = 'block';
+                inboxContainer.style.display = 'none';
+                chatContainer.style.display = 'none';
+            });
+            
+            // Back to inbox link
+            backToInbox.addEventListener('click', function(e) {
+                e.preventDefault();
+                homeContent.style.display = 'none';
+                inboxContainer.style.display = 'block';
+                chatContainer.style.display = 'none';
+            });
+            
+            // Message item click to open chat
+            messageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Get contact info
+                    currentContact = this.getAttribute('data-contact');
+                    const initials = this.getAttribute('data-initials');
+                    
+                    // Update chat header
+                    chatAvatar.textContent = initials;
+                    chatContactName.textContent = currentContact;
+                    
+                    // Show chat container
+                    homeContent.style.display = 'none';
+                    inboxContainer.style.display = 'none';
+                    chatContainer.style.display = 'block';
+                    
+                    // Remove unread class if present
+                    if (this.classList.contains('unread')) {
+                        this.classList.remove('unread');
+                    }
+                    
+                    // Load conversation
+                    loadConversation(currentContact);
+                    
+                    // Focus on input
+                    messageInput.focus();
+                });
+            });
+            
+            // Message preview click to open chat
+            previewItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Get contact name
+                    const contactName = this.querySelector('.message-preview-sender').textContent;
+                    
+                    // Find corresponding message item
+                    const messageItem = Array.from(messageItems).find(item => 
+                        item.getAttribute('data-contact') === contactName
+                    );
+                    
+                    if (messageItem) {
+                        // Trigger click on the message item
+                        messageItem.click();
+                        
+                        // Remove unread class from message preview
+                        if (this.classList.contains('unread')) {
+                            this.classList.remove('unread');
+                        }
+                    }
+                    
+                    // Hide tooltip
+                    messageTooltip.style.display = 'none';
+                });
+            });
+            
+            // Send button click to send message
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Enter key to send message
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>

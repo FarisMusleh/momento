@@ -255,6 +255,15 @@
             deleteModal.hide();
         }
     </script>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- GOOGLE-FONTS -->
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<!--CSS-->
+    <link rel="stylesheet" href="css/header.css">
+	
 </head>
 <body>
 
@@ -294,17 +303,20 @@
 		</div>
 		<div style = "text-transform: capitalize;">
 		<?php
-		$stmt = $pdo->prepare('select account_type from accounts where id = ?');
-		$stmt->execute(array($_SESSION['data']['id']));
-		$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
-		$name = null;
-		if($account_type['account_type']=='user'){
-			$name = $_SESSION['data']['name'];
-			echo $_SESSION['data']['name'];
-		}elseif($account_type['account_type']=='business'){
-			$name = $_SESSION['data']['business_name'];
-			echo $_SESSION['data']['business_name'];
-		}
+			$stmt = $pdo->prepare('select account_type from accounts where id = ?');
+			$stmt->execute(array($_SESSION['data']['id']));
+			$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($account_type['account_type']=='user'){
+				$profileData = $pdo->prepare('select name from user_profiles where id = ?');
+				$profileData->execute([$_SESSION['data']['id']]);
+				$name = $profileData->fetch(PDO::FETCH_ASSOC);
+				echo $name['name'];
+			}elseif($account_type['account_type']=='business'){
+				$profileData = $pdo->prepare('select business_name from business_profiles where id = ?');
+				$profileData->execute([$_SESSION['data']['id']]);
+				$name = $profileData->fetch(PDO::FETCH_ASSOC);
+				echo $name['business_name'];
+			}
 		?>
 		</div>
 		<div style = "margin:0 10px;opacity:0.3;">/</div>
@@ -317,7 +329,16 @@
                 <ul class="nav flex-column">
                     <li class="nav-item"><a href="#" class="nav-link active-link" onclick="showSection('general', 'General', this)">General</a></li>
                     <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('edit-profile', 'Edit Profile', this)">Edit Profile</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('password', 'Password', this)">Password</a></li>
+                    
+					<?php 
+					$stmt = $pdo->prepare('select provider from accounts where id = ?');
+					$stmt->execute([$data['id']]);
+					$result = $stmt->fetch();
+					if($result['provider']=="local"){?>
+						<li class="nav-item"><a href="#" class="nav-link " onclick="showSection('password', 'Password', this)">Password</a></li>
+					<?php
+					}
+					?>
                     <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('social-profiles', 'Social Profiles', this)">Social Profiles</a></li>
 					<!-- Delete Account Button -->
 					<li class="nav-item"><button class="nav-link text-danger" style="background: none; border: none;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color:red !important;" onclick="confirmDelete()">Delete Account</button></li>
@@ -374,10 +395,7 @@
 							<label class="form-label">Name</label>
 							<input name = "name" type="text" class="form-control" value="<?=$name?>">
 						</div>
-						<div class="mb-3">
-							<label class="form-label">Location</label>
-							<input name = "location" type="text" class="form-control" value="<?=$result['location']??""?>">
-						</div>
+						<?php require('locations-select.html') ?>
 						<div class="mb-3">
 							<label class="form-label">Bio</label>
 							<textarea name = "bio" class="form-control" rows="3" value = "<?=$bio?>"></textarea>
@@ -402,11 +420,11 @@
 							<label class="form-label">Confirm Password</label>
 							<input type="password" class="form-control" id="confirm-password">
 						</div>
-						<button type = "submit" class="btn btn-action" onclick="changePassword()">Change Password</button>
+						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" onclick="changePassword()">Change Password</button>
 						<p id="password-success" style="color: lightgreen; display: none;">Password changed successfully!</p>
 					</div>
 				</form>
-				
+				<?php?>
                 <!-- Social Profiles Section -->
 				<form action = "update-profile.php" method = "POST">
 					<input type="hidden" name="section" value="socials">
@@ -428,7 +446,7 @@
 							<input name = "instagram" type="url" class="form-control" value = "<?=$social_links['instagram']??""?>">
 						</div>
 						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-						<button type = "submit" class="btn btn-action" style = "" onclick="saveChanges('Social Profiles')">Save Changes</button>
+						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" style = "" onclick="saveChanges('Social Profiles')">Save Changes</button>
 					</div>
 				</form>
             </div>
@@ -529,5 +547,7 @@ function previewImage(input) {
     reader.readAsDataURL(file);
 }
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script>
 </html>
