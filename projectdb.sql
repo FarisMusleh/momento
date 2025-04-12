@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2025 at 12:43 AM
+-- Generation Time: Apr 13, 2025 at 12:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,20 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `projectdb`
 --
-
-DELIMITER $$
---
--- Procedures
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_related_entries` (IN `delete_id` INT)   BEGIN
-    -- Delete from table2 first
-    DELETE FROM business_profiles WHERE id = delete_id;
-
-    -- Delete from table1
-    DELETE FROM accounts WHERE id = delete_id;
-END$$
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
