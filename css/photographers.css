@@ -1,10 +1,7 @@
 .nav-sticky {
 	position: fixed;
-	background-color: transparent !important;
-	transition: background-color 0.3s ease !important;
-}
-.navbar.scrolled {
-	background-color: white !important;
+	background-color: transparent ;
+	transition: background-color 0.3s ease;
 }
 .fade-in {
 	animation: fadeInPage 1.5s ease-in;

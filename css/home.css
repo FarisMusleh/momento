@@ -172,6 +172,9 @@ body{
     font-size: 0.9rem;
     color: #6c757d;
 }
-
-
+.nav-sticky {
+	position: fixed;
+	background-color: transparent;
+	transition: background-color 0.3s ease;
+}
 

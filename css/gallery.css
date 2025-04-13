@@ -247,3 +247,8 @@ html{
 .liked-button {
 	background: rgb(0,255,0,1) !important;
 }
+.nav-sticky {
+	position: fixed;
+	background-color: transparent;
+	transition: background-color 0.3s ease;
+}

@@ -30,6 +30,7 @@ if(empty($_GET['query'])){
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<!--CSS-->
     <link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
 	<link rel="stylesheet" href="css/gallery.css">
 	<!--JS FILE-->
 	<script src="js/gallery.js"></script>
@@ -116,6 +117,9 @@ if(empty($_GET['query'])){
 			?>
         </div>
     </div>
+	<script src="js/like-handler.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
-<script src="js/like-handler.js"></script>
+

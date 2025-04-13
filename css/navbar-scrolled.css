@@ -1,0 +1,14 @@
+.nav-sticky {
+	position: fixed;
+	background-color: transparent !important;
+	transition: background-color 0.3s ease !important;
+}
+.navbar.scrolled {
+	background-color: white !important;
+}
+@media (max-width: 991px) {
+	.nav-sticky {
+		position: sticky;
+		background-color: white !important;
+	}
+}

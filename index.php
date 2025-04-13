@@ -21,17 +21,7 @@ $data = $_SESSION['data'] ?? null;
 	<!--CSS-->
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/home.css">
-	<!--STYLE-FOR-NAVBAR-TRANSPARENT-ONLY-ON-THIS-PAGE-->
-	<style>
-		.nav-sticky {
-			position: fixed;
-			background-color: transparent !important;
-			transition: background-color 0.3s ease !important;
-		}
-		.navbar.scrolled {
-		    background-color: white !important;
-		}
-	</style>
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
 </head>
 
 <body class="fade-in" style = "position:relative;">

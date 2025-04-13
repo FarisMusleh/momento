@@ -23,9 +23,10 @@ if (isset($_SESSION['data'])) {
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
+	
     <!-- CUSTOM CSS -->
     <link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
     <link rel="stylesheet" href="css/photographers.css">
 </head>
 <body class = "fade-in">
@@ -94,7 +95,8 @@ if (isset($_SESSION['data'])) {
         ?>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!-- JavaScript Animation -->
 <script>
     const animatedElements = document.querySelectorAll('.animate');

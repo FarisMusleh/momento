@@ -28,17 +28,7 @@ require('pdo.php');
 
 	<!--CSS FILE-->
 	<link rel="stylesheet" href="css/gallery.css">
-	<!--STYLE-FOR-NAVBAR-TRANSPARENT-ONLY-ON-THIS-PAGE-->
-	<style>
-		.nav-sticky {
-			position: fixed;
-			background-color: transparent !important;
-			transition: background-color 0.3s ease !important;
-		}
-		.navbar.scrolled {
-			background-color: white !important;
-		}
-	</style>
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
 	<!--JS FILE-->
 	<script src="js/gallery.js"></script>
     <title>Gallery</title>
