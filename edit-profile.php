@@ -1,246 +1,731 @@
 <?php 
-	session_start(); 
-	require('pdo.php');
-	if(isset($_SESSION['data'])){
-		$data = $_SESSION['data'];
-	}else{
-		exit();
-	}
-
+    session_start(); 
+    require('pdo.php');
+    if(isset($_SESSION['data'])){
+        $data = $_SESSION['data'];
+    }else{
+        exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Profile Settings</title>
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --text-color: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
         body {
-            background-color: #EDEDED;
-            color: #212529;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
         }
-        .navbar {
-            background-color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
+        
+        .container-main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        .nav-links a, .nav-item .nav-link {
-            color: #777 !important;
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 16px;
-            margin-right: 20px;
-            transition: color 0.3s ease;
-        }
-        .nav-links a:hover, .nav-item .nav-link:hover {
-            color: #212529 !important;
-        }
-        .btn-action {
-            position: absolute;
-            bottom: 20px;
-            right: 10px;
-            padding: 10px 15px;
-            width: auto;
-        }
-        .btn-action:hover {
-            opacity: 0.8;
-        }
-        .search-bar {
+        
+        .profile-header {
             display: flex;
             align-items: center;
-            width: 300px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .profile-avatar-container {
             position: relative;
+            margin-right: 25px;
         }
-        .search-bar input {
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 8px 35px 8px 15px;
-            width: 100%;
-            outline: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        .search-bar input:focus {
-            border-color: rgb(64, 65, 66);
-            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.25);
-        }
-        .search-icon {
-            position: absolute;
-            right: 10px;
-            cursor: pointer;
-            color: #777;
-        }
-        .profile-img {
-            width: 40px;
-            height: 40px;
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: var(--box-shadow);
         }
-        .content-section {
-            background-color: white;
-            border-radius: 5px;
-            color: #000;
-            position: relative;
-            padding-bottom: 60px;
-        }
-        .nav-item .nav-link.active-link {
-            color: #343a40 !important;
-            font-weight: bold;
-        }
-        .search-container {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .search-input:focus {
-            border-color: rgb(64, 65, 66);
-            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.25);
-            outline: none;
-        }
-        input[type="text"], input[type="email"], input[type="password"], .search-bar input, textarea {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, .search-bar input:focus, textarea:focus {
-            border-color: rgb(64, 65, 66);
-            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.25);
-            outline: none;
-        }
-        /* Hover effect for inputs */
-        input[type="url"]:hover, input[type="text"]:hover, input[type="email"]:hover, input[type="password"]:hover, textarea:hover {
-            border-color: rgb(64, 65, 66);
-            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.25);
-        }
-        /* Custom Modal Styles */
-        .modal-content {
-            border-radius: 10px;
-            border: none;
-        }
-        .modal-header {
-            background-color: #dc3545;
+        
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
             color: white;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-        .modal-footer {
-			
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-        .modal-footer .btn-danger {
-            background-color: #dc3545;
-            border: none;
-        }
-        .modal-footer .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-        }
-        /* Profile Picture in Navbar */
-        .navbar-profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        /* Enhanced Navbar */
-        .navbar-brand {
-            font-size: 24px;
-            font-weight: bold;
-            color: #212529 !important;
-        }
-        .nav-links {
             display: flex;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: var(--transition);
         }
-        .nav-links a {
-            padding: 8px 12px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+        
+        .avatar-upload-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
         }
-        .nav-links a:hover {
-            background-color: #f8f9fa;
+        
+        .profile-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--secondary-color);
         }
-		
-	  .hover-dark:hover {
-		background-color: black !important;
-		color: white !important;
-		border-color: black !important;
-		transition: all 0.3s ease !important;
-  }
-  .hover-dark{
-	  font-size: 14px !important;
-	  font-weight: 500 !important;
-	  text-align: center !important;
-	  transition: all 0.3s ease !important;
-	  
-  }	
+        
+        .profile-breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: var(--dark-gray);
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 10px;
+            color: var(--medium-gray);
+        }
+        
+        .settings-container {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .settings-sidebar {
+            width: 250px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 25px 0;
+        }
+        
+        .settings-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .settings-nav-item {
+            margin-bottom: 5px;
+        }
+        
+        .settings-nav-link {
+            display: block;
+            padding: 12px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .settings-nav-link:hover, 
+        .settings-nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .settings-nav-link.active {
+            font-weight: 600;
+        }
+        
+        .settings-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 15px;
+            transition: var(--transition);
+            background-color: var(--light-gray);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+            background-color: white;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+        }
+        
+        .btn-outline:hover {
+            background: var(--light-gray);
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .delete-account {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        .delete-account-title {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .delete-account-text {
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+        
+        /* Modal styles */
+        .modal-content {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-header {
+            background-color: var(--secondary-color);
+            color: white;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            padding: 15px 20px;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--medium-gray);
+            padding: 15px 20px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .settings-container {
+                flex-direction: column;
+            }
+            
+            .settings-sidebar {
+                width: 100%;
+                padding: 15px 0;
+            }
+            
+            .settings-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 15px;
+            }
+            
+            .settings-nav-item {
+                margin-bottom: 0;
+                margin-right: 10px;
+                white-space: nowrap;
+            }
+            
+            .settings-nav-link {
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 10px 15px;
+            }
+            
+            .settings-nav-link.active {
+                border-left: none;
+                border-bottom: 3px solid var(--primary-color);
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar-container {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/header.css">
+    
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <!-- Navigation Bar -->
+    
+    <?php require('header.php'); ?>
+    <!-- Main Content -->
+    <div class="container-main p-3">
+       
+        <div class="profile-header">
+            <div class="profile-avatar-container">
+                <img src="<?=$data['picture']?>" class="profile-avatar" alt="Profile Picture">
+                <form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
+                    <div class="avatar-upload-btn" onclick="triggerFileInput('profileFile');">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="profilePreviewImg" src="#" class="img-fluid rounded-circle" style="display: none; max-width: 200px; height: auto;">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+                                    <button id="profile_picture_upload_button" type="submit" name="uploadProfile" class="btn btn-primary" onclick="disableButtonProfilePicture(this)">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div>
+                <h1 class="profile-title">
+                    <?php
+                        $stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
+                        $stmt->execute(array($_SESSION['data']['id']));
+                        $account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if($account_type['account_type']=='user'){
+                            $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
+                            $profileData->execute([$_SESSION['data']['id']]);
+                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
+                            echo htmlspecialchars($name['name']);
+                        }elseif($account_type['account_type']=='business'){
+                            $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?');
+                            $profileData->execute([$_SESSION['data']['id']]);
+                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
+                            echo htmlspecialchars($name['business_name']);
+                        }
+                    ?>
+                </h1>
+                <div class="profile-breadcrumb">
+                    <span>Account</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span id="section-title">General Settings</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <ul class="settings-nav">
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link active" onclick="showSection('general', 'General Settings', this)">
+                            <i class="fas fa-cog me-2"></i>General
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" onclick="showSection('edit-profile', 'Profile Settings', this)">
+                            <i class="fas fa-user-edit me-2"></i>Edit Profile
+                        </a>
+                    </li>
+                    
+                    <?php 
+                    $stmt = $pdo->prepare('SELECT provider FROM accounts WHERE id = ?');
+                    $stmt->execute([$data['id']]);
+                    $result = $stmt->fetch();
+                    if($result['provider']=="local"){?>
+                        <li class="settings-nav-item">
+                            <a href="#" class="settings-nav-link" onclick="showSection('password', 'Password Settings', this)">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </a>
+                        </li>
+                    <?php } ?>
+                    
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" onclick="showSection('social-profiles', 'Social Profiles', this)">
+                            <i class="fas fa-share-alt me-2"></i>Social Profiles
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="settings-content">
+                <?php
+                    $stmt = $pdo->prepare('SELECT username, email, location, account_type FROM accounts WHERE id = ?');
+                    $stmt->execute([$data['id']]);
+                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    
+                    if($result['account_type']=="user"){
+                        $sql = $pdo->prepare('SELECT name, social_links, bio FROM user_profiles WHERE id = ?');
+                        $sql->execute([$data['id']]);
+                        $info = $sql->fetch(PDO::FETCH_ASSOC);
+                        $name = $info['name'];
+                        $bio = $info['bio'];
+                        $social_links = json_decode($info['social_links'], true);
+                    }elseif($result['account_type']=="business"){
+                        $sql = $pdo->prepare('SELECT business_name, social_links, bio FROM business_profiles WHERE id = ?');
+                        $sql->execute([$data['id']]);
+                        $info = $sql->fetch(PDO::FETCH_ASSOC);
+                        $name = $info['business_name'];
+                        $bio = $info['bio'];
+                        $social_links = json_decode($info['social_links'], true);
+                    }
+                ?>
+                
+                <!-- General Settings Section -->
+                <form action="update-profile.php" method="POST">
+                    <input type="hidden" name="section" value="general">
+                    <div id="general" class="content-section">
+                        <h2 class="section-title">General Settings</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input name="username" type="text" class="form-control" value="<?=htmlspecialchars($result['username']??'')?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input name="email" type="email" class="form-control" value="<?=htmlspecialchars($result['email']??'')?>">
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary" onclick="saveChanges('General Settings')">
+                                Save Changes
+                            </button>
+                        </div>
+                        
+                        <div id="general-success" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Your changes have been saved successfully.
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Edit Profile Section -->
+                <form action="update-profile.php" method="POST">
+                    <input type="hidden" name="section" value="edit">
+                    <div id="edit-profile" class="content-section" style="display: none;">
+                        <h2 class="section-title">Profile Settings</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label"><?=$result['account_type']=='user'?'Full Name':'Business Name'?></label>
+                            <input name="name" type="text" class="form-control" value="<?=htmlspecialchars($name)?>">
+                        </div>
+                        
+                        <?php require('locations-select.html') ?>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea name="bio" class="form-control" rows="4"><?=htmlspecialchars($bio)?></textarea>
+                            <small class="text-muted">Tell us a little about yourself</small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary" onclick="saveChanges('Profile Settings')">
+                                Update Profile
+                            </button>
+                        </div>
+                        
+                        <div id="profile-success" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Your profile has been updated successfully.
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Password Section -->
+                <form action="update-profile.php" method="POST">
+                    <input type="hidden" name="section" value="password">
+                    <div id="password" class="content-section" style="display: none;">
+                        <h2 class="section-title">Password Settings</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input name="old_password" type="password" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input name="new_password" type="password" class="form-control" id="new-password">
+                            <small class="text-muted">Minimum 8 characters with at least one number</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm-password">
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary" onclick="changePassword()">
+                                Change Password
+                            </button>
+                        </div>
+                        
+                        <div id="password-success" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Your password has been updated successfully.
+                        </div>
+                        
+                        <div id="password-error" class="alert alert-danger mt-3" style="display: none;">
+                            <i class="fas fa-exclamation-circle me-2"></i> <span id="error-message"></span>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Social Profiles Section -->
+                <form action="update-profile.php" method="POST">
+                    <input type="hidden" name="section" value="socials">
+                    <div id="social-profiles" class="content-section" style="display: none;">
+                        <h2 class="section-title">Social Profiles</h2>
+                        <p class="text-muted mb-4">Add links to your social media profiles to help others connect with you.</p>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fab fa-facebook me-2 text-primary"></i>Facebook
+                            </label>
+                            <input name="facebook" type="url" class="form-control" value="<?=htmlspecialchars($social_links['facebook']??'')?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fab fa-twitter me-2 text-info"></i>Twitter
+                            </label>
+                            <input name="twitter" type="url" class="form-control" value="<?=htmlspecialchars($social_links['twitter']??'')?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fab fa-linkedin me-2 text-primary"></i>LinkedIn
+                            </label>
+                            <input name="linked-in" type="url" class="form-control" value="<?=htmlspecialchars($social_links['linked-in']??'')?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fab fa-instagram me-2 text-danger"></i>Instagram
+                            </label>
+                            <input name="instagram" type="url" class="form-control" value="<?=htmlspecialchars($social_links['instagram']??'')?>">
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary" onclick="saveChanges('Social Profiles')">
+                                Save Social Links
+                            </button>
+                        </div>
+                        
+                        <div id="social-success" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Your social profiles have been updated.
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Delete Account Section -->
+                <div class="delete-account">
+                    <h3 class="delete-account-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Account
+                    </h3>
+                    <p class="delete-account-text">
+                        Once you delete your account, there is no going back. Please be certain.
+                    </p>
+                    <button class="btn btn-danger" onclick="confirmDelete()">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirm Account Deletion
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed from our systems.</p>
+                    <div class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-circle me-2"></i> Warning: This will permanently delete all your account information.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+                    <form action="delete-account.php" method="POST">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function showSection(sectionId, title, element) {
+            // Hide all sections
             document.querySelectorAll(".content-section").forEach(section => {
                 section.style.display = "none";
             });
+            
+            // Show the selected section
             document.getElementById(sectionId).style.display = "block";
+            
+            // Update the section title in breadcrumb
             document.getElementById("section-title").innerText = title;
-            document.querySelectorAll(".nav-item .nav-link").forEach(link => {
-                link.classList.remove("active-link");
+            
+            // Update active nav link
+            document.querySelectorAll(".settings-nav-link").forEach(link => {
+                link.classList.remove("active");
             });
-            element.classList.add("active-link");
+            element.classList.add("active");
         }
 
         function saveChanges(section) {
-            const sectionDiv = document.getElementById(section.toLowerCase().replace(" ", "-"));
-            const message = sectionDiv.querySelector(".success-message");
-            message.style.display = "block";
-            setTimeout(() => {
-                message.style.display = "none";
-            }, 3000);
+            const sectionName = section.toLowerCase().replace(" ", "-");
+            const message = document.getElementById(`${sectionName}-success`);
+            if(message) {
+                message.style.display = "block";
+                setTimeout(() => {
+                    message.style.display = "none";
+                }, 5000);
+            }
         }
 
         function changePassword() {
             const newPassword = document.getElementById("new-password").value;
             const confirmPassword = document.getElementById("confirm-password").value;
             const successMessage = document.getElementById("password-success");
-            const errorMessage = document.createElement('p'); // Create error message element
+            const errorMessage = document.getElementById("password-error");
+            const errorText = document.getElementById("error-message");
 
-            // Clear any previous error message
-            document.querySelectorAll('.error-message').forEach((msg) => msg.remove());
+            // Hide messages initially
+            successMessage.style.display = "none";
+            errorMessage.style.display = "none";
 
             if (newPassword === "" || confirmPassword === "") {
-                // Display message if any field is empty
-                errorMessage.textContent = "Both password fields must be filled.";
-                errorMessage.classList.add('error-message');
-                errorMessage.style.color = 'red';
-                document.getElementById("password").appendChild(errorMessage);
+                errorText.textContent = "Both password fields must be filled.";
+                errorMessage.style.display = "block";
+                return false;
             } else if (newPassword !== confirmPassword) {
-                // Display message if passwords do not match
-                errorMessage.textContent = "Password and confirm password must be the same.";
-                errorMessage.classList.add('error-message');
-                errorMessage.style.color = 'red';
-                document.getElementById("password").appendChild(errorMessage);
+                errorText.textContent = "Passwords do not match. Please try again.";
+                errorMessage.style.display = "block";
+                return false;
+            } else if (newPassword.length < 8) {
+                errorText.textContent = "Password must be at least 8 characters long.";
+                errorMessage.style.display = "block";
+                return false;
             } else {
-                // Show success message if passwords match
                 successMessage.style.display = "block";
                 setTimeout(() => {
                     successMessage.style.display = "none";
-                }, 4000);
+                }, 5000);
+                return true;
             }
         }
 
@@ -249,305 +734,52 @@
             deleteModal.show();
         }
 
-        function deleteAccount() {
-            // Logic for account deletion, e.g., making an API call to delete the account
-            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
-            deleteModal.hide();
+        function triggerFileInput(inputId) {
+            document.getElementById(inputId).click();
         }
+
+        function previewImage(input) {
+            var file = input.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var fileType = input.getAttribute("data-type");
+
+                if (fileType === "profile") {
+                    var profileImg = document.getElementById('profilePreviewImg');
+                    profileImg.style.display = 'none';
+                    profileImg.src = '';
+                    profileImg.src = e.target.result;
+                    profileImg.style.display = 'block';
+
+                    var profileModal = new bootstrap.Modal(document.getElementById('profileImageModal'), {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    profileModal.show();
+
+                    $('#profileImageModal').on('hidden.bs.modal', function () {
+                        profileImg.src = '';
+                        profileImg.style.display = 'none';
+                        $('#profileImageModal').attr('aria-hidden', 'true');
+                    });
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+         function disableButtonProfilePicture(button) {
+            const spinner = button.querySelector('.spinner-border');
+            spinner.classList.remove('d-none');
+            /* button.innerHTML = 'Uploading...'; */
+            button.submit().setTimeout(() => {
+                this.disabled = true;
+            }, 3000);
+            
+           
+
+        } 
     </script>
-	
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- GOOGLE-FONTS -->
-	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-	<!--CSS-->
-    <link rel="stylesheet" href="css/header.css">
-	
-</head>
-<body>
-
-    <!-- Navigation Bar -->
-    <?php
-		require("header.php");
-	?>
-	
-    <!-- Main Content -->
-    <div class="container mt-5 col-md-6">
-		<div style = "margin-left:10px;margin-bottom:20px;display:flex;flex-direction:row;align-items: center;font-size:21px;">
-		<div style = "position:relative;">
-		<img src = "<?=$data['picture']?>" width = "55" height = "55" style = "object-fit: cover;border-radius:100%;height:55px;width:55px;margin-right:20px;">
-		<form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
-			<input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
-			<button type="button" style = "position:absolute;font-size:14px;border-radius:50%;top:35px;right:20px;width:25px;height:25px;padding: 0;" class="btn btn-dark" onclick="triggerFileInput('profileFile');">+</button>
-			
-			<!-- Modal -->
-			<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body text-center"   style = "margin: auto;">
-							<img id="profilePreviewImg" src="#" class="card-img-top border-0" style="display: none;border-radius:100%;width:140px;height:140;object-fit: cover;" height = "140" width = "140">
-						</div>
-						<div class="modal-footer">
-							<button id = "profile_picture_upload_button" type="submit" name="uploadProfile" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButtonProfilePicture(this)">Save Profile Picture</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-		
-		</div>
-		<div style = "text-transform: capitalize;">
-		<?php
-			$stmt = $pdo->prepare('select account_type from accounts where id = ?');
-			$stmt->execute(array($_SESSION['data']['id']));
-			$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($account_type['account_type']=='user'){
-				$profileData = $pdo->prepare('select name from user_profiles where id = ?');
-				$profileData->execute([$_SESSION['data']['id']]);
-				$name = $profileData->fetch(PDO::FETCH_ASSOC);
-				echo $name['name'];
-			}elseif($account_type['account_type']=='business'){
-				$profileData = $pdo->prepare('select business_name from business_profiles where id = ?');
-				$profileData->execute([$_SESSION['data']['id']]);
-				$name = $profileData->fetch(PDO::FETCH_ASSOC);
-				echo $name['business_name'];
-			}
-		?>
-		</div>
-		<div style = "margin:0 10px;opacity:0.3;">/</div>
-		<div id="section-title">General</div>
-
-		</div>
-		
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="#" class="nav-link active-link" onclick="showSection('general', 'General', this)">General</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('edit-profile', 'Edit Profile', this)">Edit Profile</a></li>
-                    
-					<?php 
-					$stmt = $pdo->prepare('select provider from accounts where id = ?');
-					$stmt->execute([$data['id']]);
-					$result = $stmt->fetch();
-					if($result['provider']=="local"){?>
-						<li class="nav-item"><a href="#" class="nav-link " onclick="showSection('password', 'Password', this)">Password</a></li>
-					<?php
-					}
-					?>
-                    <li class="nav-item"><a href="#" class="nav-link " onclick="showSection('social-profiles', 'Social Profiles', this)">Social Profiles</a></li>
-					<!-- Delete Account Button -->
-					<li class="nav-item"><button class="nav-link text-danger" style="background: none; border: none;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color:red !important;" onclick="confirmDelete()">Delete Account</button></li>
-				</ul>
-
-                
-
-                
-            </div>
-            <div class="col-md-8" style = "font-weight:500;font-size:17px;">
-                
-				<form action = "update-profile.php" method = "POST">
-					<?php
-						$stmt = $pdo->prepare('select username,email,location,account_type from accounts where id = ?');
-						$stmt->execute([$data['id']]);
-						$result = $stmt->fetch(PDO::FETCH_ASSOC);
-						
-						if($result['account_type']=="user"){
-							$sql = $pdo->prepare('select name,social_links,bio from user_profiles where id = ?');
-							$sql->execute([$data['id']]);
-							$info = $sql->fetch(PDO::FETCH_ASSOC);
-							$name = $info['name'];
-							$bio = $info['bio'];
-							$social_links = json_decode($info['social_links'], true);
-							
-						}elseif($result['account_type']=="business"){
-							$sql = $pdo->prepare('select business_name,social_links,bio from business_profiles where id = ?');
-							$sql->execute([$data['id']]);
-							$info = $sql->fetch(PDO::FETCH_ASSOC);
-							$name = $info['business_name'];
-							$bio = $info['bio'];
-							$social_links = json_decode($info['social_links'], true);
-						}
-					?>
-					<input type="hidden" name="section" value="general">
-					<div id="general" class="content-section" >
-						<div class="mb-3" >
-							<label class="form-label">Username</label>
-							<input name = "username" type="text" class="form-control" value = "<?=$result['username']??""?>">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Email</label>
-							<input name = "email" type="email" class="form-control" value = "<?=$result['email']??""?>">
-						</div>
-						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-						<button type = "submit" class="btn btn-action btn-light text-dark border-dark hover-dark" onclick="saveChanges('General')">Save Changes</button>
-					</div>
-				</form>	
-				
-				<form action = "update-profile.php" method = "POST">
-					<input type="hidden" name="section" value="edit">
-					<div id="edit-profile" class="content-section" style="display: none;">
-						<div class="mb-3">
-							<label class="form-label">Name</label>
-							<input name = "name" type="text" class="form-control" value="<?=$name?>">
-						</div>
-						<?php require('locations-select.html') ?>
-						<div class="mb-3">
-							<label class="form-label">Bio</label>
-							<textarea name = "bio" class="form-control" rows="3" value = "<?=$bio?>"></textarea>
-						</div>
-						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" onclick="saveChanges('Edit Profile')">Save Changes</button>
-					</div>
-				</form>
-				
-				<form action = "update-profile.php" method = "POST">
-					<input type="hidden" name="section" value="password">
-					<div id="password" class="content-section" style="display: none;">
-						<div class="mb-3">
-							<label class="form-label">Old Password</label>
-							<input name = "old_password" type="password" class="form-control">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">New Password</label>
-							<input name = "new_password" type="password" class="form-control" id="new-password">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Confirm Password</label>
-							<input type="password" class="form-control" id="confirm-password">
-						</div>
-						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" onclick="changePassword()">Change Password</button>
-						<p id="password-success" style="color: lightgreen; display: none;">Password changed successfully!</p>
-					</div>
-				</form>
-				<?php?>
-                <!-- Social Profiles Section -->
-				<form action = "update-profile.php" method = "POST">
-					<input type="hidden" name="section" value="socials">
-					<div id="social-profiles" class="content-section" style="display: none;">
-						<div class="mb-3">
-							<label class="form-label">Facebook</label>
-							<input name = "facebook" type="url" class="form-control" value = "<?=$social_links['facebook']??""?>">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Twitter</label>
-							<input name = "twitter" type="url" class="form-control" value = "<?=$social_links['twitter']??""?>">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">LinkedIn</label>
-							<input name = "linked-in" type="url" class="form-control" value = "<?=$social_links['linked-in']??""?>">
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Instagram</label>
-							<input name = "instagram" type="url" class="form-control" value = "<?=$social_links['instagram']??""?>">
-						</div>
-						<p class="success-message" style="color: lightgreen; display: none;">Changes successfully saved!</p>
-						<button type = "submit" class="btn btn-action btn-light text-dark border-dark  hover-dark" style = "" onclick="saveChanges('Social Profiles')">Save Changes</button>
-					</div>
-				</form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Account Modal -->
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete your account? This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-					<form action = "delete-account.php" method = "POST">
-                    <button type="submit" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
-					</form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
-<script>
-function triggerFileInput(inputId) {
-    document.getElementById(inputId).click();
-}
-
-function previewImage(input) {
-    var file = input.files[0];
-    if (!file) return;
-
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        var fileType = input.getAttribute("data-type");
-
-        if (fileType === "profile") {
-            // Get the profile image element
-            var profileImg = document.getElementById('profilePreviewImg');
-
-            // Reset the previous image and hide it
-            profileImg.style.display = 'none'; // Hide the image initially
-            profileImg.src = ''; // Reset the image source
-
-            // Set the new image source and show it
-            profileImg.src = e.target.result;
-            profileImg.style.display = 'block'; // Show the new image
-
-            // Show the modal
-            var profileModal = new bootstrap.Modal(document.getElementById('profileImageModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            profileModal.show();
-
-            // Clear the image and hide it when the modal is closed
-            $('#profileImageModal').on('hidden.bs.modal', function () {
-                profileImg.src = ''; // Clear the image source
-                profileImg.style.display = 'none'; // Hide the image
-                // Manually reset aria-hidden for the modal (fixes some issues)
-                $('#profileImageModal').attr('aria-hidden', 'true');
-            });
-
-        } else {
-            // Get the generic image element
-            var genericImg = document.getElementById('previewImg');
-
-            // Reset the previous image and hide it
-            genericImg.style.display = 'none'; // Hide the image initially
-            genericImg.src = ''; // Reset the image source
-
-            // Set the new image source and show it
-            genericImg.src = e.target.result;
-            genericImg.style.display = 'block'; // Show the new image
-
-            // Show the modal
-            var genericModal = new bootstrap.Modal(document.getElementById('imageModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            genericModal.show();
-
-            // Clear the image and hide it when the modal is closed
-            $('#imageModal').on('hidden.bs.modal', function () {
-                genericImg.src = ''; // Clear the image source
-                genericImg.style.display = 'none'; // Hide the image
-                // Manually reset aria-hidden for the modal (fixes some issues)
-                $('#imageModal').attr('aria-hidden', 'true');
-            });
-        }
-    };
-
-    reader.readAsDataURL(file);
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
- integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
- <script>
 </html>
