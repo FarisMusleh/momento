@@ -51,7 +51,8 @@ if (isset($_POST['username'], $_POST['acc-type'])) {
 			'name'     => $name,
 			'username' => $username,
 			'type'     => $type,
-			'picture' => $picture
+			'picture' => $picture,
+			'location' => $location
 		];
     } elseif ($type === 'business') {
 		$stmtProfile = $pdo->prepare("
@@ -65,7 +66,8 @@ if (isset($_POST['username'], $_POST['acc-type'])) {
 			'business_name'     => $name,
 			'username' => $username,
 			'type'     => $type,
-			'picture' => $picture
+			'picture' => $picture,
+			'location' => $location
 		];
     }
 

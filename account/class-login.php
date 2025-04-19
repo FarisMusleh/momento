@@ -31,7 +31,7 @@ class account {
 					$stmt->execute(array($account['id']));
 					$user = $stmt->fetch(PDO::FETCH_ASSOC);
 					$_SESSION['data'] = array('id'=>$account['id'],'username'=>$account['username'],'email'=>$account['email'],
-					'picture'=>$account['picture']);
+					'picture'=>$account['picture'],'location'=>$account['location']);
 				}
 				//Business Information
 				elseif($account['account_type']=='business'){

@@ -69,20 +69,19 @@ if(empty($_GET['query'])){
 					$response = curl_exec($ch);
 
 					if($response === false) {
-						echo "cURL Error: " . curl_error($ch);
-						exit();
+						$_SESSION['error-message']="Something went wrong!";
 					}
 					
 					$response_data = json_decode($response, true);
 					curl_close($ch);
-					
 					if (isset($response_data['similar_categories'])) {
 						$sql = "SELECT images.id,url,username,views,label,likes,picture,(likes * 100.0 / NULLIF(views, 0)) AS like_percentage FROM 
 						images,accounts WHERE images.label LIKE ? and images.user_id = accounts.id ORDER BY like_percentage DESC, views DESC;";
 						$stmt = $pdo->prepare($sql);
 						$stmt->execute(['%' .$response_data['similar_categories'][0]. '%']);
 						if ($stmt->rowCount() > 0) {
-							while ($image = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							$images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+							foreach($images as $image) {
 								$btnClass = '';
 								if(isset($_SESSION['data'])){
 									$stmt = $pdo->prepare("SELECT 1 FROM likes WHERE user_id = ? AND image_id = ?");
@@ -109,13 +108,19 @@ if(empty($_GET['query'])){
 								echo '</div>';
 							}
 						} else {
-							echo "<div>Sorry, we couldn't find any matches</div>";
+							$_SESSION['error-message'] = "Sorry, we couldn't find any matches";
 						}
 					}
 				}
 			
 			?>
         </div>
+		<div style = "display:flex;justify-content:center;font-size:26px;"><?=$_SESSION['error-message']??""?></div>
+		<?php
+			if(isset($_SESSION['error-message'])){
+				unset($_SESSION['error-message']);
+			}
+		?>
     </div>
 	<script src="js/like-handler.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

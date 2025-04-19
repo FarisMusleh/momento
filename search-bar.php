@@ -34,7 +34,7 @@
 }
 
 .search-icon {
-  color: black;
+  color: white;
   width: 20px;
   height: 20px;
   margin-right: 10px;
@@ -59,12 +59,12 @@
 }
 
 .search-input::placeholder {
-  color: rgba(10, 10, 10, 1);
+  color: rgba(255, 255, 255, 1);
   transition: color 0.3s ease;
 }
 
 .search-bar-wrapper:hover .search-input::placeholder {
-  color: rgba(10, 10, 10, 1);
+  color: rgba(230, 230, 230, 0.9);
 }
 
 .search-bar-wrapper:focus-within .search-input::placeholder {
@@ -116,8 +116,8 @@
 .arrow {
   width: 7px;
   height: 7px;
-  border-left: 2px solid #333;
-  border-bottom: 2px solid #333;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
   transform: rotate(-45deg);
   transition: transform 0.3s ease;
   margin-left: 2px;
@@ -235,7 +235,7 @@
         <!-- Dropdown -->
         <div class="search-dropdown" id="dropdown">
           <button type="button" class="search-dropdown-btn" onclick="toggleDropdown()">
-            <span id="selected-option">
+            <span id="selected-option" style = "color:white;">
               <i data-feather="image"></i> Photos
             </span>
             <span class="arrow"></span>

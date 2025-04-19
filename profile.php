@@ -1,329 +1,1054 @@
 <?php
-	if (session_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
-	}
-	if(!isset($_SESSION['data'])){
+}
+require('pdo.php');
+if (isset($_GET['username'])) {
+    $profileUsername = $_GET['username'];
+} else {
+	if (!isset($_SESSION['data'])) {
 		header('location:index.php');
 		exit();
 	}
-	$data = $_SESSION['data'];
+    $profileUsername = $_SESSION['data']['username'];
+}
+//TO-CHECK-IF-IT-IS-MY-PF-OR-NOT
+if(isset($_SESSION['data']['username'])){
+	$isMyProfile = ($profileUsername === $_SESSION['data']['username']);
+}else{
+	$isMyProfile = "";
+}
+$stmt = $pdo->prepare('SELECT account_type,id FROM accounts WHERE username = ?');
+$stmt->execute([$profileUsername]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+$account_type = $result['account_type'];
+$id = intval($result['id']);
+if(!$account_type=='business'){
+	header('index.php');
+	exit();
+}
+/*Get user name based on account type
+if ($account_type['account_type'] == 'user') {
+    $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
+    $profileData->execute([$id]);
+    $name = $profileData->fetch(PDO::FETCH_ASSOC);
+    $displayName = $name['name'];
+} else*/ if ($account_type == 'business') {
+    $profileData = $pdo->prepare('SELECT location,picture,business_name,bio FROM accounts,business_profiles WHERE accounts.id = ? and accounts.id = business_profiles.id');
+    $profileData->execute([$id]);
+    $profile = $profileData->fetch(PDO::FETCH_ASSOC);
+	$displayName = $profile['business_name'];
+}
+//TO-REMEMBER-VARIABLES($profile,$id,$account_type) 
+// Get social links
+$sql = $pdo->prepare("SELECT social_links FROM business_profiles WHERE id = ?");
+$sql->execute([$id]);
+$json = $sql->fetch(PDO::FETCH_ASSOC);
+$social_links = !empty($json['social_links']) ? json_decode($json['social_links'], true) : [];
+
+// Get user images
+function is_valid_image($url) {
+    if (empty($url)) {
+        return false;
+    }
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return file_exists($url);
+    }
+    $headers = @get_headers($url);
+    return $headers && strpos($headers[0], '200') !== false;
+}
+
+$stmt = $pdo->prepare('SELECT url FROM images WHERE user_id = ?');
+$stmt->execute([$id]);
+$images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/profile.css">
     <title>Profile</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- GOOGLE-FONTS -->
-	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-	<!--CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- CSS -->
     <link rel="stylesheet" href="css/header.css">
-    
-</head>
-<body class = "bg-light">
-	<?php require('header.php') ?>
-
-    <div class="container-fluid bg-white">
-<div class="col-md-12">
-    <div class="row">
-   <div class="card bg-white text-dark text-center " style="min-height: fit-content;">
-          <div class="profile-thumbnail mx-auto mt-n6 pt-4 position-relative rounded-circle">
-              <img src="<?=$data['picture']?>" class="card-img-top rounded-circle border-0" alt="..." width = "140" height = "140" style = "object-fit: cover;border-radius:100%;height:140px;width:140px;">
-			  <div>
-				  <!-- Profile Picture Upload -->
-				<form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
-					<input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
-					<button type="button" class="btn btn-light text-dark hover-dark edit-img-btn" onclick="triggerFileInput('profileFile');">+</button>
-					
-					<!-- Modal -->
-					<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body text-center"   style = "margin: auto;">
-									<img id="profilePreviewImg" src="#" class="card-img-top border-0" style="display: none;border-radius:100%;width:140px;height:140;object-fit: cover;" height = "140" width = "140">
-								</div>
-								<div class="modal-footer">
-									<button id = "profile_picture_upload_button" type="submit" name="uploadProfile" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButtonProfilePicture(this)">Save Profile Picture</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			  </div>
-		  </div>
-		  
-          <div class="card-body">
-              <h3 class="h5 card-title mb-2 profile-name"><?php
-				$stmt = $pdo->prepare('select account_type from accounts where id = ?');
-				$stmt->execute(array($_SESSION['data']['id']));
-				$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
-				if($account_type['account_type']=='user'){
-					$profileData = $pdo->prepare('select name from user_profiles where id = ?');
-					$profileData->execute([$_SESSION['data']['id']]);
-					$name = $profileData->fetch(PDO::FETCH_ASSOC);
-					echo $name['name'];
-				}elseif($account_type['account_type']=='business'){
-					$profileData = $pdo->prepare('select business_name from business_profiles where id = ?');
-					$profileData->execute([$_SESSION['data']['id']]);
-					$name = $profileData->fetch(PDO::FETCH_ASSOC);
-					echo $name['business_name'];
-				}
-			  ?></h3>
-              <?php
-				$stmt = $pdo->prepare('select bio from business_profiles where id = ?');
-				$stmt->execute(array($data['id']));
-				$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				
-				//social links
-				$sql = $pdo->prepare("SELECT social_links FROM business_profiles WHERE id = ?");
-				$sql->execute([$data['id']]);
-				$json = $sql->fetch(PDO::FETCH_ASSOC);
-				$social_links = json_decode($json['social_links'], true);
-			  ?> 
-              <p class="card-text my-2"><?=$result['bio']?></p>
-              <ul class="wrapper   p-0 text-center text-danger  " style="height: min-content;">
-                <?php
-				if(!empty($social_links['facebook'])){
-					?>
-					<li class="icon facebook">
-				  <a href = "<?=$social_links['facebook']?>" style = "color:inherit;text-decoration:none;">
-                  <svg
-                    viewBox="0 0 320 512"
-                    height="1.2em"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-                    ></path>
-                  </svg>
-                </li>
-				<?php
-				}
-				
-				?>
-				
-				<?php
-				if(!empty($social_links['twitter'])){
-					?>
-                <li class="icon twitter">
-				  
-                  <svg
-                    height="1.8em"
-                    fill="currentColor"
-                    viewBox="0 0 48 48"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="twitter"
-                  >
-				  <a href = "<?=$social_links['twitter']?>" style = "color:inherit;text-decoration:none;">
-                    <path
-                      d="M42,12.429c-1.323,0.586-2.746,0.977-4.247,1.162c1.526-0.906,2.7-2.351,3.251-4.058c-1.428,0.837-3.01,1.452-4.693,1.776C34.967,9.884,33.05,9,30.926,9c-4.08,0-7.387,3.278-7.387,7.32c0,0.572,0.067,1.129,0.193,1.67c-6.138-0.308-11.582-3.226-15.224-7.654c-0.64,1.082-1,2.349-1,3.686c0,2.541,1.301,4.778,3.285,6.096c-1.211-0.037-2.351-0.374-3.349-0.914c0,0.022,0,0.055,0,0.086c0,3.551,2.547,6.508,5.923,7.181c-0.617,0.169-1.269,0.263-1.941,0.263c-0.477,0-0.942-0.054-1.392-0.135c0.94,2.902,3.667,5.023,6.898,5.086c-2.528,1.96-5.712,3.134-9.174,3.134c-0.598,0-1.183-0.034-1.761-0.104C9.268,36.786,13.152,38,17.321,38c13.585,0,21.017-11.156,21.017-20.834c0-0.317-0.01-0.633-0.025-0.945C39.763,15.197,41.013,13.905,42,12.429"
-                    ></path>
-                  </svg>
-                </li>
-				<?php
-				}
-				
-				?>
-				<?php
-				if(!empty($social_links['instagram'])){
-					?>
-                <li class="icon instagram">
-					<a href = "<?=$social_links['instagram']?>" style = "color:inherit;text-decoration:none;">
-				  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1.2em"
-                    fill="currentColor"
-                    class="bi bi-instagram"
-                    viewBox="0 0 16 16"
-                  >
-				  
-                    <path
-                      d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"
-                    ></path>
-					
-                  </svg>
-				  
-                </li>
-				<?php
-				}
-				
-				?>
-              </ul>
-			  <div>
-				<a class="btn btn-light text-dark border-dark hover-dark" style = "width:150px;" href = "edit-profile.php">Edit Profile</a>
-			  </div>
-			  <div class = "mt-2">
-				<!--Upload file-->
-				<form id="uploadForm" action="upload.php" method="POST" enctype="multipart/form-data">
-				<input type="file" name="file" id="file" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="image" required>
-				<button type="button" class="btn btn-light text-dark border-dark hover-dark" onclick="triggerFileInput('file');" style="width:150px;">Upload</button>
-				
-				<!-- Modal -->
-				<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-							<div class="modal-body text-center"   style = "margin: auto;">
-								<img id="previewImg" src="#" class="img-fluid rounded" style="max-height: 300px; display: none;">
-							</div>
-							<div class="modal-body text-center">
-								<input type="text" placeholder="Description" name="description" class="form-control form-control-sm" style="border:solid black 1px;">
-							</div>                                                               
-							<div class="modal-footer">
-								<button id = "image_upload_button" type="submit" name="upload" class="btn btn-light text-dark border-dark hover-dark" onclick="disableButtonImage()">Upload</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-			  </div>
-            </div>
-      </div>
-	</div>
-	</div>
-</div>
-<div class="container-fluid bg-light p-2">
-	<div style="column-count:3" class="flex p-4">
-    <?php
-		function is_valid_image($url){
-			if (empty($url)) {
-				return false;
-			}
-		if (!filter_var($url, FILTER_VALIDATE_URL)) {
-			return file_exists($url);
-		}
-		$headers = @get_headers($url);
-		return $headers && strpos($headers[0], '200') !== false;
-		}
-		//pdo
-		require('pdo.php');
-		//Query
-		$stmt = $pdo->prepare('select url from images where user_id = ?');
-		$stmt->execute(array($data['id']));
-		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		foreach($rows as $row){
-			$image_url = $row["url"];
-			if (!file_exists($image_url) || !is_valid_image($image_url)){
-				continue;
-			}
-	?>
-			<img style = "border-radius:10px;" src="<?=htmlspecialchars($image_url)?>" class="card-img-top mb-3"  alt="...">
-		
-	<?php
-		}
-	?>
-		</div>
-	</div>
-
-</div>
-   
-</body>
-
-<script>
-function triggerFileInput(inputId) {
-    document.getElementById(inputId).click();
-}
-
-function previewImage(input) {
-    var file = input.files[0];
-    if (!file) return;
-
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        var fileType = input.getAttribute("data-type");
-
-        if (fileType === "profile") {
-            // Get the profile image element
-            var profileImg = document.getElementById('profilePreviewImg');
-
-            // Reset the previous image and hide it
-            profileImg.style.display = 'none'; // Hide the image initially
-            profileImg.src = ''; // Reset the image source
-
-            // Set the new image source and show it
-            profileImg.src = e.target.result;
-            profileImg.style.display = 'block'; // Show the new image
-
-            // Show the modal
-            var profileModal = new bootstrap.Modal(document.getElementById('profileImageModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            profileModal.show();
-
-            // Clear the image and hide it when the modal is closed
-            $('#profileImageModal').on('hidden.bs.modal', function () {
-                profileImg.src = ''; // Clear the image source
-                profileImg.style.display = 'none'; // Hide the image
-                // Manually reset aria-hidden for the modal (fixes some issues)
-                $('#profileImageModal').attr('aria-hidden', 'true');
-            });
-
-        } else {
-            // Get the generic image element
-            var genericImg = document.getElementById('previewImg');
-
-            // Reset the previous image and hide it
-            genericImg.style.display = 'none'; // Hide the image initially
-            genericImg.src = ''; // Reset the image source
-
-            // Set the new image source and show it
-            genericImg.src = e.target.result;
-            genericImg.style.display = 'block'; // Show the new image
-
-            // Show the modal
-            var genericModal = new bootstrap.Modal(document.getElementById('imageModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            genericModal.show();
-
-            // Clear the image and hide it when the modal is closed
-            $('#imageModal').on('hidden.bs.modal', function () {
-                genericImg.src = ''; // Clear the image source
-                genericImg.style.display = 'none'; // Hide the image
-                // Manually reset aria-hidden for the modal (fixes some issues)
-                $('#imageModal').attr('aria-hidden', 'true');
-            });
+    <style>
+        :root {
+            --primary-color: rgb(4, 18, 27);
+            --secondary-color: rgb(82, 89, 95);
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
         }
-    };
 
-    reader.readAsDataURL(file);
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Profile Header with Integrated About Me */
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            position: relative;
+        }
+
+        .profile-header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            gap: 40px;
+        }
+
+        .profile-image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            min-width: 300px;
+        }
+
+        .profile-image-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .edit-profile-image {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+
+        .profile-basic-info {
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .profile-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .profile-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .profile-about-section {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-about-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .profile-about-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: white;
+        }
+
+        .about-content {
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .profile-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: #f8f9fa;
+        }
+
+        /* Experience Timeline Section */
+        .profile-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-columns {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #2ecc71);
+            border-radius: 2px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary-color), rgb(68, 70, 69));
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            left: -2.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary-color);
+            z-index: 1;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-position {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+        }
+
+        .timeline-content p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Image Gallery */
+        .gallery-container {
+			column-count: 3;
+			column-gap: 10px;
+		}
+
+		.image-container {
+			position: relative;
+			margin-bottom: 10px;
+			break-inside: avoid;
+			overflow: hidden;
+		}
+
+		.gallery-image {
+			width: 100%;
+			height: auto;
+			display: block;
+			transition: all 0.3s ease;
+		}
+
+		.hover-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.3); /* Darker overlay (0.7 opacity) */
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.image-container:hover .hover-overlay {
+			opacity: 1;
+		}
+
+		.image-container:hover .gallery-image {
+			filter: blur(3px); /* Add blur effect on hover */
+			transform: scale(1.02); /* Optional: slight zoom effect on hover */
+		}
+
+
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .profile-header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-about-section {
+                text-align: center;
+            }
+            
+            .profile-about-section h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .profile-social {
+                justify-content: center;
+            }
+
+            .gallery-container {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                padding: 1.5rem;
+            }
+            
+            .profile-header {
+                padding: 30px;
+            }
+            
+            .timeline {
+                padding-left: 2rem;
+            }
+            
+            .timeline::before {
+                left: 0.75rem;
+            }
+            
+            .timeline-item::before {
+                left: -2rem;
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-header {
+                padding: 20px;
+            }
+            
+            .profile-name {
+                font-size: 1.7rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .timeline-date {
+                font-size: 0.85rem;
+            }
+            
+            .timeline-content h3 {
+                font-size: 1.1rem;
+            }
+            
+            .timeline-position {
+                font-size: 0.9rem;
+            }
+
+            .gallery-container {
+                column-count: 1;
+				
+            }
+			
+        }
+/* Slider Container Styles */
+.controls {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-
-function disableButtonImage() {
-  document.getElementById('image_upload_button').disabled = true;
-  var ImageInput = document.createElement('input');
-  ImageInput.type = 'hidden';
-  ImageInput.name = 'upload';
-  ImageInput.value = 'true';
-  document.getElementById('uploadForm').appendChild(ImageInput);
-  document.getElementById('uploadForm').submit();
-}
-function disableButtonProfilePicture() {
-  document.getElementById('profile_picture_upload_button').disabled = true;
-  var ImageInput = document.createElement('input');
-  ImageInput.type = 'hidden';
-  ImageInput.name = 'uploadProfile';
-  ImageInput.value = 'true';
-  document.getElementById('profileUploadForm').appendChild(ImageInput);
-  document.getElementById('profileUploadForm').submit();
+/* Slider Group Styles */
+.slider-group {
+  margin-bottom: 15px;
+  position: relative;
 }
 
+.slider-group:last-child {
+  margin-bottom: 0;
+}
+
+.slider-group label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* Value Display */
+.slider-group label span {
+  background-color: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #495057;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* Custom Range Slider Styling */
+.slider-group input[type=range] {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #ddd;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+/* Chrome/Safari */
+.slider-group input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b71ca;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.slider-group input[type=range]::-webkit-slider-thumb:hover {
+  background: #285192;
+  transform: scale(1.1);
+}
+
+/* Firefox */
+.slider-group input[type=range]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b71ca;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.slider-group input[type=range]::-moz-range-thumb:hover {
+  background: #285192;
+  transform: scale(1.1);
+}
+
+/* Custom colors for different sliders */
+#brightness::-webkit-slider-thumb {
+  background: #ffa41b;
+}
+#brightness::-moz-range-thumb {
+  background: #ffa41b;
+}
+
+#contrast::-webkit-slider-thumb {
+  background: #7209b7;
+}
+#contrast::-moz-range-thumb {
+  background: #7209b7;
+}
+
+#grayscale::-webkit-slider-thumb {
+  background: #4a4e69;
+}
+#grayscale::-moz-range-thumb {
+  background: #4a4e69;
+}
+
+#saturate::-webkit-slider-thumb {
+  background: #4cc9f0;
+}
+#saturate::-moz-range-thumb {
+  background: #4cc9f0;
+}
+.modal-dialog {
+  width: fit-content !important;
+  max-width: 100%;
+  margin: 1.75rem auto; /* optional, centers vertically */
+}
+    </style>
+</head>
+<body>
+    <?php require('header.php'); ?>
+    
+    <div class="profile-container">
+        <div class="profile-header">
+			<?php if(!$isMyProfile){?>
+			<div style="display: flex; flex-direction: row; justify-content: end; gap: 10px;">
+			  <!-- Circle Comment Icon -->
+			  <a href="<?php if(isset($_SESSION['data'])){ echo "chat/chat.php?id={$id}";} else{echo "/momento/account/login.php";}?>" 
+				 style="width: 35px; height: 35px; border-radius: 50%; background-color: #f8f9fa;
+						display: flex; align-items: center; justify-content: center; 
+						color: #212529; border: 1px solid #212529; text-decoration: none;">
+				<i class="fas fa-comment-dots" style = "font-size:15px;"></i>
+			  </a>
+			</div>
+			<?php }?>
+			<div class="profile-header-content">
+                <!-- Profile Picture Section -->
+                <div class="profile-image-section">
+                    <div class="profile-image-container">
+                        <img src="<?= htmlspecialchars($profile['picture']) ?>" class="profile-image" alt="Profile Picture">
+                        
+						<?php if($isMyProfile){?>
+                        <!-- Profile Picture Upload -->
+                        <form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="handleImagePreview(this, 'profile')">
+                            <button id = "profile-btn-upload" type="button" class="edit-profile-image" onclick="document.getElementById('profileFile').click()">+</button>
+                        </form>
+						<?php }?>
+                    </div>
+                    <div class="profile-basic-info">
+                        <h1 class="profile-name"><?= htmlspecialchars($displayName) ?></h1>
+                        <p class="profile-title">Senior Software Engineer</p>
+                        <div class="profile-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><?=$profile['location']??""?></span>
+                        </div>
+						<?php if($isMyProfile){?>
+                        <a class="btn btn-light text-dark border-dark hover-dark" style="width: 150px;" href="edit-profile.php">
+							Edit Profile
+						</a>
+						<?php }?>
+                    </div>
+                </div>
+
+                <!-- About Me Section Integrated in Header -->
+                <div class="profile-about-section">
+                    <h2>About Me</h2>
+                    <p class="about-content">
+                        <?= isset($profile['bio']) ? htmlspecialchars($profile['bio']) : '' ?>
+                    </p>
+                    <div class="profile-social">
+                        <?php if(!empty($social_links['linkedIn'])) : ?>
+                            <a href="<?= htmlspecialchars($social_links['linkedIn']) ?>" class="social-link" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if(!empty($social_links['instagram'])) : ?>
+                            <a href="<?= htmlspecialchars($social_links['instagram']) ?>" class="social-link" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if(!empty($social_links['twitter'])) : ?>
+                            <a href="<?= htmlspecialchars($social_links['twitter']) ?>" class="social-link" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if(!empty($social_links['facebook'])) : ?>
+                            <a href="<?= htmlspecialchars($social_links['facebook']) ?>" class="social-link" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <main class="profile-content">
+            <div class="profile-columns">
+                <section class="profile-section experience-section">
+                    <h2 class="section-title">Experience</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">2020 - Present</div>
+                            <div class="timeline-content">
+                                <h3>Tech Solutions Inc.</h3>
+                                <p class="timeline-position">Senior Software Engineer</p>
+                                <p>Lead development of customer portal and internal tools.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2016 - 2020</div>
+                            <div class="timeline-content">
+                                <h3>Digital Innovations</h3>
+                                <p class="timeline-position">Software Engineer</p>
+                                <p>Full-stack development of web applications.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="profile-section gallery-section">
+                    <hr>
+					
+
+					<!--UPLOAD-IMAGE-->
+					<form id="uploadForm" action="upload.php" method="POST" enctype="multipart/form-data">
+					<div style = "display:flex;flex-direction:row;justify-content: space-between;">
+					  <h2 class="section-title">Gallery</h2>
+					  <input type="file" id="file" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="image" required>
+					  <?php if($isMyProfile){?>
+					  <button id = "image-upload-btn" type="button" class="btn btn-light text-dark border-dark hover-dark" onclick="triggerFileInput('file');" style="width:50px;height:40px;"><i class="fas fa-upload"></i></button>
+					  <?php }?>
+					  <canvas id="imageCanvas" style="display:none;"></canvas>
+						  <!-- Modal -->
+						  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+							  <div class="modal-content">
+								<div class="modal-header">
+								  <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+								  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body text-center" style="margin: auto;display:flex;flex-direction:row;align-items:center;">
+								  <img id="previewImg" src="#" class="img-fluid rounded" style="max-height: 300px; display: none;">
+								  <!--CONTROL-IMAGE-->
+								  <div class="controls" style = "">
+									<div class="slider-group">
+									  <label for="brightness">Brightness <span id="val-brightness">100</span></label>
+									  <input type="range" id="brightness" min="0" max="200" value="100">
+									</div>
+									<div class="slider-group">
+									  <label for="contrast">Contrast <span id="val-contrast">100</span></label>
+									  <input type="range" id="contrast" min="0" max="200" value="100">
+									</div>
+									<div class="slider-group">
+									  <label for="grayscale">Grayscale <span id="val-grayscale">0</span></label>
+									  <input type="range" id="grayscale" min="0" max="100" value="0">
+									</div>
+									<div class="slider-group">
+									  <label for="saturate">Saturation <span id="val-saturate">100</span></label>
+									  <input type="range" id="saturate" min="0" max="200" value="100">
+									</div>
+								  </div>
+								</div>
+								<div class="modal-body text-center">
+								  <input type="text" placeholder="Description" name="description" class="form-control form-control-sm" style="border:solid black 1px;">
+								</div>  
+								<div class="modal-footer">
+								  <button id="image_upload_button" type="button" class="btn btn-light text-dark border-dark hover-dark" onclick="processAndUploadImage()">Upload</button>
+								</div>
+							  </div>
+							</div>
+						  </div>
+						</form>
+					</div>
+					<div class="gallery-container">
+						<?php foreach($images as $image): ?>
+							<?php 
+							$image_url = $image["url"];
+							if (is_valid_image($image_url)): 
+							?>  
+							<div class="image-container">
+								<img src="<?= htmlspecialchars($image_url) ?>" class="gallery-image" alt="Gallery Image">
+								<div class="hover-overlay"></div>
+							</div>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					</div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Profile Image Modal -->
+    <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center" style = "margin:auto;">
+                    <img id="profilePreviewImg" src="#" class="img-fluid centered rounded-circle" style="width:140px; height:140px; object-fit:cover; display:none;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="profile_picture_upload_button" type="button" class="btn btn-primary" onclick="saveProfilePicture()">Save Profile Picture</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script>
+	
+	
+		//TO-RESET-THE-MODAL-FOR-PROFILE-PICTURE
+		document.getElementById('image-upload-btn').addEventListener('click', function () {
+		  document.getElementById('uploadForm').reset();
+		});
+		function triggerFileInput(inputId) {
+			document.getElementById(inputId).click();
+		}
+		//FOR-IMAGE-UPLOAD
+		function previewImage(input) {
+			var file = input.files[0];
+			if (!file) return;
+
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var fileType = input.getAttribute("data-type");
+
+				if (fileType === "profile") {
+					// Profile image preview logic (not included as you requested only the image upload modal)
+				} else {
+					// Get the generic image element
+					var genericImg = document.getElementById('previewImg');
+
+					// Reset the previous image and hide it
+					genericImg.style.display = 'none'; // Hide the image initially
+					genericImg.src = ''; // Reset the image source
+
+					// Set the new image source and show it
+					genericImg.src = e.target.result;
+					genericImg.style.display = 'block'; // Show the new image
+
+					// Show the modal
+					var genericModal = new bootstrap.Modal(document.getElementById('imageModal'), {
+						backdrop: 'static',
+						keyboard: false
+					});
+					genericModal.show();
+
+					// Clear the image and hide it when the modal is closed
+					$('#imageModal').on('hidden.bs.modal', function () {
+						genericImg.src = ''; // Clear the image source
+						genericImg.style.display = 'none'; // Hide the image
+						// Manually reset aria-hidden for the modal (fixes some issues)
+						$('#imageModal').attr('aria-hidden', 'true');
+					});
+				}
+			};
+
+			reader.readAsDataURL(file);
+		}
+
+		function disableButtonImage() {
+		  document.getElementById('image_upload_button').disabled = true;
+		  var ImageInput = document.createElement('input');
+		  ImageInput.type = 'hidden';
+		  ImageInput.name = 'upload';
+		  ImageInput.value = 'true';
+		  document.getElementById('uploadForm').appendChild(ImageInput);
+		  document.getElementById('uploadForm').submit();
+		}
+
+		//TO-RESET-THE-MODAL-FOR-PROFILE-PICTURE
+		document.getElementById('profile-btn-upload').addEventListener('click', function () {
+		  document.getElementById('profileUploadForm').reset();
+		});
+        //FOR-PROFILE-PICTURE
+        function handleImagePreview(input, type) {
+			const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImg = document.getElementById('profilePreviewImg');
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('profileImageModal'));
+                modal.show();
+            };
+            reader.readAsDataURL(file);
+        }
+        // SAVE-PROFILE-PICTURE
+        function saveProfilePicture() {
+            const uploadButton = document.getElementById('profile_picture_upload_button');
+            uploadButton.disabled = true;
+            uploadButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+            
+            const form = document.getElementById('profileUploadForm');
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'uploadProfile';
+            hiddenInput.value = 'true';
+            form.appendChild(hiddenInput);
+            form.submit();
+        }
+
+        // SMOOTH-SCROLLING
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+		
+		
+		//FOR-FILTERS-SLIDERS
+		// Global variables
+		const filters = {
+			brightness: 100,
+			contrast: 100,
+			grayscale: 0,
+			saturate: 100
+		};
+
+		let originalImage = null;
+
+		function triggerFileInput(inputId) {
+			document.getElementById(inputId).click();
+		}
+
+		function previewImage(input) {
+			const file = input.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				const fileType = input.getAttribute("data-type");
+				
+				if (fileType === "image") {
+					// Store the original image data
+					originalImage = new Image();
+					originalImage.onload = function() {
+						// Set up preview
+						const previewImg = document.getElementById('previewImg');
+						previewImg.style.display = 'none';
+						previewImg.src = '';
+						previewImg.src = e.target.result;
+						previewImg.style.display = 'block';
+						
+						// Apply default filters
+						applyFilters();
+						
+						// Show modal
+						const imageModal = new bootstrap.Modal(document.getElementById('imageModal'), {
+							backdrop: 'static',
+							keyboard: false
+						});
+						imageModal.show();
+						
+						// Clean up when modal closes
+						$('#imageModal').on('hidden.bs.modal', function() {
+							previewImg.src = '';
+							previewImg.style.display = 'none';
+							$('#imageModal').attr('aria-hidden', 'true');
+						});
+					};
+					originalImage.src = e.target.result;
+				}
+			};
+			reader.readAsDataURL(file);
+		}
+
+		function applyFilters() {
+			const previewImg = document.getElementById('previewImg');
+			const filterString = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) grayscale(${filters.grayscale}%) saturate(${filters.saturate}%)`;
+			previewImg.style.filter = filterString;
+		}
+
+		function updateSliderValue(id, value) {
+			document.getElementById(`val-${id}`).textContent = value;
+		}
+
+		function processAndUploadImage() {
+			// Disable the upload button
+			document.getElementById('image_upload_button').disabled = true;
+			
+			// Get the canvas and context
+			const canvas = document.getElementById('imageCanvas');
+			const ctx = canvas.getContext('2d');
+			
+			// Set canvas dimensions
+			canvas.width = originalImage.naturalWidth;
+			canvas.height = originalImage.naturalHeight;
+			
+			// Apply filters to the image on canvas
+			ctx.filter = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) grayscale(${filters.grayscale}%) saturate(${filters.saturate}%)`;
+			ctx.drawImage(originalImage, 0, 0);
+			
+			// Convert the canvas to a blob
+			canvas.toBlob(function(blob) {
+				// Create a File object from the blob
+				const filteredFile = new File([blob], "filtered_image.jpg", {type: "image/jpeg"});
+				
+				// Create a FormData object and append the filtered image
+				const formData = new FormData(document.getElementById('uploadForm'));
+				
+				// Replace the original file with the filtered one
+				formData.delete('file');
+				formData.append('file', filteredFile);
+				
+				// Add the upload flag
+				formData.append('upload', 'true');
+				
+				// Use fetch API to upload the image
+				fetch('upload.php', {
+					method: 'POST',
+					body: formData
+				})
+				.then(response => {
+					// Redirect to profile page after successful upload
+					window.location.href = '/momento/profile.php?success=1';
+				})
+				.catch(error => {
+					console.error('Error uploading image:', error);
+					alert('Failed to upload image. Please try again.');
+					document.getElementById('image_upload_button').disabled = false;
+				});
+			}, 'image/jpeg', 0.9);
+		}
+
+		// Set up event listeners when the DOM is loaded
+		document.addEventListener('DOMContentLoaded', function() {
+			// Brightness slider
+			document.getElementById('brightness').addEventListener('input', function(e) {
+				filters.brightness = e.target.value;
+				updateSliderValue('brightness', e.target.value);
+				applyFilters();
+			});
+			
+			// Contrast slider
+			document.getElementById('contrast').addEventListener('input', function(e) {
+				filters.contrast = e.target.value;
+				updateSliderValue('contrast', e.target.value);
+				applyFilters();
+			});
+			
+			// Grayscale slider
+			document.getElementById('grayscale').addEventListener('input', function(e) {
+				filters.grayscale = e.target.value;
+				updateSliderValue('grayscale', e.target.value);
+				applyFilters();
+			});
+			
+			// Saturation slider
+			document.getElementById('saturate').addEventListener('input', function(e) {
+				filters.saturate = e.target.value;
+				updateSliderValue('saturate', e.target.value);
+				applyFilters();
+			});
+		});
     </script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
- integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
 </html>

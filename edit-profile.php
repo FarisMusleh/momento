@@ -375,13 +375,13 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="profileImageModalLabel">Profile Picture Preview</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button id = "profile-upload-btn" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <img id="profilePreviewImg" src="#" class="img-fluid rounded-circle" style="display: none; max-width: 200px; height: auto;">
+                                    <img id="profilePreviewImg" src="#" class="img-fluid rounded-circle" style="display: none;width:140px; height:140px; object-fit:cover; margin:auto;">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+                                    <button id = "profile-upload-btn-cancel" type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
                                     <button id="profile_picture_upload_button" type="submit" name="uploadProfile" class="btn btn-primary" onclick="disableButtonProfilePicture(this)">
                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                         Save Changes
@@ -403,7 +403,7 @@
                             $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
                             $profileData->execute([$_SESSION['data']['id']]);
                             $name = $profileData->fetch(PDO::FETCH_ASSOC);
-                            echo htmlspecialchars($name['name']);
+                            echo htmlspecialchars($name['name']??null);
                         }elseif($account_type['account_type']=='business'){
                             $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?');
                             $profileData->execute([$_SESSION['data']['id']]);
@@ -464,16 +464,16 @@
                         $sql = $pdo->prepare('SELECT name, social_links, bio FROM user_profiles WHERE id = ?');
                         $sql->execute([$data['id']]);
                         $info = $sql->fetch(PDO::FETCH_ASSOC);
-                        $name = $info['name'];
-                        $bio = $info['bio'];
-                        $social_links = json_decode($info['social_links'], true);
+                        $name = $info['name']??null;
+                        $bio = $info['bio']??null;
+                        $social_links = json_decode($info['social_links']??null, true);
                     }elseif($result['account_type']=="business"){
                         $sql = $pdo->prepare('SELECT business_name, social_links, bio FROM business_profiles WHERE id = ?');
                         $sql->execute([$data['id']]);
                         $info = $sql->fetch(PDO::FETCH_ASSOC);
                         $name = $info['business_name'];
                         $bio = $info['bio'];
-                        $social_links = json_decode($info['social_links'], true);
+                        $social_links = json_decode($info['social_links']??null, true);
                     }
                 ?>
                 
@@ -667,6 +667,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+		//TO-RESET-THE-MODAL-FOR-PROFILE-PICTURE
+		document.getElementById('profile-upload-btn').addEventListener('click', function () {
+		  document.getElementById('profileUploadForm').reset();
+		});
+		//TO-RESET-THE-MODAL-FOR-PROFILE-PICTURE
+		document.getElementById('profile-upload-btn-cancel').addEventListener('click', function () {
+		  document.getElementById('profileUploadForm').reset();
+		});
+		
         function showSection(sectionId, title, element) {
             // Hide all sections
             document.querySelectorAll(".content-section").forEach(section => {

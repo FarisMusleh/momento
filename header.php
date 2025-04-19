@@ -1,44 +1,68 @@
 <?php
     require_once('pdo.php');
+	if(isset($_SESSION['data']))
+		$data = $_SESSION['data'];
 ?>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <nav class="navbar navbar-expand-lg nav-sticky" id = "navbar">
     <div class="container-fluid">
-        <a class="navbar-brand fs-3 momento-logo" href="index.php">Momento</a>
+        <a class="navbar-brand fs-3 momento-logo" href="/momento/index.php">Momento</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto gap-4 align-items-center">
 				<!-- CHAT-ICON -->
+				<?php if(isset($_SESSION['data'])){?>
+				<?php
+					$sql = $pdo->prepare("
+					SELECT m.*, a.username AS sender_name
+					FROM messages m
+					JOIN conversations c ON m.conversation_id = c.id
+					JOIN accounts a ON m.sender_id = a.id
+					WHERE 
+						(c.sender_id = :user_id OR c.receiver_id = :user_id)
+						AND m.sender_id != :user_id
+						AND m.seen = 0
+						AND m.id IN (
+							SELECT MAX(id)
+							FROM messages
+							WHERE seen = 0 AND sender_id != :user_id
+							GROUP BY conversation_id
+						)
+					ORDER BY m.sent_at DESC
+					LIMIT 5
+					");
+					$sql->execute([':user_id' => $data['id']]);
+					$result = $sql->fetchAll();
+				?>
 				<div class="message-icon-container">
-					<div class="message-icon" id="messageIcon">
+					<div class="message-icon" id="messageIcon" onclick="window.location.href='/momento/chat/chat.php'">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
 						</svg>
-						<div class="notification-badge" id="notificationBadge">1</div>
+						<?php if(count($result)!=0){?>
+						<div class="notification-badge" id="notificationBadge"><?php echo count($result);?></div>
+						<?php }?>
 					</div>
+					<?php if(count($result)!=0){?>
 					<div class="message-tooltip" id="messageTooltip">
+						<?php
+							foreach($result as $row){
+						?>
 						<div class="message-preview-item unread">
-							<div class="message-preview-sender">John Doe</div>
-							<div class="message-preview-text">Hey there! Just wanted to check in about the project...</div>
+							<div class="message-preview-sender"><?=$row['sender_name']?></div>
+							<div class="message-preview-text"><?=$row['message']?></div>
 						</div>
-						<div class="message-preview-item">
-							<div class="message-preview-sender">Jane Smith</div>
-							<div class="message-preview-text">Can we schedule a meeting for next week?</div>
-						</div>
-						<div class="message-preview-item">
-							<div class="message-preview-sender">Robert Martin</div>
-							<div class="message-preview-text">The documents you requested are attached.</div>
-						</div>
+							<?php }?>
 					</div>
+					<?php }?>
 				</div>
+				<?php }?>
 				<!-- END-CHAT-ICON -->
-                <li class="nav-item"><a class="nav-link" href="gallery.php">GALLERY</a></li>
-                <li class="nav-item"><a class="nav-link" href="photographers.php">PHOTOGRAPHERS</a></li>
+                <li class="nav-item"><a class="nav-link" href="/momento/gallery.php">GALLERY</a></li>
+                <li class="nav-item"><a class="nav-link" href="/momento/photographers.php">PHOTOGRAPHERS</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">FIND JOBS</a></li>
 				
 
@@ -55,6 +79,7 @@
                         <div class="dropdown-content">
                             <div class="DropDownFlex">
                                 <img src="<?= $data['picture'] ?>" class="dropdown-img">
+								
                                 <div class="dropdown-name">
                                     <?php
                                         $stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
@@ -65,7 +90,7 @@
                                             $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
                                             $profileData->execute([$_SESSION['data']['id']]);
                                             $name = $profileData->fetch(PDO::FETCH_ASSOC);
-                                            echo $name['name'];
+                                            echo $name['name']??null;
                                         } elseif ($account_type['account_type'] === 'business') {
                                             $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?');
                                             $profileData->execute([$_SESSION['data']['id']]);
@@ -77,12 +102,12 @@
                             </div>
                             <div class="dropdown-section">
                                 <?php if ($account_type['account_type'] === 'business'): ?>
-                                    <a href="profile.php" class="dropdown-link">Profile</a>
+                                    <a href="/momento/profile.php" class="dropdown-link">Profile</a>
                                     <hr class="dropdown-divider">
                                 <?php endif; ?>
-                                <a href="edit-profile.php" class="dropdown-link">Settings</a>
+                                <a href="/momento/edit-profile.php" class="dropdown-link">Settings</a>
                                 <hr class="dropdown-divider">
-                                <a href="logout.php" class="dropdown-link">Sign Out</a>
+                                <a href="/momento/logout.php" class="dropdown-link">Sign Out</a>
                             </div>
                         </div>
                     </ul>

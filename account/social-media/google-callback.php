@@ -43,7 +43,8 @@
 				'id' => $user['id'],
 				'username' => $user['username'],
 				'email' => $user['email'],
-				'picture' => $user['picture']
+				'picture' => $user['picture'],
+				'location' => $user['location']
 			);
 			$adapter->disconnect();
 			header('Location: ../../index.php');

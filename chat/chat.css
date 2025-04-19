@@ -1,0 +1,168 @@
+/* Message Container Styles */
+.message-container {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sent {
+    background-color: #d4edda;
+    margin-left: 20%;
+    margin-right: 5px;
+}
+
+.received {
+    background-color: #e2e3e5;
+    margin-right: 20%;
+    margin-left: 5px;
+}
+
+.message-time {
+    font-size: 0.75em;
+    color: #6c757d;
+    text-align: right;
+}
+
+/* Chat layout styles */
+.main-container {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.chat-container {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.user-sidebar {
+    width: 280px;
+    border-right: 1px solid #ddd;
+    height: 600px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #e9ecef;
+    border-radius: 5px 5px 0 0;
+}
+
+.sidebar-header h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.user-list {
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    position: relative;
+}
+
+.user-item:hover {
+    background-color: #e9ecef;
+}
+
+.user-item.active {
+    background-color: #e2e6ea;
+}
+
+.user-avatar {
+    position: relative;
+    margin-right: 15px;
+}
+
+.user-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 2px solid #f8f9fa;
+}
+
+.status-indicator.online {
+    background-color: #28a745;
+}
+
+.status-indicator.offline {
+    background-color: #6c757d;
+}
+
+.user-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.user-info h5 {
+    margin: 0;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.last-message {
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 3px;
+}
+
+/* Unread message indicator */
+.unread-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+/* Read receipt styling */
+.message-status {
+    font-size: 0.7em;
+    color: #6c757d;
+    text-align: right;
+    margin-top: 2px;
+}
+
+.message-status i {
+    margin-left: 2px;
+}

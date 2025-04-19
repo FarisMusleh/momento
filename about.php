@@ -159,36 +159,7 @@
             </div>
         </div>
     </section>
-    <footer class="footer shadow-lg bg-dark" style = "margin-top: auto;">
-        <div class="container-fluid">
-          <div class="fw-bold display-6 text-white text-center text-underlined"> MOOMENTO</div>
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    <h5 class="fw-bold text-white">For Photographers</h5>
-                    <div class="footer-links fw-bold">
-                        <a href="#">Inspiration</a>
-                        <a href="#">Advertising</a>
-                        <a href="#">Blog</a>
-                        <a href="#">About</a>
-                        <a href="#">Support</a>
-                    </div>
-                </div>
-                <div class="col-md-6 text-center">
-                    <h5 class="fw-bold text-white">Resources</h5>
-                    <div class="footer-links fw-bold">
-                        <a href="#">Jobs</a>
-                        <a href="#">Photographers</a>
-                        <a href="#">Freelancers</a>
-                        <a href="#">Tags</a>
-                        <a href="#">Places</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom text-center">
-                <p>© 2025 Moomento. Terms | Privacy | Cookies</p>
-            </div>
-        </div>
-    </footer>
+    <?php require('footer.php');?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

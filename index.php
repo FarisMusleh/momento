@@ -22,10 +22,15 @@ $data = $_SESSION['data'] ?? null;
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/home.css">
 	<link rel="stylesheet" href="css/navbar-scrolled.css">
+<!-- Add Bootstrap Icons CDN in your <head> if not already included -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Include Bootstrap Icons if not already -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="fade-in" style = "position:relative;">
-<?php require 'header.php'; ?>
+ <?php require("header.php"); ?>  
 <div class="hero-section">
     <div class="container">
         <h1 class="display-10">Discover the world's top photographers</h1>
@@ -40,7 +45,8 @@ $data = $_SESSION['data'] ?? null;
         <?php
         $tags = ['Wars', 'Architecture', 'Nature', 'Wedding', 'Graduation', 'Cars', 'Art'];
         foreach ($tags as $tag) {
-            echo "<button class='btn btn-dark m-1'>{$tag}</button>";
+			$location = "/momento/searching_photos.php?type=photos&query={$tag}";
+            echo "<a class='btn btn-dark m-1' href = {$location}>{$tag}</a>";
         }
         ?>
     </div>
@@ -102,7 +108,7 @@ $data = $_SESSION['data'] ?? null;
 </div>
 <?php
 $stmt = $pdo->prepare("
-    SELECT a.id, a.username, a.picture, a.location, b.business_name,b.bio, b.created_at
+    SELECT a.id, a.username, a.picture, a.location, b.business_name,b.bio, b.created_at,b.rate
     FROM accounts a
     INNER JOIN business_profiles b ON a.id = b.id
     WHERE a.account_type = 'business'
@@ -112,63 +118,71 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $photographers = $stmt->fetchAll();
 ?>
-
 <section class="photographers-section">
   <div class="container">
-    <h2>Recommended New Photographers</h2>
-    <div class="row">
-      <?php if ($photographers): ?>
-        <?php foreach ($photographers as $p): ?>
-          <div class="col-md-4 mb-4">
-            <div class="card photographer-card">
-              <img src="<?= htmlspecialchars($p['picture']) ?>" height = 70 weight = 70 alt="Photographer Image">
-              <div class="card-body">
-                <h5 class="card-title"><?= htmlspecialchars($p['business_name']) ?></h5>
-                <p class="card-text"><?= htmlspecialchars($p['bio']) ?></p>
-                <a href="profile.php?id=<?= $p['id'] ?>" class="btn btn-outline-dark">View Profile</a>
+    <h2 class="section-title text-center display-5 p-5" style="font-family:Dancing script;">PREMIUM PHOTOGRAPHERS</h2>
+
+    <?php if ($photographers): ?>
+      <div id="photographerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+        <div class="carousel-inner">
+          <?php
+            $chunks = array_chunk($photographers, 3);
+            foreach ($chunks as $slideIndex => $slidePhotographers):
+          ?>
+            <div class="carousel-item <?= $slideIndex === 0 ? 'active' : '' ?>">
+              <div class="row justify-content-center">
+                <?php foreach ($slidePhotographers as $p): ?>
+                  <?php
+                    $rating = isset($p['rate']) ? floatval($p['rate']) : 0;
+                    $fullStars = floor($rating);
+                    $halfStar = ($rating - $fullStars) >= 0.5;
+                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                  ?>
+                  <div class="col-md-4 d-flex align-items-stretch">
+                    <div class="card photographer-card text-center w-100 p-3">
+                      <div class="card-body pt-5 px-4">
+                        <div class="photographer-img-container">
+                          <img src="<?= htmlspecialchars($p['picture']) ?>" alt="<?= htmlspecialchars($p['business_name']) ?>" class="photographer-img mx-auto">
+                        </div>
+                        <h5 class="photographer-name"><?= htmlspecialchars($p['business_name']) ?></h5>
+
+                        <div class="rating-stars">
+                          <?php for ($i = 0; $i < $fullStars; $i++): ?>
+                            <span class="star filled"></span>
+                          <?php endfor; ?>
+                          <?php if ($halfStar): ?>
+                            <span class="star half"></span>
+                          <?php endif; ?>
+                          <?php for ($i = 0; $i < $emptyStars; $i++): ?>
+                            <span class="star"></span>
+                          <?php endfor; ?>
+                        </div>
+
+                        
+                        <a href="profile.php?username=<?= $p['username'] ?>" class="btn btn-view-profile">View Portfolio</a>
+                      </div>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
               </div>
             </div>
-          </div>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p class="text-center w-100">No new photographers found.</p>
-      <?php endif; ?>
-    </div>
+          <?php endforeach; ?>
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#photographerCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#photographerCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    <?php else: ?>
+      <p class="text-center text-muted fs-5 py-5">Currently curating our premium photographers collection</p>
+    <?php endif; ?>
   </div>
 </section>
-
-
-
-<footer class="footer shadow-lg bg-dark text-white">
-    <div class="container-fluid">
-        <div class="fw-bold display-6 text-center">MOMENTO</div>
-        <div class="row">
-            <div class="col-md-6 text-center">
-                <h5 class="fw-bold">For Photographers</h5>
-                <div class="footer-links fw-bold">
-                    <a href="#">Inspiration</a>
-                    <a href="#">Advertising</a>
-                    <a href="#">Blog</a>
-                    <a href="#">About</a>
-                    <a href="support.html">Support</a>
-                </div>
-            </div>
-            <div class="col-md-6 text-center">
-                <h5 class="fw-bold">Resources</h5>
-                <div class="footer-links fw-bold">
-                    <a href="#">Jobs</a>
-                    <a href="#">Photographers</a>
-                    <a href="#">Freelancers</a>
-                    <a href="#">Tags</a>
-                    <a href="#">Places</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom text-center">
-            <p>© 2025 Moomento. Terms | Privacy | Cookies</p>
-        </div>
-    </div>
-</footer>
+<?php require('footer.php')?>
 <?php require('chat_ai.php'); ?>
 </body>
 </html>
