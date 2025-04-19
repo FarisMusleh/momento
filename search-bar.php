@@ -211,6 +211,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   color: #333;
+  justify-content:space-between;
 }
 
 .suggestion-list li:hover {
@@ -220,7 +221,7 @@
 .suggestion-list li a {
   text-decoration: none;
   color: inherit;
-  flex: 1;
+  
 }
 
 
@@ -262,7 +263,7 @@
         <!-- Search Input -->
         <input type="text" name="query" class="search-input" placeholder="What are you looking for?" value="<?= $_GET['query'] ?? '' ?>">
 		<!-- Photographer Suggestions -->
-		<ul id="photographer-suggestions" class="suggestion-list" style="display:none; position:absolute; z-index:1000;left:250px;top:50px; background:#fff; border:1px solid #ccc; width:50%; list-style:none; margin:0; padding:0; max-height: 200px; overflow-y: auto;"></ul>
+		<ul id="photographer-suggestions" class="suggestion-list" style="display:none; position:absolute; z-index:1000;left:250px;top:50px; background:#fff; border:1px solid #ccc; width:45%; list-style:none; margin:0; padding:0; max-height: 200px; overflow-y: auto;"></ul>
 
       </div>
     </form>

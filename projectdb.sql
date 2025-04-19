@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2025 at 02:21 PM
+-- Generation Time: Apr 19, 2025 at 08:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,7 @@ CREATE TABLE `accounts` (
   `email` varchar(128) NOT NULL,
   `password` varchar(128) NOT NULL,
   `account_type` enum('user','business') NOT NULL,
-  `picture` varchar(512) NOT NULL DEFAULT 'Uploads/ProfilePicture/img_1.jpg',
+  `picture` varchar(512) NOT NULL DEFAULT '/momento/Uploads/ProfilePicture/img_1.jpg',
   `location` varchar(128) NOT NULL,
   `lon` double(255,30) NOT NULL,
   `lat` double(255,30) NOT NULL,
@@ -56,7 +56,9 @@ INSERT INTO `accounts` (`id`, `username`, `email`, `password`, `account_type`, `
 (46, 'te', 'h@h.c', '$2y$10$Vd7pV1Ens83dy80hcDAd4..GiZIt0TNqSovrLDBPS.c.8PS.P6MhS', 'business', '/momento/Uploads/ProfilePicture/img_1.jpg', '', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-04-11 23:18:08', '2025-04-19 00:36:56'),
 (47, 'y', 'y@y.c', '$2y$10$z5g3NRJRSu754pEJ7YVbz.55KUVA5Sl6.muZMhoTH3DqPH2qiMCJi', 'business', '/momento/Uploads/ProfilePicture/img_1.jpg', '', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-04-11 23:18:22', '2025-04-19 00:36:56'),
 (50, 'hj', 'hj@g.c', '$2y$10$Q31aPHgG1SN7P6eacjilZuyAn2e3gw/5VveU/3hq1EHj9JHrfehje', 'business', '/momento/Uploads/ProfilePicture/img_1.jpg', '', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-04-11 23:19:34', '2025-04-19 00:36:56'),
-(57, 'Oshiro', 'farismusleh2032003@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/img_67fee44a511c26.30927444.jpg', 'France', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '113031318110845926527', '2025-04-15 22:31:02', '2025-04-19 00:36:56');
+(58, 'ggg', 'l@g.c', '$2y$10$JLbQP1zVCu3yfxSeManAkObLQ5MaSylLzC5pLtv4xnFlcHATtb.Qy', 'business', 'Uploads/ProfilePicture/img_1.jpg', '', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-04-19 18:14:56', '2025-04-19 18:14:56'),
+(59, 'mnm', 't@g.c', '$2y$10$CLeAtheWQB7a/ebAWF77Q.8pIW1pqZv0BtmjDT8n2VfheyY0pKrWa', 'business', '/momento/Uploads/ProfilePicture/img_1.jpg', '', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-04-19 18:27:38', '2025-04-19 18:27:38'),
+(61, 'hgfdhgdf', 'farismusleh2032003@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/google_113031318110845926527.jpg', 'Azerbaijan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '113031318110845926527', '2025-04-19 18:31:24', '2025-04-19 18:31:24');
 
 -- --------------------------------------------------------
 
@@ -89,7 +91,9 @@ INSERT INTO `business_profiles` (`id`, `business_name`, `gender`, `contact_numbe
 (44, '', 'male', NULL, NULL, '', 0, 0, 0, '2025-04-11 23:17:35', '2025-04-11 23:17:35'),
 (46, '', 'male', NULL, NULL, '', 0, 0, 0, '2025-04-11 23:18:08', '2025-04-11 23:18:08'),
 (47, '', 'male', NULL, NULL, '', 0, 0, 0, '2025-04-11 23:18:22', '2025-04-11 23:18:22'),
-(57, '̇Oshiro', 'not specifed', NULL, NULL, 'fmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlkasdbgfjkldsbgjklsd bgjfklsd b fmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlkasdbgfjkldsbgjklsd bgjfklsd bfmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlkasdbgfjkldsbgjklsd bgjfklsd bfmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlkasdbgfjkldsbgjklsd bgjfklsd bfmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlkasdbgfjkldsbgjklsd bgjfklsd bfmdnsjkgffij ngjfdsbn gfjds gbnf jdsgbnfjlksd bgfjklds gbfjlk', 3.5, 0, 0, '2025-04-15 22:31:02', '2025-04-19 11:55:09');
+(58, '', 'male', NULL, NULL, '', 0, 0, 0, '2025-04-19 18:14:56', '2025-04-19 18:14:56'),
+(59, '', 'male', NULL, NULL, '', 0, 0, 0, '2025-04-19 18:27:38', '2025-04-19 18:27:38'),
+(61, '̇Oshiro', 'not specifed', NULL, NULL, '', 0, 0, 0, '2025-04-19 18:31:24', '2025-04-19 18:31:24');
 
 -- --------------------------------------------------------
 
@@ -271,40 +275,40 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `conversation_id`, `sender_id`, `message`, `sent_at`, `seen`, `seen_at`) VALUES
-(1, 1, 45, 'HAHAHA MMM', '2025-04-18 13:00:57', 0, NULL),
-(2, 2, 42, 'LOLOLO', '2025-04-18 18:25:53', 0, NULL),
+(1, 1, 45, 'HAHAHA MMM', '2025-04-18 13:00:57', 1, NULL),
+(2, 2, 42, 'LOLOLO', '2025-04-18 18:25:53', 1, NULL),
 (3, 1, 42, 'gfdsgfsdg', '2025-04-18 18:26:53', 1, NULL),
 (4, 3, 42, 'nigga', '2025-04-18 20:37:56', 127, NULL),
 (5, 3, 42, 'niigggaaaaa', '2025-04-18 20:38:11', 127, NULL),
-(6, 3, 30, 'what???', '2025-04-18 20:39:09', 0, NULL),
-(7, 3, 30, 'HELLO 42 HOW ARE YOU', '2025-04-18 21:17:25', 0, NULL),
-(8, 3, 30, '42 MY NAME IS GJNFIDSGNFIDSG', '2025-04-18 21:21:11', 0, NULL),
-(9, 3, 30, 'FGHDUASGHBUJSDBGUFDSBGFUDSAGFSGFSDG  SGFD GF SD', '2025-04-18 21:21:29', 0, NULL),
-(10, 3, 30, 'FDSA FDAS', '2025-04-18 21:21:31', 0, NULL),
-(11, 3, 30, 'HELLO 42, THIS IS NEW MSG AFTER EDITING :)', '2025-04-18 21:26:56', 0, NULL),
-(12, 3, 30, 'FUCK YOU', '2025-04-18 21:38:35', 0, NULL),
+(6, 3, 30, 'what???', '2025-04-18 20:39:09', 1, NULL),
+(7, 3, 30, 'HELLO 42 HOW ARE YOU', '2025-04-18 21:17:25', 1, NULL),
+(8, 3, 30, '42 MY NAME IS GJNFIDSGNFIDSG', '2025-04-18 21:21:11', 1, NULL),
+(9, 3, 30, 'FGHDUASGHBUJSDBGUFDSBGFUDSAGFSGFSDG  SGFD GF SD', '2025-04-18 21:21:29', 1, NULL),
+(10, 3, 30, 'FDSA FDAS', '2025-04-18 21:21:31', 1, NULL),
+(11, 3, 30, 'HELLO 42, THIS IS NEW MSG AFTER EDITING :)', '2025-04-18 21:26:56', 1, NULL),
+(12, 3, 30, 'FUCK YOU', '2025-04-18 21:38:35', 1, NULL),
 (13, 4, 30, 'HELLO FARIS', '2025-04-18 21:47:14', 127, NULL),
 (14, 4, 43, 'HELLO B', '2025-04-18 21:50:29', 127, NULL),
 (15, 4, 30, 'HOW ARE YOU?', '2025-04-18 21:51:20', 127, NULL),
 (16, 4, 30, 'i am fine', '2025-04-18 21:59:20', 127, NULL),
 (17, 4, 43, 'me fine', '2025-04-18 21:59:35', 127, NULL),
 (18, 4, 30, 'fdsa', '2025-04-18 22:24:43', 127, NULL),
-(19, 3, 30, 'fdas', '2025-04-18 22:24:49', 0, NULL),
+(19, 3, 30, 'fdas', '2025-04-18 22:24:49', 1, NULL),
 (20, 4, 30, 'test', '2025-04-19 00:11:48', 127, NULL),
 (21, 4, 30, 'fdasfdas', '2025-04-19 00:20:35', 127, NULL),
-(22, 3, 30, 'fdsafdasfdasg fds', '2025-04-19 00:20:41', 0, NULL),
-(23, 3, 30, 'fds', '2025-04-19 00:22:19', 0, NULL),
+(22, 3, 30, 'fdsafdasfdasg fds', '2025-04-19 00:20:41', 1, NULL),
+(23, 3, 30, 'fds', '2025-04-19 00:22:19', 1, NULL),
 (24, 4, 30, 'rfas', '2025-04-19 00:38:14', 127, NULL),
 (25, 4, 30, 'test', '2025-04-19 09:38:25', 127, NULL),
 (26, 4, 30, 'HELLO FARIS', '2025-04-19 09:39:49', 127, NULL),
 (27, 4, 30, 'TEST', '2025-04-19 09:40:09', 127, NULL),
 (28, 4, 30, 'test', '2025-04-19 10:00:40', 1, '2025-04-19'),
 (29, 4, 30, 'hi', '2025-04-19 10:00:43', 1, '2025-04-19'),
-(30, 3, 30, 'helllooo', '2025-04-19 10:00:49', 0, NULL),
+(30, 3, 30, 'helllooo', '2025-04-19 10:00:49', 1, NULL),
 (31, 4, 30, 'hello man', '2025-04-19 10:01:07', 1, '2025-04-19'),
 (32, 4, 30, 'AFTER EDIT', '2025-04-19 10:10:24', 1, '2025-04-19'),
 (33, 4, 30, 'NEW', '2025-04-19 10:10:47', 1, NULL),
-(34, 5, 30, 'hello ahmed', '2025-04-19 10:13:18', 0, NULL),
+(34, 5, 30, 'hello ahmed', '2025-04-19 10:13:18', 1, NULL),
 (35, 4, 30, 'HELLO AHMED AFTER EDIT', '2025-04-19 10:19:26', 1, '2025-04-19'),
 (36, 4, 30, 'FDSAFDASG BTN', '2025-04-19 10:20:20', 1, '2025-04-19'),
 (37, 4, 43, 'HELLO FARIS NEWWW', '2025-04-19 10:20:39', 1, '2025-04-19'),
@@ -314,7 +318,7 @@ INSERT INTO `messages` (`id`, `conversation_id`, `sender_id`, `message`, `sent_a
 (41, 4, 30, 'test', '2025-04-19 10:28:13', 1, '2025-04-19'),
 (42, 4, 30, 'asd', '2025-04-19 10:40:00', 1, '2025-04-19'),
 (43, 4, 30, 'FDASFDAFDAS', '2025-04-19 10:43:25', 1, '2025-04-19'),
-(44, 6, 30, 'hello dog', '2025-04-19 11:25:15', 0, NULL),
+(44, 6, 30, 'hello dog', '2025-04-19 11:25:15', 1, NULL),
 (45, 4, 43, 'hello b', '2025-04-19 11:43:45', 1, NULL),
 (46, 4, 30, 'hello faris how are you', '2025-04-19 11:46:44', 1, '2025-04-19'),
 (47, 4, 43, 'good', '2025-04-19 11:46:58', 1, '2025-04-19'),
@@ -322,8 +326,38 @@ INSERT INTO `messages` (`id`, `conversation_id`, `sender_id`, `message`, `sent_a
 (49, 4, 30, 'bvdfxgh', '2025-04-19 11:47:09', 1, NULL),
 (50, 4, 43, 'fdsafda', '2025-04-19 11:55:39', 1, NULL),
 (51, 4, 30, 'fdas', '2025-04-19 12:05:58', 1, '2025-04-19'),
-(52, 6, 30, 'fdasfdg', '2025-04-19 12:06:04', 0, NULL),
-(53, 1, 45, 'gfdsgfs', '2025-04-19 12:07:05', 0, NULL);
+(52, 6, 30, 'fdasfdg', '2025-04-19 12:06:04', 1, NULL),
+(53, 1, 45, 'gfdsgfs', '2025-04-19 12:07:05', 1, NULL),
+(54, 5, 44, 'test', '2025-04-19 13:11:54', 1, NULL),
+(55, 5, 30, 'gfsd', '2025-04-19 13:12:30', 1, '2025-04-19'),
+(56, 5, 30, 'fdsgdsafsa fasdfaf', '2025-04-19 13:15:30', 1, '2025-04-19'),
+(57, 5, 30, 'hello ahmed', '2025-04-19 13:17:36', 1, NULL),
+(58, 5, 44, 'test', '2025-04-19 13:25:35', 1, NULL),
+(59, 5, 30, 'vc', '2025-04-19 13:26:27', 1, '2025-04-19'),
+(60, 5, 30, 'gfds', '2025-04-19 13:26:34', 1, '2025-04-19'),
+(61, 5, 30, 'فقبيل', '2025-04-19 14:19:17', 1, '2025-04-19'),
+(62, 5, 30, 'tfds', '2025-04-19 15:06:55', 1, '2025-04-19'),
+(63, 6, 30, 'gfsdgfs', '2025-04-19 17:54:03', 0, NULL),
+(64, 5, 30, 'fdsa', '2025-04-19 17:56:07', 1, '2025-04-19'),
+(65, 6, 30, 'fdsafas', '2025-04-19 17:57:57', 0, NULL),
+(66, 5, 30, 'fdasfa', '2025-04-19 17:58:07', 1, '2025-04-19'),
+(67, 5, 30, 'fds', '2025-04-19 17:58:13', 1, '2025-04-19'),
+(68, 6, 30, 'gfds', '2025-04-19 17:59:38', 0, NULL),
+(69, 5, 30, 'fdsafda', '2025-04-19 18:00:12', 1, '2025-04-19'),
+(70, 6, 30, 'fgsdgsd', '2025-04-19 18:01:22', 0, NULL),
+(71, 5, 30, 'ffdsa', '2025-04-19 18:03:21', 1, '2025-04-19'),
+(72, 6, 30, 'fdasfdas', '2025-04-19 18:07:06', 0, NULL),
+(73, 5, 30, 'fdsagf', '2025-04-19 18:07:14', 1, '2025-04-19'),
+(74, 5, 30, 'fvc', '2025-04-19 18:07:30', 1, '2025-04-19'),
+(75, 5, 44, 'f dsaf das', '2025-04-19 18:07:39', 1, '2025-04-19'),
+(76, 5, 30, 'fdsafdas', '2025-04-19 18:09:00', 1, '2025-04-19'),
+(77, 6, 30, 'fdasfdas', '2025-04-19 18:09:04', 0, NULL),
+(78, 5, 30, 'fdsafdas', '2025-04-19 18:09:23', 1, '2025-04-19'),
+(79, 5, 30, 'dfsaf gfds gfds', '2025-04-19 18:13:55', 1, '2025-04-19'),
+(80, 6, 30, 'fdasf das f', '2025-04-19 18:13:58', 0, NULL),
+(81, 5, 44, 'fdsa fdsa fdas', '2025-04-19 18:14:05', 1, NULL),
+(82, 2, 42, 'ghfhd', '2025-04-19 18:16:32', 1, '2025-04-19'),
+(83, 1, 42, 'cvszvv', '2025-04-19 18:22:04', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -438,7 +472,7 @@ ALTER TABLE `views`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `comments`
@@ -474,7 +508,7 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `views`

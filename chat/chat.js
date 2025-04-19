@@ -1,6 +1,9 @@
 // Global variables
 let isScrolledToBottom = true;
 const messageContainer = document.getElementById('messageContainer');
+let lastUpdateHash = ''; // For conversation list optimization
+let currentUserId = senderId; // Assuming senderId is already defined in your page
+let activeUserId = receiverId || 0; // Assuming receiverId is already defined in your page
 
 // Initialize chat functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,14 +17,6 @@ function initializeChat() {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
     
-    // Make user items clickable to open conversations
-    document.querySelectorAll('.user-item').forEach(function(item) {
-        item.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
-            window.location.href = 'chat.php?id=' + userId;
-        });
-    });
-
     // Track if user is scrolled to bottom
     if (messageContainer) {
         messageContainer.addEventListener('scroll', () => {
@@ -53,6 +48,108 @@ function initializeChat() {
         // Auto refresh every 2 seconds
         setInterval(loadMessages, 2000);
     }
+    
+    // Refresh conversation sidebar using our new optimized function
+    updateUserList(); // Initial load
+    setInterval(updateUserList, 3000); // Then every 3 seconds
+}
+
+/**
+ * Function to update the user list (replaces refreshConversationSidebar)
+ */
+function updateUserList() {
+    fetch(`get-conversations.php?user_id=${currentUserId}&active_user=${activeUserId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Create a simple hash of the data to check for changes
+                const newHash = JSON.stringify(data.conversations);
+                
+                if (newHash !== lastUpdateHash) {
+                    renderUserList(data.conversations, data.current_active);
+                    lastUpdateHash = newHash;
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching conversations:', error));
+}
+
+/**
+ * Function to render the user list
+ */
+function renderUserList(conversations, currentActive) {
+    const userList = document.querySelector('.user-list');
+    if (!userList) return;
+    
+    // Keep track of the scroll position
+    const scrollPosition = userList.scrollTop;
+    
+    let html = '';
+    
+    if (conversations.length === 0) {
+        html = '<div class="p-3 text-center text-muted">No conversations yet</div>';
+    } else {
+        conversations.forEach(convo => {
+            const isActive = (convo.other_user_id == currentActive);
+            const isOnline = convo.is_online || false;
+            
+            html += `
+                <div class="user-item ${isActive ? 'active' : ''}" data-user-id="${convo.other_user_id}">
+                    <div class="user-avatar">
+                        <img src="${convo.other_user_picture}">
+                        <span class="status-indicator ${isOnline ? 'online' : 'offline'}"></span>
+                    </div>
+                    <div class="user-info">
+                        <h5>
+                            ${convo.other_username}
+                            ${convo.unread_count > 0 ? '<span class="unread-indicator"></span>' : ''}
+                        </h5>
+                        <p class="last-message">${convo.last_message.substring(0, 30)}${convo.last_message.length > 30 ? '...' : ''}</p>
+                    </div>
+                    <div class="message-time">${convo.time_formatted}</div>
+                </div>
+            `;
+        });
+    }
+    
+    userList.innerHTML = html;
+    
+    // Restore scroll position
+    userList.scrollTop = scrollPosition;
+    
+    // Setup click events for user items
+    setupUserItemsClickEvents();
+}
+
+/**
+ * Setup click events for user items in the sidebar
+ */
+function setupUserItemsClickEvents() {
+    document.querySelectorAll('.user-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            window.location.href = 'chat.php?id=' + userId;
+        });
+    });
+}
+
+/**
+ * When changing active conversation
+ */
+function setActiveConversation(userId) {
+    activeUserId = userId;
+    
+    // Update UI immediately
+    document.querySelectorAll('.user-item').forEach(item => {
+        if (item.getAttribute('data-user-id') == userId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Force update
+    updateUserList();
 }
 
 /**
@@ -130,6 +227,8 @@ function sendMessage() {
             if (response.success) {
                 msgInput.value = '';
                 loadMessages();
+                // Also refresh the conversation list with our new function
+                updateUserList();
             }
         })
         .catch(error => {

@@ -64,7 +64,7 @@
 
 			// Download image
 			if (downloadProfilePic($profilePicUrl, $filename)) {
-				$picture = 'uploads/ProfilePicture/google_' . $providerId . '.jpg';
+				$picture = '/momento/uploads/ProfilePicture/google_' . $providerId . '.jpg';
 			} else {
 				$picture = $profilePicUrl; // fallback
 			}
