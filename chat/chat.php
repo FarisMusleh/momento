@@ -85,13 +85,13 @@ if ($receiver_id > 0) {
 <body>
     <?php require('../header.php')?>
     <div class="container">
-        <h2 class="mt-3">Messaging</h2>
+        <h2 class="mt-3" style="font-family:Dancing Script">Messaging</h2>
         
         <div class="main-container">
             <!-- User list sidebar -->
             <div class="user-sidebar">
                 <div class="sidebar-header">
-                    <h4>Conversations</h4>
+                    <h4 style="font-family:Pacifico">Conversations  <i class="fas fa-comments"></i></h4>
                 </div>
                 
                 <!-- Dynamic user list -->
@@ -182,7 +182,10 @@ if ($receiver_id > 0) {
             <!-- Chat content area -->
             <div class="chat-container">
                 <?php if($receiver_id > 0): ?>
-                    <h4>
+                   
+                    <h4 class="text-start mb-3" style="font-family:Dancing Script; font-size: 1.5rem;">
+                        <i class="fas fa-user-circle"></i>
+                        
                         <?php 
                             // Get username of receiver
                             $userQuery = $pdo->prepare("SELECT username FROM accounts WHERE id = :user_id");
@@ -190,6 +193,7 @@ if ($receiver_id > 0) {
                             $user = $userQuery->fetch();
                             echo htmlspecialchars($user['username'] ?? 'Conversation');
                         ?>
+                        
                     </h4>
                     
                     <!-- Messages display area -->
