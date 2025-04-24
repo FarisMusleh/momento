@@ -84,9 +84,7 @@ if ($receiver_id > 0) {
 </head>
 <body>
     <?php require('../header.php')?>
-    <div class="container">
-        <h2 class="mt-3" style="font-family:Dancing Script">Messaging</h2>
-        
+    <div class="container">        
         <div class="main-container">
             <!-- User list sidebar -->
             <div class="user-sidebar">

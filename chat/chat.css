@@ -185,6 +185,7 @@ h4 {
     position: relative;
     word-break: break-word;
     animation: fadeIn 0.3s ease;
+
 }
 
 .message.sent {
@@ -195,8 +196,8 @@ h4 {
 }
 
 .message.received {
-    background: #f1f3f5;
-    color: #eeecec;
+    background: #287cf8;
+    color: white;
     margin-right: auto;
     border-bottom-left-radius: 4px;
 }

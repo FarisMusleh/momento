@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photographer Dashboard</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .trend-up {
+            color: #2ecc71;
+        }
+
+        .trend-down {
+            color: var(--accent-color);
+        }
+
+        .quick-actions .btn {
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .testimonial-card {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .popular-photo {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .popular-photo:hover {
+            transform: scale(1.05);
+        }
+
+        .rating-stars {
+            color: #f1c40f;
+            font-size: 1.2rem;
+        }
+
+        .calendar-day {
+            padding: 0.25rem;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .calendar-day.booked {
+            background-color: rgba(52, 152, 219, 0.2);
+            border-radius: 50%;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .calendar-day.today {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .progress-thin {
+            height: 6px;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .stat-card h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://via.placeholder.com/150x50?text=PhotoPro" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-calendar me-1"></i> Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-images me-1"></i> Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Settings</a>
+                    </li>
+                </ul>
+                <div class="ms-3">
+                    <img src="https://via.placeholder.com/40x40" class="profile-img" alt="Profile">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1>Welcome back, <span class="fw-bold">Alex Johnson</span></h1>
+                    <p class="mb-0">Here's what's happening with your photography business today</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end mt-3 mt-md-0">
+                        <div class="me-3 text-center">
+                            <div class="fs-5 fw-bold">28°C</div>
+                            <div class="small">Sunny</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="fs-5 fw-bold" id="current-date">June 15, 2023</div>
+                            <div class="small" id="current-time">10:30 AM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="icon"><i class="fas fa-eye"></i></div>
+                            <h2 id="total-views">12,847</h2>
+                            <div class="text-muted">Total Views</div>
+                        </div>
+                        <div class="trend trend-up">
+                            <i class="fas fa-arrow-up me-1"></i> 12%
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                            <h2 id="today-appointments">5</h2>
+                            <div class="text-muted">Today's Appointments</div>
+                        </div>
+                        <div class="trend trend-up">
+                            <i class="fas fa-arrow-up me-1"></i> 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="icon"><i class="fas fa-star"></i></div>
+                            <h2>4.8</h2>
+                            <div class="text-muted">Average Rating</div>
+                        </div>
+                        <div class="trend trend-up">
+                            <i class="fas fa-arrow-up me-1"></i> 0.2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="icon"><i class="fas fa-heart"></i></div>
+                            <h2 id="month-likes">328</h2>
+                            <div class="text-muted">Likes This Month</div>
+                        </div>
+                        <div class="trend trend-up">
+                            <i class="fas fa-arrow-up me-1"></i> 24%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Views Analytics -->
+                <div class="stat-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3><i class="fas fa-chart-line me-2"></i> Views Analytics</h3>
+                        <div>
+                            <select class="form-select form-select-sm" id="views-timeframe">
+                                <option value="week">Last 7 Days</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <canvas id="viewsChart" height="250"></canvas>
+                </div>
+
+                <!-- Appointments -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-card mb-4 h-100">
+                            <h3><i class="fas fa-calendar-alt me-2"></i> Appointments</h3>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h2 class="mb-0">18</h2>
+                                    <small class="text-muted">This Month</small>
+                                </div>
+                                <div class="trend trend-up">
+                                    <i class="fas fa-arrow-up me-1"></i> 3 from last month
+                                </div>
+                            </div>
+                            <div class="progress progress-thin mb-3">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                            </div>
+                            <p class="small text-muted mb-2">65% of your monthly goal (28 appointments)</p>
+
+                            <h5 class="mt-4 mb-3">Upcoming Appointments</h5>
+                            <div class="list-group">
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>Portrait Session</strong>
+                                            <div class="text-muted small">Today, 2:00 PM</div>
+                                        </div>
+                                        <span class="badge bg-primary">Confirmed</span>
+                                    </div>
+                                </div>
+                                <div class="list-group-item border-0 px-0 py-2">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>Wedding Shoot</strong>
+                                            <div class="text-muted small">Tomorrow, 9:00 AM</div>
+                                        </div>
+                                        <span class="badge bg-primary">Confirmed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card mb-4 h-100">
+                            <h3><i class="far fa-calendar me-2"></i> June 2023</h3>
+                            <div class="text-end mb-2">
+                                <button class="btn btn-sm btn-outline-primary"><i
+                                        class="fas fa-chevron-left"></i></button>
+                                <span class="mx-2">June</span>
+                                <button class="btn btn-sm btn-outline-primary"><i
+                                        class="fas fa-chevron-right"></i></button>
+                            </div>
+                            <div class="row g-0 text-center small">
+                                <div class="col">Sun</div>
+                                <div class="col">Mon</div>
+                                <div class="col">Tue</div>
+                                <div class="col">Wed</div>
+                                <div class="col">Thu</div>
+                                <div class="col">Fri</div>
+                                <div class="col">Sat</div>
+                            </div>
+                            <div class="row g-0 text-center" id="mini-calendar">
+                                <!-- Calendar days will be generated by JS -->
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Appointment Types</h5>
+                            <canvas id="appointmentsChart" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Ratings & Reviews -->
+                <div class="stat-card mb-4">
+                    <h3><i class="fas fa-star me-2"></i> Ratings & Reviews</h3>
+                    <div class="text-center py-3">
+                        <div class="rating-stars mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <h2>4.8 <small class="text-muted">/ 5.0</small></h2>
+                        <p class="text-muted">Based on 142 reviews</p>
+                    </div>
+
+                    <div class="testimonial-card p-3 mb-3 bg-light">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://via.placeholder.com/40" class="profile-img me-3" alt="Client">
+                            <div>
+                                <strong>Sarah Miller</strong>
+                                <div class="rating-stars small">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">"Alex captured our wedding perfectly! The photos are stunning and he made us
+                            feel so comfortable."</p>
+                    </div>
+
+                    <div class="progress mb-1" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mb-3">
+                        <span>5 stars (75%)</span>
+                        <span>107 reviews</span>
+                    </div>
+
+                    <div class="progress mb-1" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 15%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mb-3">
+                        <span>4 stars (15%)</span>
+                        <span>21 reviews</span>
+                    </div>
+
+                    <a href="#" class="btn btn-outline-primary w-100 mt-2">View All Reviews</a>
+                </div>
+
+                <!-- Engagement Metrics -->
+                <div class="stat-card mb-4">
+                    <h3><i class="fas fa-chart-pie me-2"></i> Engagement</h3>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="p-2 text-center">
+                                <div class="fs-4 fw-bold">328</div>
+                                <small class="text-muted">Likes This Month</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 text-center">
+                                <div class="fs-4 fw-bold">142</div>
+                                <small class="text-muted">Profile Searches</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-3 mb-2">Social Media</h5>
+                    <div class="list-group mb-3">
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fab fa-instagram me-2 text-danger"></i>
+                                    <span>Instagram</span>
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary">+24 new</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fab fa-facebook me-2 text-primary"></i>
+                                    <span>Facebook</span>
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary">+12 new</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-3 mb-2">Popular Photos</h5>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo1" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo2" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo3" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo4" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo5" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                        <div class="col-4">
+                            <img src="https://via.placeholder.com/300x200?text=Photo6" class="popular-photo"
+                                alt="Popular Photo">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="stat-card">
+                    <h3><i class="fas fa-bolt me-2"></i> Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="btn btn-primary mb-2">
+                            <i class="fas fa-calendar-plus me-2"></i> Schedule Appointment
+                        </button>
+                        <button class="btn btn-outline-primary mb-2">
+                            <i class="fas fa-upload me-2"></i> Upload New Work
+                        </button>
+                        <button class="btn btn-outline-primary mb-2">
+                            <i class="fas fa-envelope me-2"></i> Check Messages <span
+                                class="badge bg-danger ms-1">3</span>
+                        </button>
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-user me-2"></i> View Recent Client
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Initialize and update every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Generate mini calendar
+        function generateMiniCalendar() {
+            const calendar = document.getElementById('mini-calendar');
+            calendar.innerHTML = '';
+
+            // For demo purposes, we'll just show a static calendar for June 2023
+            // In a real app, you would generate this dynamically based on the current month
+            const daysInMonth = 30;
+            const startingDay = 3; // June 1, 2023 is Thursday (0=Sun, 1=Mon, etc.)
+
+            // Add empty cells for days before the 1st
+            for (let i = 0; i < startingDay; i++) {
+                calendar.innerHTML += '<div class="col calendar-day"></div>';
+            }
+
+            // Add days of the month
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = today.getMonth(); // June is month 5
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isBooked = [5, 8, 12, 15, 18, 22, 25, 28].includes(day); // Demo booked days
+                const isToday = day === currentDay && currentMonth === 5; // June is month 5
+
+                let dayClass = 'calendar-day';
+                if (isBooked) dayClass += ' booked';
+                if (isToday) dayClass += ' today';
+
+                calendar.innerHTML += `<div class="col ${dayClass}">${day}</div>`;
+            }
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Views Chart
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            const viewsChart = new Chart(viewsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun 1', 'Jun 2', 'Jun 3', 'Jun 4', 'Jun 5', 'Jun 6', 'Jun 7', 'Jun 8', 'Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13', 'Jun 14', 'Jun 15'],
+                    datasets: [{
+                        label: 'Daily Views',
+                        data: [120, 190, 170, 220, 300, 280, 350, 320, 400, 380, 420, 450, 500, 480, 520],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Appointments Chart
+            const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
+            const appointmentsChart = new Chart(appointmentsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Portrait', 'Wedding', 'Commercial', 'Event', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: [
+                            '#3498db',
+                            '#e74c3c',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#9b59b6'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Update chart when timeframe changes
+            document.getElementById('views-timeframe').addEventListener('change', function () {
+                const timeframe = this.value;
+                let labels, data;
+
+                if (timeframe === 'week') {
+                    labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    data = [320, 400, 380, 420, 450, 500, 480];
+                } else if (timeframe === 'month') {
+                    labels = ['Jun 1', 'Jun 2', 'Jun 3', 'Jun 4', 'Jun 5', 'Jun 6', 'Jun 7', 'Jun 8', 'Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13', 'Jun 14', 'Jun 15'];
+                    data = [120, 190, 170, 220, 300, 280, 350, 320, 400, 380, 420, 450, 500, 480, 520];
+                } else { // year
+                    labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    data = [3200, 2900, 3500, 4200, 4800, 5200, 5500, 5800, 5400, 6000, 6500, 7000];
+                }
+
+                viewsChart.data.labels = labels;
+                viewsChart.data.datasets[0].data = data;
+                viewsChart.update();
+            });
+        }
+
+        // Animate counting numbers
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', function () {
+            generateMiniCalendar();
+            initCharts();
+
+            // Animate some numbers for demo purposes
+            animateValue('total-views', 0, 12847, 2000);
+            animateValue('today-appointments', 0, 5, 1000);
+            animateValue('month-likes', 0, 328, 1500);
+        });
+    </script>
+</body>
+
+</html>
