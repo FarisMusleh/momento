@@ -2,12 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../pdo.php';
+require('pdo.php');
 
 // Check if user is logged in
 if (!isset($_SESSION['data']['id'])) {
     // Redirect or handle not logged in state
-    header('Location: login.php');
     exit;
 }
 
