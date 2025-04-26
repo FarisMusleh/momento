@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Momento Terms & Conditions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #showTermsBtn {
+            padding: 12px 24px;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+
+        #showTermsBtn:hover {
+            background-color: #4338ca;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 5% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            height: 80%;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .close {
+            float: right;
+            font-size: 22px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #1f2937;
+        }
+
+        p,
+        li {
+            margin: 10px 0;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="showTermsBtn">Show Terms</button>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Terms & Conditions for Momento</h2>
+
+            <p>
+                Welcome to Momento. By accessing or using this website, you agree to be bound by the following terms and
+                conditions. These terms are designed in accordance with the applicable laws of the Hashemite Kingdom of
+                Jordan, including but not limited to the Cybercrime Law, the Copyright Law, and the Telecommunications
+                Law.
+            </p>
+
+            <h3>1. Responsibility for Uploaded Images and Content</h3>
+            <ul>
+                <li>Users are solely and fully responsible for any images or content they upload to the platform.</li>
+                <li>Momento bears no legal or civil liability for any content uploaded by users.</li>
+                <li>Any image or content that violates Jordanian law (as of the year 2025) is the sole responsibility of
+                    the user who uploaded it. This includes, but is not limited to:</li>
+                <ul>
+                    <li>Violation of individuals’ privacy.</li>
+                    <li>Breach of intellectual property or copyright.</li>
+                    <li>Incitement to hatred, violence, racism, or discrimination.</li>
+                    <li>Obscene or unethical content that contradicts public morals.</li>
+                    <li>Use of personal photos without explicit consent.</li>
+                </ul>
+            </ul>
+
+            <h3>2. Ownership and Usage Rights</h3>
+            <ul>
+                <li>Any image uploaded without clear prior agreement or license shall be considered proprietary content
+                    of Momento, and the platform reserves the right to use, modify, or republish it at its discretion.
+                </li>
+                <li>By uploading content to Momento, users grant the platform a non-exclusive license to use such
+                    content within the platform’s services and promotional materials.</li>
+            </ul>
+
+            <h3>3. Compliance with Jordanian Law</h3>
+            <ul>
+                <li>Users agree not to use the platform for any unlawful or unauthorized purposes under the laws of
+                    Jordan.</li>
+                <li>Uploading or sharing any content that violates Jordanian law, including the Cybercrime Law No. 27 of
+                    2015, is strictly prohibited.</li>
+                <li>The platform reserves the right to cooperate with law enforcement authorities and judicial entities
+                    in the event of any legal violation involving a user.</li>
+            </ul>
+
+            <h3>4. Account and Content Management</h3>
+            <ul>
+                <li>Momento reserves the right to suspend or delete any user account that violates these terms or
+                    uploads content deemed illegal or inappropriate.</li>
+                <li>The platform may remove any uploaded content without prior notice if it violates internal policies
+                    or national regulations.</li>
+            </ul>
+
+            <h3>5. Privacy and Data Protection</h3>
+            <ul>
+                <li>Momento is committed to maintaining the confidentiality of user data and will not share it with any
+                    third party without explicit consent, unless required by law or judicial authorities.</li>
+                <li>Users have the right to request permanent deletion of their personal data from the platform’s
+                    database.</li>
+            </ul>
+
+            <h3>6. Child Protection</h3>
+            <ul>
+                <li>Users are strictly prohibited from uploading any images or content involving minors (under 18 years
+                    of age) without verified parental or legal guardian consent.</li>
+                <li>Any violation of this policy may result in account suspension and legal action in accordance with
+                    child protection laws in Jordan.</li>
+            </ul>
+
+            <h3>7. Changes to Terms</h3>
+            <ul>
+                <li>These terms and conditions may be updated at any time without prior notice. Continued use of the
+                    platform after changes are posted will be considered acceptance of those changes.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("termsModal");
+        const btn = document.getElementById("showTermsBtn");
+        const close = document.getElementById("closeModal");
+
+        btn.onclick = () => modal.style.display = "block";
+        close.onclick = () => modal.style.display = "none";
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = "none";
+        }
+    </script>
+
+</body>
+
+</html>

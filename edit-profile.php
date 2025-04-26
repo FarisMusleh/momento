@@ -451,6 +451,11 @@
                             <i class="fas fa-share-alt me-2"></i>Social Profiles
                         </a>
                     </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" onclick="showSection('Experience', 'Experience', this)">
+                            <i class="fas fa-briefcase me-2"></i>Experience
+                        </a>
+                    </li>
                 </ul>
             </div>
             
@@ -515,6 +520,10 @@
                             <label class="form-label"><?=$result['account_type']=='user'?'Full Name':'Business Name'?></label>
                             <input name="name" type="text" class="form-control" value="<?=htmlspecialchars($name)?>">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Job</label>
+                            <input name="Job" type="text" class="form-control">
+                        </div>
                         
                         <?php require('locations-select.html') ?>
                         
@@ -573,7 +582,93 @@
                         </div>
                     </div>
                 </form>
-                
+             <!-- Experience Section -->
+<form action="update-profile.php" method="POST" id="experience-form">
+    <input type="hidden" name="section" value="experience">
+    <div id="Experience" class="content-section" style="display: none;">
+        <h2 class="section-title"><i class="fas fa-briefcase me-2"></i>Work Experience</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Job Title <span class="text-danger">*</span></label>
+                    <input name="job_title" type="text" class="form-control" required 
+                           placeholder="e.g., Senior Software Engineer">
+                    <div class="invalid-feedback">Please provide a valid job title</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                    <input name="company_name" type="text" class="form-control" required
+                           placeholder="e.g., Tech Solutions Inc.">
+                    <div class="invalid-feedback">Please provide a company name</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                    <input name="start_date" type="date" class="form-control" required
+                           max="<?= date('Y-m-d') ?>">
+                    <div class="invalid-feedback">Please select a valid start date</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="end-date-group">
+                    <label class="form-label">End Date</label>
+                    <input name="end_date" type="date" class="form-control"
+                           min="" max="<?= date('Y-m-d') ?>">
+                    <small class="text-muted">Leave empty if currently working here</small>
+                    <div class="invalid-feedback">End date must be after start date</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group form-check mb-4">
+            <input name="current_job" type="checkbox" class="form-check-input" id="current-job">
+            <label class="form-check-label" for="current-job">I currently work here</label>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Responsibilities & Achievements</label>
+            <textarea name="description" class="form-control" rows="5" 
+                      placeholder="Describe your role, responsibilities, and key achievements (bullet points work well)"></textarea>
+            <small class="text-muted">Use bullet points (•) to highlight key achievements</small>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="add-another" name="add_another">
+                <label class="form-check-label" for="add-another">
+                    Add another experience after saving
+                </label>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-secondary me-2" onclick="resetExperienceForm()">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Experience
+                </button>
+            </div>
+        </div>
+        
+        <div id="experience-success" class="alert alert-success mt-3" style="display: none;">
+            <i class="fas fa-check-circle me-2"></i> 
+            <span id="success-message">Experience added successfully.</span>
+            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div id="experience-error" class="alert alert-danger mt-3" style="display: none;">
+            <i class="fas fa-exclamation-circle me-2"></i> 
+            <span id="experience-error-message"></span>
+            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+</form>
                 <!-- Social Profiles Section -->
                 <form action="update-profile.php" method="POST">
                     <input type="hidden" name="section" value="socials">
@@ -789,6 +884,65 @@
            
 
         } 
+
+// Enhanced Experience Form Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const currentJobCheckbox = document.getElementById('current-job');
+    const endDateInput = document.querySelector('input[name="end_date"]');
+    const startDateInput = document.querySelector('input[name="start_date"]');
+    const experienceForm = document.getElementById('experience-form');
+    
+    // Current job checkbox functionality
+    if(currentJobCheckbox) {
+        currentJobCheckbox.addEventListener('change', function() {
+            endDateInput.disabled = this.checked;
+            if(this.checked) {
+                endDateInput.value = '';
+            }
+        });
+    }
+    
+    // Set min end date based on start date
+    if(startDateInput) {
+        startDateInput.addEventListener('change', function() {
+            const endDateInput = document.querySelector('input[name="end_date"]');
+            endDateInput.min = this.value;
+        });
+    }
+    
+    // Form validation
+    if(experienceForm) {
+        experienceForm.addEventListener('submit', function(e) {
+            if(!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Additional validation for end date
+            if(endDateInput.value && startDateInput.value) {
+                if(new Date(endDateInput.value) < new Date(startDateInput.value)) {
+                    endDateInput.classList.add('is-invalid');
+                    e.preventDefault();
+                    e.stopPropagation();
+                } else {
+                    endDateInput.classList.remove('is-invalid');
+                }
+            }
+            
+            this.classList.add('was-validated');
+        });
+    }
+});
+
+function resetExperienceForm() {
+    const form = document.getElementById('experience-form');
+    form.reset();
+    form.classList.remove('was-validated');
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.getElementById('experience-success').style.display = 'none';
+    document.getElementById('experience-error').style.display = 'none';
+}
+
     </script>
 </body>
 </html>
