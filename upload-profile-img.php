@@ -45,18 +45,24 @@ if (isset($_POST['uploadProfile']) && isset($_FILES['profileFile'])) {
 
     // Proceed with saving the image if it's safe
     $uniqueId = uniqid('img_', true);
-    $targetDir = "uploads/ProfilePicture/";
+    $targetDir = "/momento/uploads/ProfilePicture/";
     $newFileName = $uniqueId . '.' . $fileExt;
     $targetFilePath = $targetDir . $newFileName;
+	//For downloading image in right path
+	$targetDirFull = $_SERVER['DOCUMENT_ROOT'] . $targetFilePath;
 
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0755, true);
     }
-	if(!$data['picture']=="uploads/ProfilePicture/img_1.jpg"&&file_exists($data['picture'])){
-		unlink($data['picture']);
+	$stmt = $pdo->prepare('select picture from accounts where id = ?');
+	$stmt->execute([$data['id']]);
+	$result = $stmt->fetch();
+	$parts = explode("/", $result['picture']);
+	if($parts[4]!="img_1.jpg"&&file_exists("uploads/ProfilePicture/".$parts[4])){
+		unlink("uploads/ProfilePicture/".$parts[4]);
 	}
     // Move uploaded file to the target directory
-    if (move_uploaded_file($filePath, $targetFilePath)) {
+    if (move_uploaded_file($filePath, $targetDirFull)) {
         // Save the image details to the database
         try {
             $sql = $pdo->prepare("UPDATE accounts SET picture = ? WHERE id = ?");
@@ -67,8 +73,6 @@ if (isset($_POST['uploadProfile']) && isset($_FILES['profileFile'])) {
             exit;
         }
 
-        // Output success message
-        echo "File uploaded successfully.";
 		$stmt = $pdo->prepare('select account_type from accounts where id = ?');
 		$stmt->execute([$data['id']]);
 		$result = $stmt->fetch();

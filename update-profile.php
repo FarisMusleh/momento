@@ -19,8 +19,8 @@
         $stmt->execute([$username, $email, $data['id']]);
 
         // Update session
-        $_SESSION['username'] = $username;
-        $_SESSION['email'] = $email;
+        $_SESSION['data']['username'] = $username;
+        $_SESSION['data']['email'] = $email;
         
     } elseif ($_POST["section"] == "edit") {
         $name = $_POST['name'] ?? "";

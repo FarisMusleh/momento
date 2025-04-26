@@ -183,7 +183,7 @@ $photographers = $stmt->fetchAll();
   </div>
 </section>
 <?php require('footer.php')?>
-<?php require('chat_ai.php'); ?>
+<?php require('chat_admin.php'); ?>
 </body>
 </html>
 <script>

@@ -114,10 +114,10 @@
 }
 
 .arrow {
-  width: 7px;
+  width: 8px;
   height: 7px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
+  border-left: 3px solid white;
+  border-bottom: 3px solid white;
   transform: rotate(-45deg);
   transition: transform 0.3s ease;
   margin-left: 2px;
@@ -145,7 +145,7 @@
   margin-top: 5px;
 }
 
-.search-dropdown-content a {
+.search-dropdown-content div {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -154,9 +154,10 @@
   color: #111;
   font-weight: 500;
   transition: background 0.3s;
+  cursor:pointer;
 }
 
-.search-dropdown-content a:hover {
+.search-dropdown-content div:hover {
   background: rgba(150, 150, 150, 0.2);
 }
 
@@ -208,7 +209,6 @@
   align-items: center;
   padding: 12px 16px;
   font-size: 15px;
-  cursor: pointer;
   transition: background-color 0.2s ease;
   color: #333;
   justify-content:space-between;
@@ -223,7 +223,20 @@
   color: inherit;
   
 }
-
+.suggestion-list li:hover{
+	background-color:#ccc;
+}
+.username-edit{
+  text-decoration: none;
+  color:#777;
+  text-decoration:none;
+  font-family:Poppins;
+  font-weight:700;
+  width:100%;
+}
+.username-edit:hover{
+	color:#888;
+}
 
 
 
@@ -242,8 +255,8 @@
             <span class="arrow"></span>
           </button>
           <div class="search-dropdown-content">
-            <a href="#" onclick="selectOption('photos', 'image')"><i data-feather="image"></i> Photos</a>
-            <a href="#" onclick="selectOption('photographers', 'user')"><i data-feather="user"></i> Photographers</a>
+            <div onclick="selectOption('photos', 'image')"><i data-feather="image"></i>Photos</div>
+            <div onclick="selectOption('photographers', 'user')"><i data-feather="user"></i> Photographers</div>
           </div>
         </div>
 

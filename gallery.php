@@ -88,7 +88,7 @@ require('pdo.php');
             echo '<div class="hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-3">';
             echo '<div class="mt-2 d-flex align-items-center">';
             echo '<img src="' . htmlspecialchars($image['picture']) . '" alt="Profile" class="me-2 pfp" style="width:30px;height:30px;">';
-            echo '<span class="text-white" style="text-transform: capitalize;">' . htmlspecialchars($image['username']) . '</span>';
+            echo '<span class="text-white" style="text-transform: capitalize;"><a style = "color:white;" href = "/momento/profile.php?username='.htmlspecialchars($image['username']).'">' . htmlspecialchars($image['username']) . '</a></span>';
             echo '</div>';
             echo '<div class="d-flex align-items-center justify-content-between text-white">';
             echo '<button class="btn like-btn '.$btnClass.'" data-image-id="' . $image['id'] . '">';

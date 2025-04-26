@@ -1,4 +1,7 @@
 <?php
+	if (session_status() === PHP_SESSION_NONE) {
+		session_start();
+	}
     require_once('pdo.php');
 	if(isset($_SESSION['data']))
 		$data = $_SESSION['data'];
@@ -38,7 +41,7 @@
 					$result = $sql->fetchAll();
 				?>
 				<div class="message-icon-container p-1">
-					<div class=" bg-secondary rounded-circle" style=" padding:3px " id="messageIcon" onclick="window.location.href='/momento/chat/chat.php'">
+					<div class="bg-secondary rounded-circle message-icon" style=" padding:3px " id="messageIcon" onclick="window.location.href='/momento/chat/chat.php'">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
 						</svg>
@@ -61,7 +64,7 @@
 				</div>
 				<?php }?>
 				<!-- END-CHAT-ICON -->
-                <li class="nav-item"><a class="nav-link" href="/momento/index.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/momento/index.php">HOME</a></li>
                 <li class="nav-item"><a class="nav-link" href="/momento/gallery.php">GALLERY</a></li>
                 <li class="nav-item"><a class="nav-link" href="/momento/photographers.php">PHOTOGRAPHERS</a></li>
 				
@@ -74,11 +77,17 @@
                 <?php else: ?>
                     <ul class="list-unstyled m-0 p-0">
                         <div class="dropdown-button">
-                            <img src="<?= $data['picture'] ?>" class="dropdown-img">
+							<?php 
+								$sql = $pdo->prepare('select picture from accounts where id = ?');
+								$sql->execute([$_SESSION['data']['id']]);
+								$result = $sql->fetch();
+							?>
+                            <img src="<?= $result['picture'] ?>" class="dropdown-img">
+							<?php echo "<script>console.log('{$result['picture']}')</script>"?>
                         </div>
                         <div class="dropdown-content">
                             <div class="DropDownFlex">
-                                <img src="<?= $data['picture'] ?>" class="dropdown-img">
+                                <img src="<?= $result['picture'] ?>" class="dropdown-img">
 								
                                 <div class="dropdown-name">
                                     <?php

@@ -58,7 +58,7 @@ function is_valid_image($url) {
     return $headers && strpos($headers[0], '200') !== false;
 }
 
-$stmt = $pdo->prepare('SELECT url FROM images WHERE user_id = ?');
+$stmt = $pdo->prepare('SELECT url,id FROM images WHERE user_id = ?');
 $stmt->execute([$id]);
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -77,521 +77,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/header.css">
-    <style>
-        :root {
-            --primary-color: rgb(4, 18, 27);
-            --secondary-color: rgb(82, 89, 95);
-            --light-color: #ecf0f1;
-            --dark-color: #34495e;
-            --success-color: #2ecc71;
-            --text-color: #333;
-            --text-light: #7f8c8d;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --border-radius: 8px;
-        }
-
-        /* Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: #f5f7fa;
-        }
-
-        .profile-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        /* Profile Header with Integrated About Me */
-        .profile-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 40px;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            position: relative;
-        }
-
-        .profile-header-content {
-            display: flex;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            gap: 40px;
-        }
-
-        .profile-image-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2;
-            min-width: 300px;
-        }
-
-        .profile-image-container {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .profile-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .edit-profile-image {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            background-color: var(--light-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: black;
-            cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border: none;
-        }
-
-        .profile-basic-info {
-            text-align: center;
-        }
-
-        .profile-name {
-            font-size: 2rem;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
-
-        .profile-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .profile-location {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-        }
-
-        .profile-about-section {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .profile-about-section h2 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: white;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .profile-about-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: white;
-        }
-
-        .about-content {
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .profile-social {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-link {
-            color: white;
-            font-size: 1.5rem;
-            transition: transform 0.3s;
-        }
-
-        .social-link:hover {
-            transform: translateY(-3px);
-            color: #f8f9fa;
-        }
-
-        /* Experience Timeline Section */
-        .profile-content {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .profile-columns {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.75rem;
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), #2ecc71);
-            border-radius: 2px;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 2.5rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 1rem;
-            height: 100%;
-            width: 3px;
-            background: linear-gradient(to bottom, var(--primary-color), rgb(68, 70, 69));
-            border-radius: 3px;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .timeline-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 0.5rem;
-            left: -2.5rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            border-radius: 50%;
-            background: var(--primary-color);
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px var(--primary-color);
-            z-index: 1;
-        }
-
-        .timeline-date {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .timeline-content h3 {
-            font-size: 1.25rem;
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-position {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: inline-block;
-            background: rgba(52, 152, 219, 0.1);
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-        }
-
-        .timeline-content p {
-            color: #555;
-            line-height: 1.6;
-        }
-
-        /* Image Gallery */
-        .gallery-container {
-			column-count: 3;
-			column-gap: 10px;
-		}
-
-		.image-container {
-			position: relative;
-			margin-bottom: 10px;
-			break-inside: avoid;
-			overflow: hidden;
-		}
-
-		.gallery-image {
-			width: 100%;
-			height: auto;
-			display: block;
-			transition: all 0.3s ease;
-		}
-
-		.hover-overlay {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0, 0, 0, 0.3); /* Darker overlay (0.7 opacity) */
-			opacity: 0;
-			transition: opacity 0.3s ease;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.image-container:hover .hover-overlay {
-			opacity: 1;
-		}
-
-		.image-container:hover .gallery-image {
-			filter: blur(3px); /* Add blur effect on hover */
-			transform: scale(1.02); /* Optional: slight zoom effect on hover */
-		}
-
-
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .profile-header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .profile-about-section {
-                text-align: center;
-            }
-            
-            .profile-about-section h2::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            
-            .profile-social {
-                justify-content: center;
-            }
-
-            .gallery-container {
-                column-count: 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .profile-content {
-                padding: 1.5rem;
-            }
-            
-            .profile-header {
-                padding: 30px;
-            }
-            
-            .timeline {
-                padding-left: 2rem;
-            }
-            
-            .timeline::before {
-                left: 0.75rem;
-            }
-            
-            .timeline-item::before {
-                left: -2rem;
-                width: 1rem;
-                height: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .profile-header {
-                padding: 20px;
-            }
-            
-            .profile-name {
-                font-size: 1.7rem;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
-            
-            .timeline-date {
-                font-size: 0.85rem;
-            }
-            
-            .timeline-content h3 {
-                font-size: 1.1rem;
-            }
-            
-            .timeline-position {
-                font-size: 0.9rem;
-            }
-
-            .gallery-container {
-                column-count: 1;
-				
-            }
-			
-        }
-/* Slider Container Styles */
-.controls {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-/* Slider Group Styles */
-.slider-group {
-  margin-bottom: 15px;
-  position: relative;
-}
-
-.slider-group:last-child {
-  margin-bottom: 0;
-}
-
-.slider-group label {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-/* Value Display */
-.slider-group label span {
-  background-color: #e9ecef;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  color: #495057;
-  min-width: 36px;
-  text-align: center;
-}
-
-/* Custom Range Slider Styling */
-.slider-group input[type=range] {
-  width: 100%;
-  height: 8px;
-  border-radius: 5px;
-  background: #ddd;
-  outline: none;
-  -webkit-appearance: none;
-}
-
-/* Chrome/Safari */
-.slider-group input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #3b71ca;
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
-  transition: all 0.2s;
-}
-
-.slider-group input[type=range]::-webkit-slider-thumb:hover {
-  background: #285192;
-  transform: scale(1.1);
-}
-
-/* Firefox */
-.slider-group input[type=range]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #3b71ca;
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
-  transition: all 0.2s;
-}
-
-.slider-group input[type=range]::-moz-range-thumb:hover {
-  background: #285192;
-  transform: scale(1.1);
-}
-
-/* Custom colors for different sliders */
-#brightness::-webkit-slider-thumb {
-  background: #ffa41b;
-}
-#brightness::-moz-range-thumb {
-  background: #ffa41b;
-}
-
-#contrast::-webkit-slider-thumb {
-  background: #7209b7;
-}
-#contrast::-moz-range-thumb {
-  background: #7209b7;
-}
-
-#grayscale::-webkit-slider-thumb {
-  background: #4a4e69;
-}
-#grayscale::-moz-range-thumb {
-  background: #4a4e69;
-}
-
-#saturate::-webkit-slider-thumb {
-  background: #4cc9f0;
-}
-#saturate::-moz-range-thumb {
-  background: #4cc9f0;
-}
-.modal-dialog {
-  width: fit-content !important;
-  max-width: 100%;
-  margin: 1.75rem auto; /* optional, centers vertically */
-}
-    </style>
+	<link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
     <?php require('header.php'); ?>
@@ -740,7 +226,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 								  </div>
 								</div>
 								<div class="modal-body text-center">
-								  <input type="text" placeholder="Description" name="description" class="form-control form-control-sm" style="border:solid black 1px;">
+								  <input type="text" id = "myText" placeholder="Description" name="description" class="form-control form-control-sm" style="border:solid black 1px;">
 								</div>  
 								<div class="modal-footer">
 								  <button id="image_upload_button" type="button" class="btn btn-light text-dark border-dark hover-dark" onclick="processAndUploadImage()">Upload</button>
@@ -754,20 +240,46 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 						<?php foreach($images as $image): ?>
 							<?php 
 							$image_url = $image["url"];
-							if (is_valid_image($image_url)): 
 							?>  
 							<div class="image-container">
 								<img src="<?= htmlspecialchars($image_url) ?>" class="gallery-image" alt="Gallery Image">
-								<div class="hover-overlay"></div>
+								<div class="hover-overlay">
+									<a href = "download_handler.php/?imageId=<?=$image['id']?>" class="dots-menu btn btn-light"><i class = " fas fa-download"></i></a>
+									<?php if($isMyProfile): ?>
+										<button type="button" class="dots-menu btn btn-danger" onclick="confirmDelete(<?=$image['id']?>)">
+											<i class="fas fa-trash"></i>
+										</button>
+									<?php endif; ?>
+								</div>
 							</div>
-							<?php endif; ?>
 						<?php endforeach; ?>
 					</div>
                 </section>
             </div>
         </main>
     </div>
-
+	<!-- Delete Confirmation Modal -->
+	<div class="modal fade" id="deleteImageModal" tabindex="-1" aria-labelledby="deleteImageModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteImageModalLabel">Confirm Deletion</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to delete this image? This action cannot be undone.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<form id="deleteForm" action="delete_image.php" method="POST">
+						<input type="hidden" id="deleteImageId" name="imageId" value="">
+						<input type="hidden" name="userId" value="<?= $id ?>">
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
     <!-- Profile Image Modal -->
     <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -791,8 +303,20 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <script>
-	
-	
+		function confirmDelete(imageId) {
+			// Set the delete link with the correct image ID
+			document.getElementById('deleteImageId').value = imageId;
+			
+			// Show the modal
+			const deleteModal = new bootstrap.Modal(document.getElementById('deleteImageModal'));
+			deleteModal.show();
+		}
+		// Prevent Enter key from submitting the form
+		  document.getElementById("myText").addEventListener("keydown", function(event) {
+			if (event.key === "Enter") {
+			  event.preventDefault();
+			}
+		  });
 		//TO-RESET-THE-MODAL-FOR-PROFILE-PICTURE
 		document.getElementById('image-upload-btn').addEventListener('click', function () {
 		  document.getElementById('uploadForm').reset();
@@ -1049,6 +573,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				applyFilters();
 			});
 		});
+
     </script>
 </body>
 </html>

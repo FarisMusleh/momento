@@ -196,7 +196,7 @@ h4 {
 }
 
 .message.received {
-    background: #287cf8;
+    background: #287cf855;
     color: white;
     margin-right: auto;
     border-bottom-left-radius: 4px;
