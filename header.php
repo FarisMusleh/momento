@@ -73,8 +73,7 @@
 
                 <?php if (!isset($_SESSION['data'])): ?>
                     <li class="nav-item"><a class="nav-link" href="account/register.php">Sign up</a></li>
-                    <li class="login"><a class="btn text-white text-center" href="account/login.php">Login</a></li>
-                <?php else: ?>
+                    <li class="login btn"><a class="text-white text-center text-decoration-none" href="account/login.php">Login</a></li>                <?php else: ?>
                     <ul class="list-unstyled m-0 p-0">
                         <div class="dropdown-button">
 							<?php 

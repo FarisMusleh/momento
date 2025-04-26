@@ -27,6 +27,25 @@ $data = $_SESSION['data'] ?? null;
 
 <!-- Include Bootstrap Icons if not already -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+/* Smooth hover effect on cards */
+.card2 {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+}
+
+/* Improve image loading state */
+.card2 img {
+    filter: blur(2px);
+    transition: filter 0.4s ease;
+}
+.card2 img.loaded {
+    filter: blur(0);
+}
+</style>
 </head>
 
 <body class="fade-in" style = "position:relative;">
@@ -79,28 +98,52 @@ $data = $_SESSION['data'] ?? null;
         <?php } ?>
     </div>
 </div>
-<div class="container-md mt-5 p-5 mb-5 shadow-lg" style="background-image: url('./img/Bg.jpg'); background-size: cover; background-position: center; border-radius: 15px; border: 1px solid #333; outline: 6px solid rgba(0,0,0,0.1);">
-    <div class="row g-4">
+<div class="container-md my-5 px-4 px-lg-5 card p-5 shadow-lg">
+    <div class="row g-4 g-lg-5">
+        <!-- Photographers Card -->
         <div class="col-md-6">
-            <div class="card shadow-lg position-relative overflow-hidden rounded-4 transition-all duration-300 hover:shadow-xl">
-                <img src="img/pg.jpg" class="card-img-top" alt="Photographers" height="300px" style="object-fit: cover;">
-                <div class="card-body bg-dark bg-opacity-50 p-4">
-                    <h5 class="card-title text-center text-light mb-3 fs-4">Photographers</h5>
-                    <div class="text-center">
-                        <a href="photographers.php" class="btn btn-outline-light px-5 py-3 text-uppercase fw-bold transition-all duration-200 hover:bg-white hover-text-dark">Explore More</a>
+            <div class="card2 h-100 border-0 overflow-hidden bg-transparent">
+                <!-- Image with Overlay -->
+                <div class="position-relative overflow-hidden rounded-top-3" style="height: 320px;">
+                    <img src="img/pg.jpg" class="w-100 h-100 object-fit-cover" alt="Professional Photographers">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+                    <div class="position-absolute bottom-0 start-0 p-4 text-white">
+                        <h3 class="fw-bold mb-2">Photographers</h3>
+                        <p class="mb-0 opacity-75">Meet our award-winning photography team</p>
                     </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body bg-white p-4 rounded-bottom-3 shadow-sm">
+                    <p class="text-muted mb-4">Explore portfolios from our curated selection of professional photographers specializing in various styles.</p>
+                    <a href="photographers.php" class="btn btn-dark px-4 py-2 rounded-1 fw-medium d-flex align-items-center justify-content-between">
+                        View Profiles
+                        <i class="bi bi-arrow-right-short fs-5"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
+        <!-- Gallery Card -->
         <div class="col-md-6">
-            <div class="card shadow-lg position-relative overflow-hidden rounded-4 transition-all duration-300 hover:shadow-xl">
-                <img src="img/Photos.jpg" class="card-img-top" alt="Photos" height="300px" style="object-fit: cover;">
-                <div class="card-body bg-dark bg-opacity-50 p-4">
-                    <h5 class="card-title text-center text-light mb-3 fs-4">Photos</h5>
-                    <div class="text-center">
-                        <a href="gallery.php" class="btn btn-outline-light px-5 py-3 text-uppercase fw-bold transition-all duration-200 hover:bg-white hover-text-dark">Explore More</a>
+            <div class="card2 h-100 border-0 overflow-hidden bg-transparent">
+                <!-- Image with Overlay -->
+                <div class="position-relative overflow-hidden rounded-top-3" style="height: 320px;">
+                    <img src="img/Photos.jpg" class="w-100 h-100 object-fit-cover" alt="Premium Photo Gallery">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+                    <div class="position-absolute bottom-0 start-0 p-4 text-white">
+                        <h3 class="fw-bold mb-2">Photo Gallery</h3>
+                        <p class="mb-0 opacity-75">Discover our exclusive collection</p>
                     </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body bg-white p-4 rounded-bottom-3 shadow-sm">
+                    <p class="text-muted mb-4">Browse thousands of high-resolution images across multiple categories and photography styles.</p>
+                    <a href="gallery.php" class="btn btn-dark px-4 py-2 rounded-1 fw-medium d-flex align-items-center justify-content-between">
+                        Explore Gallery
+                        <i class="bi bi-grid-3x3-gap fs-5"></i>
+                    </a>
                 </div>
             </div>
         </div>
