@@ -65,7 +65,107 @@
 				<?php }?>
 				<!-- END-CHAT-ICON -->
                 <li class="nav-item"><a class="nav-link" href="/momento/index.php">HOME</a></li>
-                <li class="nav-item"><a class="nav-link" href="/momento/gallery.php">GALLERY</a></li>
+               <!-- Ultra-Professional Categories Dropdown -->
+                <li class="nav-item dropdown dropdown-hover">
+                    <a class="nav-link d-flex align-items-center" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                </i> GALLERY
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="galleryDropdown" style="min-width: 320px;">
+                        <li>
+                            <a class="dropdown-item categories-item" href="/momento/gallery.php">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-primary bg-opacity-10 text-primary">
+                                        <i class="fas fa-images"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">All Collections</div>
+                                        <div class="text-muted small">Browse complete gallery</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-2"></li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-danger bg-opacity-10 text-danger">
+                                        <i class="fas fa-fighter-jet"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Wars</div>
+                                        <div class="text-muted small">Documentary and historical</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-warning bg-opacity-10 text-warning">
+                                        <i class="fas fa-ring"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Wedding</div>
+                                        <div class="text-muted small">Celebrations and moments</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-success bg-opacity-10 text-success">
+                                        <i class="fas fa-mountain"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Nature</div>
+                                        <div class="text-muted small">Landscapes and wildlife</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-info bg-opacity-10 text-info">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Graduation</div>
+                                        <div class="text-muted small">Academic achievements</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon  bg-opacity-10 text-purple">
+                                         <i class="fas fa-palette"></i>   
+                                </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Art</div>
+                                        <div class="text-muted small">Creative expressions</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item categories-item" href="">
+                                <div class="d-flex align-items-center">
+                                    <div class="categories-icon bg-secondary bg-opacity-10 text-secondary">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-medium">Architecture</div>
+                                        <div class="text-muted small">Urban and structures</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End Ultra-Professional Dropdown -->
                 <li class="nav-item"><a class="nav-link" href="/momento/photographers.php">PHOTOGRAPHERS</a></li>
 				
 

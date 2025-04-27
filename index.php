@@ -19,9 +19,9 @@ $data = $_SESSION['data'] ?? null;
 	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 	<!--CSS-->
+    <link rel="stylesheet" href="css/navbar-scrolled.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/home.css">
-	<link rel="stylesheet" href="css/navbar-scrolled.css">
 <!-- Add Bootstrap Icons CDN in your <head> if not already included -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -47,7 +47,6 @@ $data = $_SESSION['data'] ?? null;
 }
 </style>
 </head>
-
 <body class="fade-in" style = "position:relative;">
  <?php require("header.php"); ?>  
 <div class="hero-section">

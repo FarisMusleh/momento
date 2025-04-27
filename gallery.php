@@ -25,6 +25,10 @@ require('pdo.php');
 	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/header.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Include Bootstrap Icons if not already -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 	<!--CSS FILE-->
 	<link rel="stylesheet" href="css/gallery.css">
@@ -42,6 +46,17 @@ require('pdo.php');
 				require('search-bar.php');
 			?>
         </div>
+    </div>
+<div class="container-fluid trending-searches mt-10 p-5">
+    <h2 class="text-center mb-4" style="font-family: Pacifico;">Popular Tags</h2>
+    <div class="text-center">
+        <?php
+        $tags = ['Wars', 'Architecture', 'Nature', 'Wedding', 'Graduation', 'Cars', 'Art'];
+        foreach ($tags as $tag) {
+			$location = "/momento/searching_photos.php?type=photos&query={$tag}";
+            echo "<a class='btn btn-dark m-1' href = {$location}>{$tag}</a>";
+        }
+        ?>
     </div>
     <!-- Image Gallery Section -->
 <div class="container-fluid p-5">
