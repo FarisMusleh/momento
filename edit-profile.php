@@ -341,6 +341,39 @@
                 margin-bottom: 15px;
             }
         }
+
+ .form-card {
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+    .form-card:hover {
+        background-color: #fff;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    }
+    .section-header {
+        border-bottom: 1px solid #eaeaea;
+        padding-bottom: 1rem;
+    }
+    .section-title {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    .section-subtitle {
+        font-size: 0.9rem;
+    }
+    .form-control, .form-select, .form-check-input {
+        border-radius: 0.375rem;
+    }
+    .form-floating>label {
+        color: #6c757d;
+    }
+    .btn {
+        border-radius: 0.375rem;
+        font-weight: 500;
+    }
+    .alert {
+        border-radius: 0.5rem;
+    }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -583,89 +616,114 @@
                     </div>
                 </form>
              <!-- Experience Section -->
-<form action="update-profile.php" method="POST" id="experience-form">
+<form action="update-profile.php" method="POST" id="experience-form" class="needs-validation" novalidate>
     <input type="hidden" name="section" value="experience">
     <div id="Experience" class="content-section" style="display: none;">
-        <h2 class="section-title"><i class="fas fa-briefcase me-2"></i>Work Experience</h2>
+        <div class="section-header mb-4">
+            <h2 class="section-title"><i class="fas fa-briefcase me-2"></i>Work Experience</h2>
+            <p class="section-subtitle text-muted">Detail your professional journey to showcase your expertise</p>
+        </div>
         
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label">Job Title <span class="text-danger">*</span></label>
-                    <input name="job_title" type="text" class="form-control" required 
-                           placeholder="e.g., Senior Software Engineer">
-                    <div class="invalid-feedback">Please provide a valid job title</div>
+        <div class="form-card mb-4 p-4 border rounded">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input name="job_title" type="text" class="form-control" id="jobTitleInput" 
+                               placeholder="Senior Software Engineer" required>
+                        <label for="jobTitleInput">Job Title <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback">Please provide a valid job title</div>
+                        <small class="form-text text-muted">E.g., Senior Software Engineer, Project Manager</small>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
-                    <input name="company_name" type="text" class="form-control" required
-                           placeholder="e.g., Tech Solutions Inc.">
-                    <div class="invalid-feedback">Please provide a company name</div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input name="company_name" type="text" class="form-control" id="companyInput" 
+                               placeholder="Tech Solutions Inc." required>
+                        <label for="companyInput">Company Name <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback">Please provide a company name</div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label">Start Date <span class="text-danger">*</span></label>
-                    <input name="start_date" type="date" class="form-control" required
-                           max="<?= date('Y-m-d') ?>">
-                    <div class="invalid-feedback">Please select a valid start date</div>
+        <div class="form-card mb-4 p-4 border rounded">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input name="start_date" type="date" class="form-control" id="startDateInput" 
+                               max="<?= date('Y-m-d') ?>" required>
+                        <label for="startDateInput">Start Date <span class="text-danger">*</span></label>
+                        <div class="invalid-feedback">Please select a valid start date</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating" id="end-date-group">
+                        <input name="end_date" type="date" class="form-control" id="endDateInput"
+                               min="" max="<?= date('Y-m-d') ?>">
+                        <label for="endDateInput">End Date</label>
+                        <div class="invalid-feedback">End date must be after start date</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group" id="end-date-group">
-                    <label class="form-label">End Date</label>
-                    <input name="end_date" type="date" class="form-control"
-                           min="" max="<?= date('Y-m-d') ?>">
-                    <small class="text-muted">Leave empty if currently working here</small>
-                    <div class="invalid-feedback">End date must be after start date</div>
-                </div>
+            
+            <div class="form-check mt-3">
+                <input name="current_job" type="checkbox" class="form-check-input" id="current-job">
+                <label class="form-check-label" for="current-job">I currently work here</label>
             </div>
         </div>
         
-        <div class="form-group form-check mb-4">
-            <input name="current_job" type="checkbox" class="form-check-input" id="current-job">
-            <label class="form-check-label" for="current-job">I currently work here</label>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Responsibilities & Achievements</label>
-            <textarea name="description" class="form-control" rows="5" 
-                      placeholder="Describe your role, responsibilities, and key achievements (bullet points work well)"></textarea>
-            <small class="text-muted">Use bullet points (•) to highlight key achievements</small>
+        <div class="form-card mb-4 p-4 border rounded">
+            <div class="form-floating">
+                <textarea name="description" class="form-control" id="responsibilitiesInput" 
+                          placeholder="Describe your role and achievements" style="height: 150px"></textarea>
+                <label for="responsibilitiesInput">Responsibilities & Achievements</label>
+                <div class="form-text">
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li><i class="fas fa-info-circle me-1"></i> Describe your key responsibilities</li>
+                        <li><i class="fas fa-trophy me-1"></i> Highlight measurable achievements</li>
+                        <li><i class="fas fa-bullseye me-1"></i> Use bullet points (•) for clarity</li>
+                    </ul>
+                </div>
+            </div>
         </div>
         
         <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="add-another" name="add_another">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="add-another" name="add_another" role="switch">
                 <label class="form-check-label" for="add-another">
                     Add another experience after saving
                 </label>
             </div>
-            <div>
-                <button type="button" class="btn btn-outline-secondary me-2" onclick="resetExperienceForm()">
-                    <i class="fas fa-times me-1"></i> Cancel
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary px-4" onclick="resetExperienceForm()">
+                    <i class="fas fa-undo me-2"></i> Reset
                 </button>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i> Save Experience
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="fas fa-save me-2"></i> Save Experience
                 </button>
             </div>
         </div>
         
-        <div id="experience-success" class="alert alert-success mt-3" style="display: none;">
-            <i class="fas fa-check-circle me-2"></i> 
-            <span id="success-message">Experience added successfully.</span>
-            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+        <div id="experience-success" class="alert alert-success alert-dismissible fade show mt-4" style="display: none;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle me-3 fs-4"></i> 
+                <div>
+                    <h5 class="alert-heading mb-1">Success!</h5>
+                    <p class="mb-0" id="success-message">Experience added successfully.</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         
-        <div id="experience-error" class="alert alert-danger mt-3" style="display: none;">
-            <i class="fas fa-exclamation-circle me-2"></i> 
-            <span id="experience-error-message"></span>
-            <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+        <div id="experience-error" class="alert alert-danger alert-dismissible fade show mt-4" style="display: none;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle me-3 fs-4"></i> 
+                <div>
+                    <h5 class="alert-heading mb-1">Error</h5>
+                    <p class="mb-0" id="experience-error-message"></p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>
 </form>
@@ -942,7 +1000,23 @@ function resetExperienceForm() {
     document.getElementById('experience-success').style.display = 'none';
     document.getElementById('experience-error').style.display = 'none';
 }
+ // Example of enhanced date validation
+    document.getElementById('current-job').addEventListener('change', function() {
+        const endDateGroup = document.getElementById('end-date-group');
+        if (this.checked) {
+            endDateGroup.style.opacity = '0.5';
+            endDateGroup.querySelector('input').disabled = true;
+            endDateGroup.querySelector('input').value = '';
+        } else {
+            endDateGroup.style.opacity = '1';
+            endDateGroup.querySelector('input').disabled = false;
+        }
+    });
 
+    // Start date change handler to set min end date
+    document.querySelector('input[name="start_date"]').addEventListener('change', function() {
+        document.querySelector('input[name="end_date"]').min = this.value;
+    });
     </script>
 </body>
 </html>
