@@ -566,13 +566,13 @@
                         </div>
                         <?php }?>
                         <?php require('locations-select.html') ?>
-                        
+                        <?php if($result['account_type']=='business'){?>
                         <div class="form-group">
                             <label class="form-label">Bio</label>
                             <textarea name="bio" class="form-control" rows="4"><?=htmlspecialchars($bio)?></textarea>
                             <small class="text-muted">Tell us a little about yourself</small>
                         </div>
-                        
+                        <?php }?>
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary" onclick="saveChanges('Profile Settings')">
                                 Update Profile
