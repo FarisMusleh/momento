@@ -763,7 +763,7 @@ commentForm.addEventListener('submit', (e) => {
     });
     }else{
 		downloadButton.addEventListener('click', () => {
-      window.location.href = '/momento/';
+      window.location.href = '/momento/account/login.php';
     });
 	}
     // Dark mode toggle
