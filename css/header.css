@@ -74,14 +74,38 @@
 .dropdown-img:hover {
     transform: scale(1.05);
 }
+/* Ultra Modern Monochromatic Dropdown */
+:root {
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8f8f8;
+  --text-primary: #121212;
+  --text-secondary: #757575;
+  --accent: #000000;
+  --border-light: rgba(0, 0, 0, 0.06);
+  --shadow-ambient: rgba(0, 0, 0, 0.08);
+  --shadow-key: rgba(0, 0, 0, 0.12);
+  --status-online: #00C853;
+}
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-primary: #121212;
+    --surface-secondary: #1e1e1e;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a0a0a0;
+    --accent: #ffffff;
+    --border-light: rgba(255, 255, 255, 0.08);
+    --shadow-ambient: rgba(0, 0, 0, 0.3);
+    --shadow-key: rgba(0, 0, 0, 0.5);
+    --status-online: #00E676;
+  }
+}
 .dropdown-content {
     position: absolute;
     top: 60px;
     right: 10px;
     background-color: #fff;
-    width: 90vw;
-    max-width: 280px;
+    max-width: 300px;
     padding: 16px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
@@ -90,7 +114,101 @@
     visibility: hidden;
     transform: translateY(15px);
     transition: all 0.3s ease;
+	width: 300px;
+	background-color: var(--surface-primary);
+	border-radius: 16px;
+	overflow: hidden;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	box-shadow: 
+	0 10px 25px var(--shadow-ambient),
+	0 6px 12px var(--shadow-key),
+	0 0 0 1px var(--border-light);
+	transform: scale(1);
+	transform-origin: top right;
+	margin: 5px;
 }
+.navbar-profile-container {
+  position: relative;
+}
+
+.navbar-profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 10px var(--shadow-ambient);
+  border: 3px solid var(--surface-primary);
+}
+.navbar-user-info {
+  display: flex;
+  flex-direction: column;
+}
+.navbar-user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.navbar-dropdown-body {
+  padding: 8px 0;
+}
+
+.navbar-menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.navbar-menu-item:hover {
+  background-color: var(--surface-secondary);
+}
+
+.navbar-menu-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.navbar-menu-item:hover .menu-icon {
+  color: var(--text-primary);
+}
+
+.navbar-hover-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-menu-item:hover .hover-indicator {
+  opacity: 1;
+}
+
+/* Elegant animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-dropdown-content {
+  animation: fadeIn 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+
 
 .dropdown-button:hover+.dropdown-content,
 .dropdown-content:hover {
@@ -110,7 +228,7 @@
     font-weight: 600;
     margin-top: 10px;
     font-size: 1rem;
-    color: #333;
+    color: #fff;
     text-transform: capitalize;
 }
 
@@ -123,7 +241,7 @@
     display: block;
     padding: 10px 14px;
     border-radius: 8px;
-    color: #333;
+    color: #fff;
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;

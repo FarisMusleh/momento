@@ -227,6 +227,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  cursor: pointer;
   padding: 20px;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(1px);

@@ -6,6 +6,9 @@
     }else{
         exit();
     }
+	$sql_check_account_type = $pdo->prepare('select account_type from accounts where id = ?');
+	$sql_check_account_type->execute([$data['id']]);
+	$account_type = $sql_check_account_type->fetch();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -478,17 +481,19 @@
                             </a>
                         </li>
                     <?php } ?>
-                    
+                    <?php if($account_type['account_type'] == "business"){?>
                     <li class="settings-nav-item">
                         <a href="#" class="settings-nav-link" onclick="showSection('social-profiles', 'Social Profiles', this)">
                             <i class="fas fa-share-alt me-2"></i>Social Profiles
                         </a>
                     </li>
+					
                     <li class="settings-nav-item">
                         <a href="#" class="settings-nav-link" onclick="showSection('Experience', 'Experience', this)">
                             <i class="fas fa-briefcase me-2"></i>Experience
                         </a>
                     </li>
+					<?php }?>
                 </ul>
             </div>
             
@@ -506,11 +511,12 @@
                         $bio = $info['bio']??null;
                         $social_links = json_decode($info['social_links']??null, true);
                     }elseif($result['account_type']=="business"){
-                        $sql = $pdo->prepare('SELECT business_name, social_links, bio FROM business_profiles WHERE id = ?');
+                        $sql = $pdo->prepare('SELECT business_name, job,social_links, bio FROM business_profiles WHERE id = ?');
                         $sql->execute([$data['id']]);
                         $info = $sql->fetch(PDO::FETCH_ASSOC);
                         $name = $info['business_name'];
                         $bio = $info['bio'];
+						$job = $info['job'];
                         $social_links = json_decode($info['social_links']??null, true);
                     }
                 ?>
@@ -553,11 +559,12 @@
                             <label class="form-label"><?=$result['account_type']=='user'?'Full Name':'Business Name'?></label>
                             <input name="name" type="text" class="form-control" value="<?=htmlspecialchars($name)?>">
                         </div>
+						<?php if($result['account_type']=='business'){?>
                         <div class="form-group">
                             <label class="form-label">Job</label>
-                            <input name="Job" type="text" class="form-control">
+                            <input name="job" type="text" class="form-control" value = "<?=$job?>">
                         </div>
-                        
+                        <?php }?>
                         <?php require('locations-select.html') ?>
                         
                         <div class="form-group">
@@ -580,28 +587,23 @@
                 
                 <!-- Password Section -->
                 <form action="update-profile.php" method="POST">
-                    <input type="hidden" name="section" value="password">
+                    <input type="hidden" name="section" value="password" required>
                     <div id="password" class="content-section" style="display: none;">
                         <h2 class="section-title">Password Settings</h2>
                         
                         <div class="form-group">
                             <label class="form-label">Current Password</label>
-                            <input name="old_password" type="password" class="form-control">
+                            <input name="old_password" type="password" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">New Password</label>
-                            <input name="new_password" type="password" class="form-control" id="new-password">
+                            <input name="new_password" type="password" class="form-control" id="new-password" required>
                             <small class="text-muted">Minimum 8 characters with at least one number</small>
                         </div>
                         
-                        <div class="form-group">
-                            <label class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirm-password">
-                        </div>
-                        
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary" onclick="changePassword()">
+                            <button type="submit" class="btn btn-primary">
                                 Change Password
                             </button>
                         </div>
@@ -623,7 +625,6 @@
             <h2 class="section-title"><i class="fas fa-briefcase me-2"></i>Work Experience</h2>
             <p class="section-subtitle text-muted">Detail your professional journey to showcase your expertise</p>
         </div>
-        
         <div class="form-card mb-4 p-4 border rounded">
             <div class="row g-3">
                 <div class="col-md-6">
@@ -687,13 +688,7 @@
             </div>
         </div>
         
-        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="add-another" name="add_another" role="switch">
-                <label class="form-check-label" for="add-another">
-                    Add another experience after saving
-                </label>
-            </div>
+        <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-secondary px-4" onclick="resetExperienceForm()">
                     <i class="fas fa-undo me-2"></i> Reset
@@ -703,7 +698,6 @@
                 </button>
             </div>
         </div>
-        
         <div id="experience-success" class="alert alert-success alert-dismissible fade show mt-4" style="display: none;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-check-circle me-3 fs-4"></i> 
@@ -859,37 +853,7 @@
             }
         }
 
-        function changePassword() {
-            const newPassword = document.getElementById("new-password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
-            const successMessage = document.getElementById("password-success");
-            const errorMessage = document.getElementById("password-error");
-            const errorText = document.getElementById("error-message");
 
-            // Hide messages initially
-            successMessage.style.display = "none";
-            errorMessage.style.display = "none";
-
-            if (newPassword === "" || confirmPassword === "") {
-                errorText.textContent = "Both password fields must be filled.";
-                errorMessage.style.display = "block";
-                return false;
-            } else if (newPassword !== confirmPassword) {
-                errorText.textContent = "Passwords do not match. Please try again.";
-                errorMessage.style.display = "block";
-                return false;
-            } else if (newPassword.length < 8) {
-                errorText.textContent = "Password must be at least 8 characters long.";
-                errorMessage.style.display = "block";
-                return false;
-            } else {
-                successMessage.style.display = "block";
-                setTimeout(() => {
-                    successMessage.style.display = "none";
-                }, 5000);
-                return true;
-            }
-        }
 
         function confirmDelete() {
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));

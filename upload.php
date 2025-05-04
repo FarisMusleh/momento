@@ -23,8 +23,17 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
 
     // Prepare the file for classification
     $filePath = $_FILES['file']['tmp_name'];
+	$imageInfo = getimagesize($filePath);
     $cFile = curl_file_create($filePath, mime_content_type($filePath), $fileName);
+	if ($imageInfo) {
+        $width = $imageInfo[0];
+        $height = $imageInfo[1];
 
+        if ($width < 600 || $height < 600) {
+			header('Location: nigga' . $_SERVER['HTTP_REFERER']);
+			exit();
+		}
+	}
     // Prepare cURL multi handle
     $multiCurl = curl_multi_init();
     $curlHandles = [];
@@ -90,8 +99,8 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     if (move_uploaded_file($filePath, $targetFilePath)) {
         // Save the image details to the database
         try {
-            $sql = $pdo->prepare('INSERT INTO images (user_id, url, file_name, description, label) VALUES (?, ?, ?, ?, ?)');
-            $sql->execute([$data['id'], $targetFilePath, $newFileName, $_POST['description'], json_encode($topLabels)]);
+            $sql = $pdo->prepare('INSERT INTO images (user_id, url,title, file_name, description, label) VALUES (?, ?,? , ?, ?, ?)');
+            $sql->execute([$data['id'], $targetFilePath, $_POST['title'], $newFileName, $_POST['description'], json_encode($topLabels)]);
         } catch (Exception $e) {
             echo "Database Error: " . $e->getMessage();
             exit;

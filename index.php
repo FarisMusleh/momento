@@ -13,20 +13,22 @@ $data = $_SESSION['data'] ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momento</title>
 
+    <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- GOOGLE-FONTS -->
-	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-	<!--CSS-->
-    <link rel="stylesheet" href="css/navbar-scrolled.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/home.css">
-<!-- Add Bootstrap Icons CDN in your <head> if not already included -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Include Bootstrap Icons if not already -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-<!-- Include Bootstrap Icons if not already -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
+    <link rel="stylesheet" href="css/home.css">
+
 <style>
 /* Smooth hover effect on cards */
 .card2 {
@@ -150,7 +152,7 @@ $data = $_SESSION['data'] ?? null;
 </div>
 <?php
 $stmt = $pdo->prepare("
-    SELECT a.id, a.username, a.picture, a.location, b.business_name,b.bio, b.created_at,b.rate
+    SELECT a.id, a.username, a.picture, a.location, b.business_name,b.bio, b.created_at,b.total_rate
     FROM accounts a
     INNER JOIN business_profiles b ON a.id = b.id
     WHERE a.account_type = 'business'
@@ -210,7 +212,6 @@ $photographers = $stmt->fetchAll();
             </div>
           <?php endforeach; ?>
         </div>
-
         <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#photographerCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -7,7 +7,6 @@
 		$data = $_SESSION['data'];
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <nav class="navbar navbar-expand-lg nav-sticky" id = "navbar">
     <div class="container-fluid">
         <a class="navbar-brand fs-3 momento-logo" href="/momento/index.php">Momento</a>
@@ -86,7 +85,7 @@
                         </li>
                         <li><hr class="dropdown-divider my-2"></li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=war">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon bg-danger bg-opacity-10 text-danger">
                                         <i class="fas fa-fighter-jet"></i>
@@ -99,7 +98,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=wedding">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon bg-warning bg-opacity-10 text-warning">
                                         <i class="fas fa-ring"></i>
@@ -112,7 +111,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=nature">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon bg-success bg-opacity-10 text-success">
                                         <i class="fas fa-mountain"></i>
@@ -125,7 +124,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=graduation">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon bg-info bg-opacity-10 text-info">
                                         <i class="fas fa-graduation-cap"></i>
@@ -138,7 +137,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=art">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon  bg-opacity-10 text-purple">
                                          <i class="fas fa-palette"></i>   
@@ -151,7 +150,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item categories-item" href="">
+                            <a class="dropdown-item categories-item" href="/momento/searching_photos.php?type=photos&query=architecture">
                                 <div class="d-flex align-items-center">
                                     <div class="categories-icon bg-secondary bg-opacity-10 text-secondary">
                                         <i class="fas fa-building"></i>
@@ -185,38 +184,69 @@
 							<?php echo "<script>console.log('{$result['picture']}')</script>"?>
                         </div>
                         <div class="dropdown-content">
-                            <div class="DropDownFlex">
-                                <img src="<?= $result['picture'] ?>" class="dropdown-img">
+                            <div class="dropdown-header"> 
+							<div class="navbar-profile-container">
+							  <img src="<?= $result['picture'] ?>" class="navbar-profile-image">
+							  
+							</div>
+							<div class="navbar-user-info"> 
+							  <div class="navbar-user-name"> 
+								<?php 
+								$stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?'); 
+								$stmt->execute([$_SESSION['data']['id']]); 
+								$account_type = $stmt->fetch(PDO::FETCH_ASSOC); 
 								
-                                <div class="dropdown-name">
-                                    <?php
-                                        $stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
-                                        $stmt->execute([$_SESSION['data']['id']]);
-                                        $account_type = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                                        if ($account_type['account_type'] === 'user') {
-                                            $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
-                                            $profileData->execute([$_SESSION['data']['id']]);
-                                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
-                                            echo $name['name']??null;
-                                        } elseif ($account_type['account_type'] === 'business') {
-                                            $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?');
-                                            $profileData->execute([$_SESSION['data']['id']]);
-                                            $name = $profileData->fetch(PDO::FETCH_ASSOC);
-                                            echo $name['business_name'];
-                                        }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="dropdown-section">
-                                <?php if ($account_type['account_type'] === 'business'): ?>
-                                    <a href="/momento/profile.php" class="dropdown-link">Profile</a>
-                                    <hr class="dropdown-divider">
-                                <?php endif; ?>
-                                <a href="/momento/edit-profile.php" class="dropdown-link">Settings</a>
-                                <hr class="dropdown-divider">
-                                <a href="/momento/logout.php" class="dropdown-link">Sign Out</a>
-                            </div>
+								if ($account_type['account_type'] === 'user') { 
+								  $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?'); 
+								  $profileData->execute([$_SESSION['data']['id']]); 
+								  $name = $profileData->fetch(PDO::FETCH_ASSOC); 
+								  echo $name['name']??null; 
+								} elseif ($account_type['account_type'] === 'business') { 
+								  $profileData = $pdo->prepare('SELECT business_name FROM business_profiles WHERE id = ?'); 
+								  $profileData->execute([$_SESSION['data']['id']]); 
+								  $name = $profileData->fetch(PDO::FETCH_ASSOC); 
+								  echo $name['business_name']; 
+								} 
+								?> 
+							  </div>
+							</div> 
+						  </div> 
+                            <div class="navbar-dropdown-body"> 
+								<?php if ($account_type['account_type'] === 'business'): ?> 
+								  <a href="/momento/profile.php" class="navbar-menu-item">
+									<svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+									  <circle cx="12" cy="7" r="4"></circle>
+									</svg>
+									<span>Profile</span>
+									<div class="navbar-hover-indicator"></div>
+								  </a> 
+								  <a href="/momento/dashboard.php" class="navbar-menu-item">
+								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M4 3h6v6H4V3zm0 8h6v10H4V11zm10-8h6v10h-6V3zm0 12h6v6h-6v-6z"/>
+								  </svg>
+								  <span>Dashboard</span>
+								  <div class="navbar-hover-indicator"></div>
+								</a>
+								<?php endif; ?> 
+								<a href="/momento/edit-profile.php" class="navbar-menu-item">
+								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<circle cx="12" cy="12" r="3"></circle>
+									<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+								  </svg>
+								  <span>Settings</span>
+								  <div class="navbar-hover-indicator"></div>
+								</a>
+								<a href="/momento/logout.php" class="navbar-menu-item">
+								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+									<polyline points="16 17 21 12 16 7"></polyline>
+									<line x1="21" y1="12" x2="9" y2="12"></line>
+								  </svg>
+								  <span>Sign Out</span>
+								  <div class="navbar-hover-indicator"></div>
+								</a> 
+							  </div> 
                         </div>
                     </ul>
                 <?php endif; ?>

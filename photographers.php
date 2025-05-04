@@ -31,6 +31,7 @@ if (isset($_SESSION['data'])) {
     <link rel="stylesheet" href="css/header.css">
 	<link rel="stylesheet" href="css/navbar-scrolled.css">
     <link rel="stylesheet" href="css/photographers.css">
+
 </head>
 <body class = "fade-in">
 
@@ -46,26 +47,27 @@ if (isset($_SESSION['data'])) {
 </div>
 
 <!-- Category Buttons -->
-<div class="container-fluid bg-light py-5">
-    <div class="d-flex  text-center">
-        <div class="mx-auto d-flex">
-            <button class="btn btn-dark fw-bold">Wars</button>
-            <button class="btn btn-dark fw-bold">Graduation</button>
-            <button class="btn btn-dark fw-bold">Wedding</button>
-            <button class="btn btn-dark fw-bold">Nature</button>
-            <button class="btn btn-dark fw-bold">Tourism</button>
-            <button class="btn btn-dark fw-bold">Architecture</button>
-        </div>
-    </div>
+<div class=" bg-light py-5">
+    <div class="d-flex justify-content-center text-center">
+		<div class="cat-dark-btns d-flex flex-wrap justify-content-center gap-2">
+			<button class="btn btn-dark fw-bold">Wars</button>
+			<button class="btn btn-dark fw-bold">Graduation</button>
+			<button class="btn btn-dark fw-bold">Wedding</button>
+			<button class="btn btn-dark fw-bold">Nature</button>
+			<button class="btn btn-dark fw-bold">Tourism</button>
+			<button class="btn btn-dark fw-bold">Architecture</button>
+		</div>
+	</div>
+
 
     <!-- Photographer Cards -->
-    <div class="row">
+    <div class="row gap-5 justify-center">
         <?php
         $stmt = $pdo->prepare("
-            SELECT bp.business_name, bp.bio, a.location, a.picture, bp.rate, bp.total_likes, bp.total_views
+            SELECT bp.business_name, bp.bio, a.username, a.location, a.picture, bp.total_rate, bp.total_likes, bp.total_reviews, bp.total_views
             FROM business_profiles bp
             JOIN accounts a ON bp.id = a.id
-            ORDER BY bp.rate DESC, bp.total_likes DESC, bp.total_views DESC
+            ORDER BY bp.total_rate DESC, bp.total_likes DESC, bp.total_views DESC
             LIMIT 20
         ");
 
@@ -73,27 +75,34 @@ if (isset($_SESSION['data'])) {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($result as $row) {
-            echo '<div class="col-md-3 mt-3 animate">
-                    <div class="card photographer-card position-relative bg-light bg-opacity-50 border-0 rounded-4 shadow-lg"
-                         style="backdrop-filter: blur(10px);">
-                        <div class="position-relative">
-                            <img src="img/test.jpg" alt="Photographer Profile" class="card-img-top rounded-4" style="opacity:0.7">
-                            <div class="position-absolute top-50 start-50 translate-middle">
-                                <img src="'.$row["picture"].'" alt="Profile Picture" 
-                                     class="rounded-circle border border-white shadow-lg" 
-                                     style="width: 100px; height: 100px; object-fit: cover;">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">'.$row["business_name"].'</h5>
-                            <p class="card-text">'.$row["bio"].'</p>
-                            <div class="d-grid gap-2 d-md-block">
-                                <a href="#" class="btn btn-primary">Portfolio</a>
-                                <a href="#" class="btn btn-outline-primary">Contact</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>';
+echo '
+    <div class="photographer-card">
+        <div class="card-header">
+            <img src="'.$row['picture'].'" alt="Julia Smith" class="profile-image-cards">
+            <div class="favorite-btn">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </div>
+        </div>
+        <div class="card-content">
+            <a href = "/momento/profile.php?username='.$row['username'].'"><h3 class="username">'.$row["business_name"].'</h3></a>
+            <div class="location">
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                '.$row["location"].'
+            </div>
+            <div class="rate">$120 / hour</div>
+            <div class="rating">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                '.$row['total_rate'].'&nbsp;('.$row['total_reviews'].' reviews)
+            </div>
+            <div class="divider"></div>
+            <div class="tags">
+                <span class="tag">Portrait</span>
+                <span class="tag">Fashion</span>
+                <span class="tag">Wedding</span>
+            </div>
+        </div>
+    </div>';
+
         }
         ?>
     </div>
@@ -131,5 +140,13 @@ window.onscroll = function() {
   }
 };
 </script>
+    <script>
+        // Simple toggle for favorite buttons
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>

@@ -184,58 +184,151 @@
 
 
 
-
-
-
-/* Suggestion List Styles */
 .suggestion-list {
+	display:none;
   position: absolute;
-  top: 100%;
+  top: 46px; /* Align with bottom of search bar */
   left: 0;
   right: 0;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  padding: 0;
-  margin-top: 6px;
-  z-index: 1000;
-  max-height: 250px;
+  background: rgba(90, 90, 90, 1);
+  backdrop-filter: blur(3px);
+  border-radius: 23px 23px 23px 23px; /* Rounded only on bottom corners */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  margin-top: 0; /* No margin to connect with search bar */
+  z-index: 990; /* Just below search bar z-index */
+  max-height: 350px;
   overflow-y: auto;
-  border: 1px solid #e0e0e0;
+  border: none;
+  transition: all 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle divider */
+}
+
+.suggestion-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestion-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.suggestion-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 6px;
 }
 
 .suggestion-list li {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin: 6px 0;
   font-size: 15px;
-  transition: background-color 0.2s ease;
-  color: #333;
-  justify-content:space-between;
+  transition: all 0.3s ease;
+  color: white;
+  justify-content: space-between;
+  border-bottom: none;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .suggestion-list li:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.suggestion-list li a {
+.suggestion-list .user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.suggestion-list .profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.username-edit {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  color: inherit;
-  
+  transition: all 0.2s ease;
+  font-size: 15px;
+  letter-spacing: 0.2px;
 }
-.suggestion-list li:hover{
-	background-color:#ccc;
+
+.username-edit:hover {
+  color: white;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
-.username-edit{
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   text-decoration: none;
-  color:#777;
-  text-decoration:none;
-  font-family:Poppins;
-  font-weight:700;
-  width:100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-.username-edit:hover{
-	color:#888;
+
+.book-btn {
+  background: linear-gradient(to right, #2980b9, #3498db);
+  color: white;
+}
+
+.book-btn:hover {
+  background: linear-gradient(to right, #2573a7, #2980b9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.chat-btn {
+  background: linear-gradient(to right, #2d3436, #636e72);
+  color: white;
+}
+
+.chat-btn:hover {
+  background: linear-gradient(to right, #222, #444);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-action i {
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+}
+
+.chat-btn .feather {
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+}
+
+.empty-result {
+  padding: 20px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
 }
 
 
@@ -276,7 +369,7 @@
         <!-- Search Input -->
         <input type="text" name="query" class="search-input" placeholder="What are you looking for?" value="<?= $_GET['query'] ?? '' ?>">
 		<!-- Photographer Suggestions -->
-		<ul id="photographer-suggestions" class="suggestion-list" style="display:none; position:absolute; z-index:1000;left:250px;top:50px; background:#fff; border:1px solid #ccc; width:45%; list-style:none; margin:0; padding:0; max-height: 200px; overflow-y: auto;"></ul>
+		<ul id="photographer-suggestions" class="suggestion-list"></ul>
 
       </div>
     </form>
@@ -320,6 +413,24 @@
   feather.replace();
 </script>
 
+
+<script>
+  // Re-initialize Feather icons when suggestions are loaded
+  const originalAjaxSuccess = $.ajax;
+  $.ajax = function() {
+    const originalSuccess = arguments[0].success;
+    if (originalSuccess) {
+      arguments[0].success = function(data) {
+        const result = originalSuccess.apply(this, arguments);
+        if (typeof feather !== 'undefined') {
+          setTimeout(() => feather.replace(), 10);
+        }
+        return result;
+      };
+    }
+    return originalAjaxSuccess.apply($, arguments);
+  };
+</script>
 
 
 <script>

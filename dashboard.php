@@ -1,3 +1,59 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require 'pdo.php';
+if (isset($_SESSION['data'])) {
+    $data = $_SESSION['data'];
+}else{
+	header('location: index.php');
+}
+$sql_photographer = $pdo->prepare('select * from business_profiles where id = ?');
+$sql_photographer->execute([$data['id']]);
+$photographer = $sql_photographer->fetch();
+if(!$photographer){
+	header('location: index.php');
+}
+$stmtToday = $pdo->prepare("
+    SELECT COUNT(*) as count
+FROM appointments 
+WHERE photographer_id = ? 
+  AND date >= CURDATE()
+  AND date < CURDATE() + INTERVAL 1 DAY
+
+");
+$stmtToday->execute([$data['id']]);
+$todayAppointments = $stmtToday->fetch(PDO::FETCH_ASSOC)['count'];
+
+$currentMonth = date('Y-m');
+$lastMonth = date('Y-m', strtotime('-1 month'));
+
+$stmtCurrent = $pdo->prepare("SELECT COUNT(*) FROM appointments WHERE photographer_id = ? AND DATE_FORMAT(date, '%Y-%m') = ?");
+$stmtCurrent->execute([$data['id'], $currentMonth]);
+$currentMonthCount = $stmtCurrent->fetchColumn();
+
+$stmtLast = $pdo->prepare("SELECT COUNT(*) FROM appointments WHERE photographer_id = ? AND DATE_FORMAT(date, '%Y-%m') = ?");
+$stmtLast->execute([$data['id'], $lastMonth]);
+$lastMonthCount = $stmtLast->fetchColumn();
+
+$diff = $currentMonthCount - $lastMonthCount;
+$trendIcon = $diff >= 0 ? 'up' : 'down';
+$trendClass = $diff >= 0 ? 'trend-up' : 'trend-down';
+$diffText = $diff != 0 ? abs($diff) . ' from last month' : 'No change';
+
+$goal = 28;
+$percent = min(round(($currentMonthCount / $goal) * 100), 100);
+
+$stmtUpcoming = $pdo->prepare("
+    SELECT category, date, status 
+    FROM appointments 
+    WHERE photographer_id = ? AND date >= CURDATE() 
+    ORDER BY date ASC 
+    LIMIT 5
+");
+$stmtUpcoming->execute([$data['id']]);
+$upcomingAppointments = $stmtUpcoming->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +67,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!--CSS-->
+    <link rel="stylesheet" href="css/header.css">
     <style>
         :root {
             --primary-color: #3498db;
@@ -146,52 +211,29 @@
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="https://via.placeholder.com/150x50?text=PhotoPro" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-calendar me-1"></i> Appointments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-images me-1"></i> Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Settings</a>
-                    </li>
-                </ul>
-                <div class="ms-3">
-                    <img src="https://via.placeholder.com/40x40" class="profile-img" alt="Profile">
-                </div>
-            </div>
-        </div>
-    </nav>
+    <?php require("header.php"); ?>
 
-    <!-- Main Content -->
+    <!-- Navigation Bar -->
     <div class="container py-4">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1>Welcome back, <span class="fw-bold">Alex Johnson</span></h1>
+				<?php
+					$sql = $pdo->prepare('select business_name,total_likes,total_views,total_rate,total_reviews from business_profiles where id = ?');
+					$sql->execute([$data['id']]);
+					$result = $sql->fetch();
+
+				?>
+                    <h1>Welcome back, <span class="fw-bold"></span><?=$result['business_name']?></h1>
                     <p class="mb-0">Here's what's happening with your photography business today</p>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-md-end mt-3 mt-md-0">
-                        <div class="me-3 text-center">
+                        <!--  <div class="me-3 text-center">
                             <div class="fs-5 fw-bold">28°C</div>
                             <div class="small">Sunny</div>
-                        </div>
+                        </div> -->
                         <div class="text-center">
                             <div class="fs-5 fw-bold" id="current-date">June 15, 2023</div>
                             <div class="small" id="current-time">10:30 AM</div>
@@ -208,7 +250,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="icon"><i class="fas fa-eye"></i></div>
-                            <h2 id="total-views">12,847</h2>
+                            <h2 id="total-views"><?=$result['total_views']?></h2>
                             <div class="text-muted">Total Views</div>
                         </div>
                         <div class="trend trend-up">
@@ -222,7 +264,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="icon"><i class="fas fa-calendar-check"></i></div>
-                            <h2 id="today-appointments">5</h2>
+                            <h2 id="today-appointments"><?=$todayAppointments?></h2>
                             <div class="text-muted">Today's Appointments</div>
                         </div>
                         <div class="trend trend-up">
@@ -236,7 +278,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="icon"><i class="fas fa-star"></i></div>
-                            <h2>4.8</h2>
+                            <h2><?=$result['total_rate']?></h2>
                             <div class="text-muted">Average Rating</div>
                         </div>
                         <div class="trend trend-up">
@@ -250,7 +292,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="icon"><i class="fas fa-heart"></i></div>
-                            <h2 id="month-likes">328</h2>
+                            <h2 id="month-likes"><?=$result['total_likes']?></h2>
                             <div class="text-muted">Likes This Month</div>
                         </div>
                         <div class="trend trend-up">
@@ -282,66 +324,51 @@
 
                 <!-- Appointments -->
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="stat-card mb-4 h-100">
-                            <h3><i class="fas fa-calendar-alt me-2"></i> Appointments</h3>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h2 class="mb-0">18</h2>
-                                    <small class="text-muted">This Month</small>
-                                </div>
-                                <div class="trend trend-up">
-                                    <i class="fas fa-arrow-up me-1"></i> 3 from last month
-                                </div>
-                            </div>
-                            <div class="progress progress-thin mb-3">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-                            </div>
-                            <p class="small text-muted mb-2">65% of your monthly goal (28 appointments)</p>
+                    
+					
+					
+					
+					<div class="col-md-6">
+    <div class="stat-card mb-4 h-100">
+        <h3><i class="fas fa-calendar-alt me-2"></i> Appointments</h3>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="mb-0"><?= $currentMonthCount ?></h2>
+                <small class="text-muted">This Month</small>
+            </div>
+            <div class="trend <?= $trendClass ?>">
+                <i class="fas fa-arrow-<?= $trendIcon ?> me-1"></i> <?= $diffText ?>
+            </div>
+        </div>
+        <div class="progress progress-thin mb-3">
+            <div class="progress-bar bg-success" role="progressbar" style="width: <?= $percent ?>%"></div>
+        </div>
+        <p class="small text-muted mb-2"><?= $percent ?>% of your monthly goal (<?= $goal ?> appointments)</p>
 
-                            <h5 class="mt-4 mb-3">Upcoming Appointments</h5>
-                            <div class="list-group">
-                                <div class="list-group-item border-0 px-0 py-2">
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <strong>Portrait Session</strong>
-                                            <div class="text-muted small">Today, 2:00 PM</div>
-                                        </div>
-                                        <span class="badge bg-primary">Confirmed</span>
-                                    </div>
-                                </div>
-                                <div class="list-group-item border-0 px-0 py-2">
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <strong>Wedding Shoot</strong>
-                                            <div class="text-muted small">Tomorrow, 9:00 AM</div>
-                                        </div>
-                                        <span class="badge bg-primary">Confirmed</span>
-                                    </div>
-                                </div>
+        <h5 class="mt-4 mb-3">Upcoming Appointments</h5>
+        <div class="list-group">
+            <?php if ($upcomingAppointments): ?>
+                <?php foreach ($upcomingAppointments as $appointment): ?>
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong><?= htmlspecialchars($appointment['category']) ?></strong>
+                                <div class="text-muted small"><?= date('l, g:i A', strtotime($appointment['date'])) ?></div>
                             </div>
+                            <span class="badge bg-primary"><?= htmlspecialchars($appointment['status']) ?></span>
                         </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-muted small">No upcoming appointments</p>
+            <?php endif; ?>
+        </div>
+    </div>
+	</div>
                     <div class="col-md-6">
                         <div class="stat-card mb-4 h-100">
-                            <h3><i class="far fa-calendar me-2"></i> June 2023</h3>
-                            <div class="text-end mb-2">
-                                <button class="btn btn-sm btn-outline-primary"><i
-                                        class="fas fa-chevron-left"></i></button>
-                                <span class="mx-2">June</span>
-                                <button class="btn btn-sm btn-outline-primary"><i
-                                        class="fas fa-chevron-right"></i></button>
-                            </div>
-                            <div class="row g-0 text-center small">
-                                <div class="col">Sun</div>
-                                <div class="col">Mon</div>
-                                <div class="col">Tue</div>
-                                <div class="col">Wed</div>
-                                <div class="col">Thu</div>
-                                <div class="col">Fri</div>
-                                <div class="col">Sat</div>
-                            </div>
-                            <div class="row g-0 text-center" id="mini-calendar">
+                      
+                            <div class="row g-0 text-center" id="mini-calendar" style = "display:none;">
                                 <!-- Calendar days will be generated by JS -->
                             </div>
 
@@ -351,141 +378,121 @@
                     </div>
                 </div>
             </div>
-
+			
             <!-- Right Column -->
             <div class="col-lg-4">
+			<?php require('appointment/calender.php');?>
                 <!-- Ratings & Reviews -->
+				
                 <div class="stat-card mb-4">
                     <h3><i class="fas fa-star me-2"></i> Ratings & Reviews</h3>
                     <div class="text-center py-3">
                         <div class="rating-stars mb-2">
+						<?php
+							$rating = isset($result['total_rate']) ? floatval($result['total_rate']) : 0;
+							$fullStars = floor($result['total_rate']);
+							$halfStar = ($result['total_rate'] - $fullStars) >= 0.5;
+							$emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                            for ($i = 0; $i < $fullStars; $i++):
+							?>
                             <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
+						  <?php endfor; ?>
+						  <?php if ($halfStar): ?>
+							<i class="fas fa-star-half-alt"></i>
+						  <?php endif; ?>
+						  <?php for ($i = 0; $i < $emptyStars; $i++): ?>
+							<i class="far fa-star"></i>
+						  <?php endfor; ?>
                         </div>
-                        <h2>4.8 <small class="text-muted">/ 5.0</small></h2>
-                        <p class="text-muted">Based on 142 reviews</p>
+                        <h2><?=$result['total_rate']?> <small class="text-muted">/ 5.0</small></h2>
+                        <p class="text-muted">Based on <?=$result['total_reviews']?> reviews</p>
                     </div>
+<!------------------------------------------------------------------------------------------------------------->
+					<?php
+					$sql_reviews = $pdo->prepare('
+						SELECT 
+							reviews.id, reviews.user_id, reviews.photographer_id, reviews.rate, reviews.comment, 
+							reviews.created_at, accounts.picture, accounts.username
+						FROM reviews
+						JOIN accounts ON accounts.id = reviews.user_id
+						WHERE reviews.photographer_id = ? AND reviews.rate >= 2.0
+						LIMIT 1
+					');
+					$sql_reviews->execute([$data['id']]);
+					$reviews = $sql_reviews->fetchAll();
+					?>
+                    <?php foreach ($reviews as $review): ?>
+						<div class="testimonial-card p-3 mb-3 bg-light">
+							<div class="d-flex align-items-center mb-2">
+								<img src="<?= htmlspecialchars($review['picture'] ?? 'https://via.placeholder.com/40') ?>" class="profile-img me-3" alt="Client">
+								<div>
+									<strong><?= htmlspecialchars($review['username']) ?></strong>
+									<div class="rating-stars small">
+										<?php
+										$fullStars = floor($review['rate']);
+										$halfStar = ($review['rate'] - $fullStars) >= 0.5 ? 1 : 0;
+										$emptyStars = 5 - $fullStars - $halfStar;
 
-                    <div class="testimonial-card p-3 mb-3 bg-light">
-                        <div class="d-flex align-items-center mb-2">
-                            <img src="https://via.placeholder.com/40" class="profile-img me-3" alt="Client">
-                            <div>
-                                <strong>Sarah Miller</strong>
-                                <div class="rating-stars small">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-0">"Alex captured our wedding perfectly! The photos are stunning and he made us
-                            feel so comfortable."</p>
-                    </div>
+										for ($i = 0; $i < $fullStars; $i++) {
+											echo '<i class="fas fa-star text-warning"></i>';
+										}
+										if ($halfStar) {
+											echo '<i class="fas fa-star-half-alt text-warning"></i>';
+										}
+										for ($i = 0; $i < $emptyStars; $i++) {
+											echo '<i class="far fa-star text-muted"></i>';
+										}
+										?>
+									</div>
+								</div>
+							</div>
+							<p class="mb-0">"<?= htmlspecialchars($review['comment']) ?>"</p>
+						</div>
+					<?php endforeach; ?>
+                    
+					
+					<?php
+					
+						$sql_rating_breakdown = $pdo->prepare("
+							SELECT rate, COUNT(*) as count 
+							FROM reviews 
+							WHERE photographer_id = ? 
+							GROUP BY rate
+						");
+						$sql_rating_breakdown->execute([$data['id']]);
+						$ratings_data = $sql_rating_breakdown->fetchAll(PDO::FETCH_ASSOC);
+						$rating_counts = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+						$total_reviews = 0;
+						foreach ($ratings_data as $row) {
+							$rounded_rate = round($row['rate']);
+							if (isset($rating_counts[$rounded_rate])) {
+								$rating_counts[$rounded_rate] += $row['count'];
+								$total_reviews += $row['count'];
+							}
+						}
+						?>
 
-                    <div class="progress mb-1" style="height: 10px;">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
-                    </div>
-                    <div class="d-flex justify-content-between small text-muted mb-3">
-                        <span>5 stars (75%)</span>
-                        <span>107 reviews</span>
-                    </div>
+					<?php
+					foreach ([5, 4, 3, 2, 1] as $star) {
+						$count = $rating_counts[$star];
+						$percent = $total_reviews > 0 ? round(($count / $total_reviews) * 100) : 0;
+						?>
+						<div class="progress mb-1" style="height: 10px;">
+							<div class="progress-bar bg-warning" role="progressbar" style="width: <?= $percent ?>%"></div>
+						</div>
+						<div class="d-flex justify-content-between small text-muted mb-3">
+							<span><?= $star ?> star<?= $star > 1 ? 's' : '' ?> (<?= $percent ?>%)</span>
+							<span><?= $count ?> review<?= $count != 1 ? 's' : '' ?></span>
+						</div>
+					<?php } ?>
 
-                    <div class="progress mb-1" style="height: 10px;">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 15%"></div>
-                    </div>
-                    <div class="d-flex justify-content-between small text-muted mb-3">
-                        <span>4 stars (15%)</span>
-                        <span>21 reviews</span>
-                    </div>
 
                     <a href="#" class="btn btn-outline-primary w-100 mt-2">View All Reviews</a>
                 </div>
-
-                <!-- Engagement Metrics -->
-                <div class="stat-card mb-4">
-                    <h3><i class="fas fa-chart-pie me-2"></i> Engagement</h3>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <div class="p-2 text-center">
-                                <div class="fs-4 fw-bold">328</div>
-                                <small class="text-muted">Likes This Month</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-2 text-center">
-                                <div class="fs-4 fw-bold">142</div>
-                                <small class="text-muted">Profile Searches</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h5 class="mt-3 mb-2">Social Media</h5>
-                    <div class="list-group mb-3">
-                        <div class="list-group-item border-0 px-0 py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fab fa-instagram me-2 text-danger"></i>
-                                    <span>Instagram</span>
-                                </div>
-                                <div>
-                                    <span class="badge bg-primary">+24 new</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-0 py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fab fa-facebook me-2 text-primary"></i>
-                                    <span>Facebook</span>
-                                </div>
-                                <div>
-                                    <span class="badge bg-primary">+12 new</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h5 class="mt-3 mb-2">Popular Photos</h5>
-                    <div class="row g-2">
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo1" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo2" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo3" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo4" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo5" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                        <div class="col-4">
-                            <img src="https://via.placeholder.com/300x200?text=Photo6" class="popular-photo"
-                                alt="Popular Photo">
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Quick Actions -->
                 <div class="stat-card">
                     <h3><i class="fas fa-bolt me-2"></i> Quick Actions</h3>
                     <div class="quick-actions">
-                        <button class="btn btn-primary mb-2">
-                            <i class="fas fa-calendar-plus me-2"></i> Schedule Appointment
-                        </button>
                         <button class="btn btn-outline-primary mb-2">
                             <i class="fas fa-upload me-2"></i> Upload New Work
                         </button>
@@ -502,7 +509,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -655,9 +661,9 @@
             initCharts();
 
             // Animate some numbers for demo purposes
-            animateValue('total-views', 0, 12847, 2000);
-            animateValue('today-appointments', 0, 5, 1000);
-            animateValue('month-likes', 0, 328, 1500);
+            animateValue('total-views', 0, <?=$result['total_views']?>, 2000);
+            animateValue('today-appointments', 0, <?=intval($todayAppointments)?>, 1000);
+            animateValue('month-likes', 0, <?=$result['total_likes']?>, 1500);
         });
     </script>
 </body>

@@ -97,23 +97,34 @@ require('pdo.php');
 				$btnClass = $liked ? 'liked-button' : '';
 			}
 			
-            echo '<div>';
-            echo '<div class="gallery-item">';
-            echo '<img loading = "lazy" src="' . htmlspecialchars($image['url']) . '" class="" alt="' . htmlspecialchars($image['label']) . '">';
-            echo '<div class="hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-3">';
-            echo '<div class="mt-2 d-flex align-items-center">';
-            echo '<img src="' . htmlspecialchars($image['picture']) . '" alt="Profile" class="me-2 pfp" style="width:30px;height:30px;">';
-            echo '<span class="text-white" style="text-transform: capitalize;"><a style = "color:white;" href = "/momento/profile.php?username='.htmlspecialchars($image['username']).'">' . htmlspecialchars($image['username']) . '</a></span>';
-            echo '</div>';
-            echo '<div class="d-flex align-items-center justify-content-between text-white">';
-            echo '<button class="btn like-btn '.$btnClass.'" data-image-id="' . $image['id'] . '">';
-            echo '<i class="bi bi-suit-heart-fill" style="margin:auto;"></i>';
-            echo '</button>';
-            echo '<span><i class="fas fa-eye"></i> ' . $image['views'] . '</span>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
+		echo '<div class="gallery-item position-relative" style="overflow: hidden;">';
+		echo '<img loading="lazy" src="' . htmlspecialchars($image['url']) . '" class="w-100" alt="' . htmlspecialchars($image['label']) . '">';
+		echo '<a href="view_image.php?id=' . $image['id'] . '" class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1;"></a>';
+		echo '<div class="hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-3" style="z-index: 2; pointer-events: none;">';
+		echo '<div class="mt-2 d-flex align-items-center" style="pointer-events: auto;">';
+		echo '<img src="' . htmlspecialchars($image['picture']) . '" alt="Profile" class="me-2 pfp" style="width:30px;height:30px;">';
+		echo '<span class="text-white text-capitalize">';
+		echo '<a href="/momento/profile.php?username=' . htmlspecialchars($image['username']) . '" style="color:white;" onclick="event.stopPropagation();">';
+		echo htmlspecialchars($image['username']);
+		echo '</a></span>';
+		echo '</div>';
+		echo '<div class="d-flex align-items-center justify-content-between text-white" style="pointer-events: auto;">';
+		echo '<button class="btn like-btn ' . $btnClass . '" data-image-id="' . $image['id'] . '" onclick="event.stopPropagation();">';
+		echo '<i class="bi bi-suit-heart-fill" style="margin:auto;"></i>';
+		echo '</button>';
+		echo '<span><i class="fas fa-eye"></i> ' . $image['views'] . '</span>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>'; 
+
+
+
+
+
+
+
+
+
         }
         ?>
     </div>

@@ -24,6 +24,7 @@
         
     } elseif ($_POST["section"] == "edit") {
         $name = $_POST['name'] ?? "";
+		$job = $_POST['job'] ?? "";
         $location = $_POST['location'] ?? "";
         $bio = $_POST['bio'] ?? "";
 
@@ -39,8 +40,8 @@
             $stmt->execute([$name, $bio, $data['id']]);
             $_SESSION['name'] = $name;
         } elseif ($account_type === "business") {
-            $stmt = $pdo->prepare("UPDATE business_profiles SET business_name = ?, bio = ? WHERE id = ?");
-            $stmt->execute([$name, $bio, $data['id']]);
+            $stmt = $pdo->prepare("UPDATE business_profiles SET business_name = ?, job = ?,  bio = ? WHERE id = ?");
+            $stmt->execute([$name, $job,$bio, $data['id']]);
             $_SESSION['business_name'] = $name;
             $_SESSION['location'] = $location;
         }
@@ -93,7 +94,20 @@
 
         header("Location: logout.php");
         exit;
-    }
+    }elseif ($_POST["section"] == "experience") {
+        $job = $_POST['job_title'] ?? "";
+        $company = $_POST['company_name'] ?? "";
+        $start = $_POST['start_date'] ?? "";
+		if(isset($_POST['current_job'])){
+			$end = "present";
+		}else{
+			$end = $_POST['end_date'] ?? "";			
+		}
+		$description = $_POST['description'] ?? "";
+		$sql = $pdo->prepare('insert into experience(user_id, start_date,
+		end_date, company, job, achievements) values(?,?,?,?,?,?)');
+		$sql->execute([$data['id'], $start, $end, $company, $job, $description]);
+	}
 
     // Redirect only if no password change (prevents exit)
     header("Location: edit-profile.php");
