@@ -32,41 +32,11 @@
                         <li style="margin-bottom: 14px;"><a href="/momento/about.php"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">About
                                 Us</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/momento/leadership"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Leadership</a>
-                        </li>
-                        <li style="margin-bottom: 14px;"><a href="/momento/newsroom"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Newsroom</a>
-                        </li>
                         <li style="margin-bottom: 14px;"><a href="/momento/contact"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Contact</a>
                         </li>
                     </ul>
                 </div>
-
-                <div>
-                    <h4
-                        style="font-size: 14px; font-weight: 600; margin-bottom: 22px; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; position: relative; padding-bottom: 8px;">
-                        Solutions
-                        <span
-                            style="position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: #3a86ff;"></span>
-                    </h4>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="margin-bottom: 14px;"><a href="/momento/jobs"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Find
-                                Jobs</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/momento/careers"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Careers</a>
-                        </li>
-                        <li style="margin-bottom: 14px;"><a href="/momento/advertising"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Advertising</a>
-                        </li>
-                        <li style="margin-bottom: 14px;"><a href="/momento/partners"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Partnerships</a>
-                        </li>
-                    </ul>
-                </div>
-
                 <div>
                     <h4
                         style="font-size: 14px; font-weight: 600; margin-bottom: 22px; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; position: relative; padding-bottom: 8px;">
@@ -75,12 +45,6 @@
                             style="position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: #3a86ff;"></span>
                     </h4>
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="margin-bottom: 14px;"><a href="/blog"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Blog</a>
-                        </li>
-                        <li style="margin-bottom: 14px;"><a href="/webinars"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Webinars</a>
-                        </li>
                         <li style="margin-bottom: 14px;"><a href="/help-center"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Help
                                 Center</a></li>
@@ -104,12 +68,6 @@
                         <li style="margin-bottom: 14px;"><a href="/terms"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Terms
                                 of Service</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/cookies"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Cookie
-                                Policy</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/compliance"
-                                style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">GDPR
-                                Compliance</a></li>
                     </ul>
                 </div>
             </div>
@@ -118,22 +76,10 @@
             <div style="border-top: 1px solid #2a3a4a; margin: 40px 0 30px;"></div>
 
             <!-- Bottom Footer -->
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;" class="text-center">
                 <div style="margin-bottom: 15px;">
                     <p style="font-size: 12px; color: #7f8c8d; margin: 0 0 8px 0;">© 2025 Momento Group, Inc. All rights
                         reserved.</p>
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <a href="/legal"
-                        style="color: #7f8c8d; text-decoration: none; font-size: 12px; margin-left: 25px; white-space: nowrap;">Legal
-                        Notice</a>
-                    <a href="/accessibility"
-                        style="color: #7f8c8d; text-decoration: none; font-size: 12px; margin-left: 25px; white-space: nowrap;">Accessibility</a>
-                    <a href="/sitemap"
-                        style="color: #7f8c8d; text-decoration: none; font-size: 12px; margin-left: 25px; white-space: nowrap;">Sitemap</a>
-                    <a href="/trademarks"
-                        style="color: #7f8c8d; text-decoration: none; font-size: 12px; margin-left: 25px; white-space: nowrap;">Trademarks</a>
                 </div>
             </div>
         </div>
