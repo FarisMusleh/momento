@@ -6,7 +6,7 @@ if (!isset($_GET['username'])) {
 $today = date('Y-m-d');
 
 try {
-    require('../pdo.php');
+   
 
     if (isset($_SESSION['data']['id'])) {
         $userId = $_SESSION['data']['id'];

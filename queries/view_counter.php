@@ -8,7 +8,7 @@ $imageId = intval($_GET['id']);
 $today = date('Y-m-d');
 
 try {
-    require('../pdo.php');
+
 
     // Only count the view if user is logged in
     if (isset($_SESSION['data']['id'])) {
