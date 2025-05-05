@@ -61,7 +61,7 @@ if (isset($_SESSION['data'])) {
 
 
     <!-- Photographer Cards -->
-    <div class="row gap-5 justify-center">
+    <div class="row  justify-center">
         <?php
         $stmt = $pdo->prepare("
             SELECT bp.business_name, bp.bio, a.username, a.location, a.picture, bp.total_rate, bp.total_likes, bp.total_reviews, bp.total_views
