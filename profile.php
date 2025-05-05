@@ -11,14 +11,18 @@ if (isset($_GET['username'])) {
 		exit();
 	}
     $profileUsername = $_SESSION['data']['username'];
+	
 }
-$sql_check_user_profiles = $pdo->prepare('select account_type from accounts where id = ?');
+if(isset($_SESSION['data']['username'])){
+	$sql_check_user_profiles = $pdo->prepare('select account_type from accounts where id = ?');
 $sql_check_user_profiles->execute([$_SESSION['data']['id']]);
-
 if($sql_check_user_profiles->fetch()['account_type']=='user' && !isset($_GET['username'])){
 	header('location:index.php');
 	exit();
 }
+}
+
+
 //TO-CHECK-IF-IT-IS-MY-PF-OR-NOT
 if(isset($_SESSION['data']['username'])){
 	$isMyProfile = ($profileUsername === $_SESSION['data']['username']);

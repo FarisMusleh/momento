@@ -731,12 +731,12 @@ commentForm.addEventListener('submit', (e) => {
       const count = commentsList.querySelectorAll('.comment').length;
       commentCount.textContent = `${count}`;
     } else {
-      alert('Error posting comment. Please try again.');
+      
     }
   })
   .catch(err => {
     console.error('Error:', err);
-    alert('There was an error submitting your comment.');
+    
   });
 });
 

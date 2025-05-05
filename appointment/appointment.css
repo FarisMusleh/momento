@@ -1,0 +1,500 @@
+/* General Styles */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+	background-color: #fafafa;
+	color: #333;
+	line-height: 1.6;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+/* Header Styles */
+header {
+	background-color: #000;
+	color: #fff;
+	padding: 20px 0;
+	margin-bottom: 40px;
+}
+
+.header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	font-size: 24px;
+	font-weight: 300;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* Navigation */
+.main-nav {
+	display: flex;
+	margin-bottom: 30px;
+}
+
+.nav-tab {
+	padding: 12px 24px;
+	background: none;
+	border: none;
+	font-size: 16px;
+	color: #777;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.3s;
+	text-decoration: none;
+}
+
+.nav-tab.active, .nav-tab:hover {
+	color: #000;
+	background-color: #f0f0f0;
+	border-radius: 4px 4px 0 0;
+}
+
+/* Filter Navigation */
+.filter-nav {
+	display: flex;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 30px;
+}
+
+.filter-button {
+	padding: 12px 20px;
+	margin-right: 5px;
+	background: none;
+	border: none;
+	font-size: 14px;
+	color: #777;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.3s;
+	text-decoration: none;
+}
+
+.filter-button.active, .filter-button:hover {
+	color: #000;
+}
+
+.filter-button::after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 2px;
+	background: #000;
+	bottom: -1px;
+	left: 0;
+	transition: width 0.3s;
+}
+
+.filter-button.active::after, .filter-button:hover::after {
+	width: 100%;
+}
+
+.filter-button .count {
+	display: inline-block;
+	background-color: #e6e6e6;
+	color: #333;
+	font-size: 12px;
+	padding: 2px 6px;
+	border-radius: 12px;
+	margin-left: 5px;
+	font-weight: 500;
+}
+
+/* Services Section */
+.services-section {
+	margin-bottom: 40px;
+}
+
+.service-form {
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 5px;
+	padding: 25px;
+	margin-bottom: 30px;
+}
+
+.form-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin: -10px;
+	margin-bottom: 15px;
+}
+
+.form-col {
+	padding: 10px;
+	flex: 1;
+}
+
+.form-col-4 {
+	flex: 4;
+}
+
+.form-control {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 14px;
+	color: #333;
+}
+
+.form-button {
+	padding: 12px 20px;
+	background-color: #000;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	margin-right: 5px;
+}
+
+.form-button:hover {
+	background-color: #333;
+}
+
+.form-button.secondary {
+	background-color: #777;
+}
+
+.form-button.warning {
+	background-color: #f39c12;
+}
+
+.form-button.danger {
+	background-color: #e74c3c;
+}
+
+/* Services Table */
+.services-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.services-table th,
+.services-table td {
+	padding: 15px;
+	text-align: left;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.services-table th {
+	background-color: #f9f9f9;
+	color: #333;
+	font-weight: 500;
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 0.5px;
+}
+
+.services-table tr:last-child td {
+	border-bottom: none;
+}
+
+.services-table tr:hover {
+	background-color: #f9f9f9;
+}
+
+.action-button {
+	display: inline-block;
+	padding: 8px 12px;
+	background-color: #f0f0f0;
+	color: #333;
+	border: none;
+	border-radius: 4px;
+	font-size: 12px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	margin-right: 5px;
+	text-decoration: none;
+}
+
+.action-button:hover {
+	background-color: #e0e0e0;
+}
+
+.action-button.edit {
+	background-color: #f39c12;
+	color: #fff;
+}
+
+.action-button.delete {
+	background-color: #e74c3c;
+	color: #fff;
+}
+
+.service-details {
+	font-size: 14px;
+	color: #666;
+	line-height: 1.4;
+}
+
+/* Appointment List */
+.appointment-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+}
+
+.appointment-card {
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 5px;
+	overflow: hidden;
+	transition: all 0.3s;
+	cursor: pointer;
+}
+
+.appointment-card:hover {
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	transform: translateY(-2px);
+}
+
+.appointment-header {
+	padding: 15px;
+	border-bottom: 1px solid #f0f0f0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.appointment-name {
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.appointment-status {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 600;
+}
+
+.status-pending { color: #f39c12; }
+.status-confirmed { color: #3498db; }
+.status-cancelled { color: #e74c3c; }
+.status-completed { color: #2ecc71; }
+
+.appointment-body {
+	padding: 15px;
+}
+
+.appointment-detail {
+	margin-bottom: 10px;
+	font-size: 14px;
+	color: #666;
+}
+
+.appointment-detail strong {
+	color: #333;
+	font-weight: 500;
+}
+
+.appointment-footer {
+	padding: 10px 15px;
+	background-color: #f9f9f9;
+	text-align: right;
+	font-size: 12px;
+	color: #999;
+}
+
+/* Detail View */
+.detail-view {
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 5px;
+	padding: 30px;
+	margin-bottom: 40px;
+}
+
+.detail-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-title {
+	font-size: 24px;
+	font-weight: 300;
+}
+
+.detail-back {
+	color: #333;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+}
+
+.detail-back i {
+	margin-right: 5px;
+}
+
+.detail-content {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 30px;
+}
+
+.detail-info {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.detail-item {
+	margin-bottom: 15px;
+}
+
+.detail-label {
+	font-size: 12px;
+	color: #999;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 5px;
+}
+
+.detail-value {
+	font-size: 16px;
+	color: #333;
+}
+
+.notes-section {
+	margin-top: 30px;
+	grid-column: 1 / -1;
+	padding-top: 20px;
+	border-top: 1px solid #f0f0f0;
+}
+
+.notes-content {
+	background-color: #f9f9f9;
+	padding: 15px;
+	border-radius: 4px;
+	font-style: italic;
+	color: #666;
+}
+
+/* Status Form */
+.status-form {
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 5px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-select {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background-color: #fff;
+	font-size: 14px;
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-size: 16px;
+}
+
+.status-message {
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 4px;
+	background-color: #e3f2fd;
+	color: #2196f3;
+	font-size: 14px;
+}
+
+/* Empty State */
+.empty-state {
+	text-align: center;
+	padding: 60px 0;
+	color: #999;
+}
+
+.empty-state i {
+	font-size: 48px;
+	margin-bottom: 20px;
+	color: #ddd;
+}
+
+.empty-state h3 {
+	font-size: 18px;
+	font-weight: 400;
+	margin-bottom: 10px;
+}
+
+.empty-state p {
+	font-size: 14px;
+}
+
+/* Section visibility */
+.section {
+	display: none;
+}
+
+.section.active {
+	display: block;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+	.detail-content {
+		grid-template-columns: 1fr;
+	}
+	
+	.appointment-list {
+		grid-template-columns: 1fr;
+	}
+	
+	.filter-nav {
+		overflow-x: auto;
+		white-space: nowrap;
+		padding-bottom: 5px;
+	}
+	
+	.detail-info {
+		grid-template-columns: 1fr;
+	}
+	
+	.form-row {
+		flex-direction: column;
+	}
+	
+	.services-table {
+		display: block;
+		overflow-x: auto;
+	}
+}
