@@ -122,13 +122,21 @@ def classify_clip():
         # Get top matching labels using CLIP model
         labels = classify_clip_image(img)
 
-        if labels:
-            return jsonify({"labels": labels})
-        else:
-            return jsonify({"error": "No relevant category found"}), 404
+        # Define violence-related keywords
+        violent_keywords = {'violence', 'blood', 'war', 'gore', 'explosion', 'injury'}
+
+        # Check for violence flags
+        label_set = {label.lower() for label in labels}
+        is_violent = not violent_keywords.isdisjoint(label_set)
+
+        return jsonify({
+            "labels": labels,
+            "flag_violence": is_violent
+        })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
