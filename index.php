@@ -55,7 +55,7 @@ $data = $_SESSION['data'] ?? null;
     <div class="container">
         <h1 class="display-10">Discover the world's top photographers</h1>
         <p class="text-xl scale-up">Capture, Share & Discover Timeless Moments</p>
-        <?php require 'search-bar.php'; ?>
+        <?php require 'include/search-bar.php'; ?>
     </div>
 </div>
 
@@ -226,7 +226,7 @@ $photographers = $stmt->fetchAll();
   </div>
 </section>
 <?php require('footer.php')?>
-<?php if($data['id']){ require('chat_admin.php'); }?>
+<?php if(isset($data['id'])){ require('chat_admin.php'); }?>
 </body>
 </html>
 <script>

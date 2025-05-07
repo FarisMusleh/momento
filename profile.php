@@ -92,7 +92,7 @@ if(!$isMyProfile){
 	<link rel="stylesheet" href="css/profile.css">
 	<!-- Toastify -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	
 	
 	
 <style>
@@ -649,9 +649,16 @@ input:focus {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script>
-
-
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <?php
+		if (isset($_SESSION['message'])) {
+			$message = $_SESSION['message'];
+			
+		}
+	?>
+	
+	
+	<script>
 
 const stars = document.querySelectorAll('#starRating i');
   const ratingInput = document.getElementById('ratingValue');
@@ -716,40 +723,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
 	
 	
 		function confirmDelete(imageId) {
@@ -975,7 +948,16 @@ document.addEventListener('DOMContentLoaded', function () {
 				// Add the upload flag
 				formData.append('upload', 'true');
 				
-				// Use fetch API to upload the image
+					<?php if (isset($message)): ?>
+					Toastify({
+					  text: "<?php echo $message;?>",
+					  duration: 3000,
+					  gravity: "top",
+					  position: "right",
+					  backgroundColor: "#ff4d4d",
+					  stopOnFocus: true
+					}).showToast();
+					<?php endif; $display = "temp";?>
 				fetch('upload.php', {
 					method: 'POST',
 					body: formData
@@ -986,14 +968,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				})
 				.catch(error => {
 					console.error('Error uploading image:', error);
-					Toastify({
-					  text: "Failed to upload image.",
-					  duration: 3000,
-					  gravity: "top",
-					  position: "right",
-					  backgroundColor: "#ff4d4d",
-					  stopOnFocus: true
-					}).showToast();
 					document.getElementById('image_upload_button').disabled = false;
 				});
 			}, 'image/jpeg', 0.9);
@@ -1029,7 +1003,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				applyFilters();
 			});
 		});
-
     </script>
 </body>
 </html>

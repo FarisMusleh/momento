@@ -48,7 +48,7 @@
                         <li style="margin-bottom: 14px;"><a href="/help-center"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Help
                                 Center</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/api"
+                        <li style="margin-bottom: 14px;"><a href="Integration.html"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Developer
                                 API</a></li>
                     </ul>

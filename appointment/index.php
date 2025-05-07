@@ -30,6 +30,7 @@ $reviews = $sql_reviews->fetchAll();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Photography Booking | <?=$photographer['business_name']?></title>
@@ -45,7 +46,12 @@ $reviews = $sql_reviews->fetchAll();
     
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/header.css">
     <style>
         :root {
             --primary: #2a2a2a;
@@ -795,10 +801,11 @@ $reviews = $sql_reviews->fetchAll();
         .service-item:nth-child(3) { animation-delay: 0.3s; }
         .service-item:nth-child(4) { animation-delay: 0.4s; }
     </style>
+	
 </head>
 <body>
-  
-    
+	
+    <?php require('../header.php')?>
     <section class="hero">
         <div class="hero-content">
             <h1>Premium Photography Experience With <?=$photographer['business_name']?></h1>

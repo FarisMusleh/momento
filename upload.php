@@ -1,10 +1,10 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-	}
-if(!isset($_SESSION['data'])){
-	header('location:index.php');
-	exit();
+}
+if (!isset($_SESSION['data'])) {
+    header('location:index.php');
+    exit();
 }
 $data = $_SESSION['data'];
 require('pdo.php');
@@ -15,103 +15,94 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     $fileName = basename($_FILES['file']['name']);
     $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
 
-    // Check if the file extension is allowed
     if (!in_array($fileExt, $allowedExtensions)) {
-        echo "Invalid file type.";
+        $_SESSION['message'] = "Image not allowed: Invalid file type.";
         exit;
     }
 
-    // Prepare the file for classification
     $filePath = $_FILES['file']['tmp_name'];
-	$imageInfo = getimagesize($filePath);
+    $imageInfo = getimagesize($filePath);
     $cFile = curl_file_create($filePath, mime_content_type($filePath), $fileName);
-	if ($imageInfo) {
+
+    if ($imageInfo) {
         $width = $imageInfo[0];
         $height = $imageInfo[1];
-
         if ($width < 600 || $height < 600) {
-			header('Location: nigga' . $_SERVER['HTTP_REFERER']);
-			exit();
-		}
-	}
-    // Prepare cURL multi handle
-    $multiCurl = curl_multi_init();
-    $curlHandles = [];
+			$_SESSION['message'] = "Image not allowed : Image size too small.";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+    }
 
-    // NSFW classification request
-    $chNsfw = curl_init();
-    curl_setopt($chNsfw, CURLOPT_URL, "http://127.0.0.1:5000/classify/nsfw");
-    curl_setopt($chNsfw, CURLOPT_POST, true);
-    curl_setopt($chNsfw, CURLOPT_POSTFIELDS, ['file' => $cFile]);
-    curl_setopt($chNsfw, CURLOPT_RETURNTRANSFER, true);
-    curl_multi_add_handle($multiCurl, $chNsfw);
-    $curlHandles['nsfw'] = $chNsfw;
-
-    // CLIP classification request
-    $chClip = curl_init();
-    curl_setopt($chClip, CURLOPT_URL, "http://127.0.0.1:5000/classify/clip");
-    curl_setopt($chClip, CURLOPT_POST, true);
-    curl_setopt($chClip, CURLOPT_POSTFIELDS, ['file' => $cFile]);
-    curl_setopt($chClip, CURLOPT_RETURNTRANSFER, true);
-    curl_multi_add_handle($multiCurl, $chClip);
-    $curlHandles['clip'] = $chClip;
-
-    // Execute multi cURL
-    $running = null;
-    do {
-        curl_multi_exec($multiCurl, $running);
-        usleep(100); // small delay to avoid 100% CPU usage
-    } while ($running > 0);
-
-    // Get the responses for both requests
-    $responseNsfw = curl_multi_getcontent($curlHandles['nsfw']);
-    $responseClip = curl_multi_getcontent($curlHandles['clip']);
-
-    // Close all cURL handles
-    curl_multi_remove_handle($multiCurl, $chNsfw);
-    curl_multi_remove_handle($multiCurl, $chClip);
-    curl_multi_close($multiCurl);
-
-    // Decode the JSON responses
+    // STEP 1: NSFW check
+    $chNsfw = curl_init("http://127.0.0.1:5000/classify/nsfw");
+    curl_setopt_array($chNsfw, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => ['file' => $cFile],
+        CURLOPT_RETURNTRANSFER => true
+    ]);
+    $responseNsfw = curl_exec($chNsfw);
+    curl_close($chNsfw);
     $resultNsfw = json_decode($responseNsfw, true);
-    $resultClip = json_decode($responseClip, true);
-
     $classification = $resultNsfw['label'] ?? 'Unknown';
-    $topLabels = $resultClip['labels'] ?? [];
 
-    // If classified as NSFW, do not upload
-    if (strtolower($classification) === "nsfw") {
-        echo "Image not allowed: NSFW content detected.";
+    if (strtolower($classification) === 'nsfw') {
+        $_SESSION['message'] = "Image not allowed: NSFW content detected.";
         exit;
     }
 
-    // Proceed with saving the image if it's safe
-    $uniqueId = uniqid('img_', true);
-    $targetDir = "uploads/Images/";
-    $newFileName = $uniqueId . '.' . $fileExt;
-    $targetFilePath = $targetDir . $newFileName;
+	// STEP 2: CLIP classification + violence detection (combined)
+	$chClip = curl_init("http://127.0.0.1:5000/classify/clip");
+	curl_setopt_array($chClip, [
+		CURLOPT_POST => true,
+		CURLOPT_POSTFIELDS => ['file' => $cFile],
+		CURLOPT_RETURNTRANSFER => true
+	]);
+	$responseClip = curl_exec($chClip);
+	curl_close($chClip);
 
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0755, true);
-    }
+	// Decode response
+	$resultClip = json_decode($responseClip, true);
+	$topLabels = $resultClip['labels'] ?? [];
+	$isViolent = $resultClip['flag_violence'] ?? false; // Will be true/false
+	if($isViolent){
+		exit();
+	}
+	// Save to disk
+	$uniqueId = uniqid('img_', true);
+	$targetDir = "uploads/Images/";
+	$newFileName = $uniqueId . '.' . $fileExt;
+	$targetFilePath = $targetDir . $newFileName;
 
-    // Move uploaded file to the target directory
+	if (!is_dir($targetDir)) {
+		mkdir($targetDir, 0755, true);
+	}
+
+
     if (move_uploaded_file($filePath, $targetFilePath)) {
-        // Save the image details to the database
+        // Save to DB
         try {
-            $sql = $pdo->prepare('INSERT INTO images (user_id, url,title, file_name, description, label) VALUES (?, ?,? , ?, ?, ?)');
-            $sql->execute([$data['id'], $targetFilePath, $_POST['title'], $newFileName, $_POST['description'], json_encode($topLabels)]);
+            $sql = $pdo->prepare('INSERT INTO images (user_id, url, title, file_name, description, label) VALUES (?, ?, ?, ?, ?, ?)');
+            $sql->execute([
+                $data['id'],
+                $targetFilePath,
+                $_POST['title'],
+                $newFileName,
+                $_POST['description'],
+                json_encode($topLabels)
+            ]);
+			$_SESSION['message'] = "Image Uploaded Successfully";
+			$_SESSION['color'] = "green";
         } catch (Exception $e) {
-            echo "Database Error: " . $e->getMessage();
+            $_SESSION['message'] = "File upload failed.";
             exit;
         }
 
-        // Output success message with classification results
-        echo "File uploaded successfully. Classification: NSFW - " . $classification . ". Top Labels: " . implode(', ', $topLabels);
         header('Location: profile.php');
         exit;
     } else {
-        echo "File upload failed.";
+        $_SESSION['message'] = "File upload failed.";
     }
+	
 }
 ?>

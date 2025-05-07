@@ -42,7 +42,7 @@ if (isset($_SESSION['data'])) {
     <div class="container">
         <h1 class="display-10 slide-in">Discover the world's top photographers</h1>
         <p class="text-xl scale-up">Explore work from the most talented and accomplished photographers ready to take on your next project.</p>
-        <?php require('search-bar.php'); ?>   
+        <?php require('include/search-bar.php'); ?>   
     </div>
 </div>
 

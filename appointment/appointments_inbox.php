@@ -1,7 +1,6 @@
 <?php
 require('../pdo.php');
 
-// Start session for user authentication
 session_start();
 
 
@@ -11,7 +10,13 @@ if (!isset($_SESSION['data']['id'])) {
 }
 $user_id = $_SESSION['data']['id'];
 
-// Get appointment ID if viewing details
+$sql_account_type = $pdo->prepare('select account_type from accounts where id = ?');
+$sql_account_type->execute([$user_id]);
+$type = $sql_account_type->fetch();
+if($type['account_type']!='business'){
+	header('Location: ../index.php');
+}
+
 $viewing_details = false;
 $appointment_detail = null;
 if (isset($_GET['view']) && is_numeric($_GET['view'])) {
@@ -53,11 +58,10 @@ if (isset($_GET['view']) && is_numeric($_GET['view'])) {
     }
 }
 
-// Determine if we're filtering by status
 $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
 $status_options = ['pending', 'cancelled', 'confirmed', 'completed'];
 
-// Build the query based on filter
+
 $query = "SELECT * FROM appointments WHERE photographer_id = $user_id";
 if (in_array($status_filter, $status_options)) {
     $query .= " AND status = '$status_filter'";
@@ -71,7 +75,6 @@ try {
     die("Query failed: " . $e->getMessage());
 }
 
-// Count appointments by status
 $status_counts = [];
 try {
     $count_query = "SELECT status, COUNT(*) as count FROM appointments WHERE photographer_id = $user_id GROUP BY status";
@@ -107,15 +110,27 @@ function formatDateTime($date) {
     <title>Appointments & Services | Photography Studio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="appointment.css">
+	<!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">Photography Studio</div>
-            </div>
-        </div>
-    </header>
+
+    <?php require('../header.php');?>
     
     <div class="container">
         <!-- Main Navigation -->
@@ -182,24 +197,27 @@ function formatDateTime($date) {
                             <?php endif; ?>
                         </div>
                         
-                        <div class="status-form">
-                            <form method="get">
-                                <div class="form-group">
-                                    <label for="status" class="form-label">Update Status</label>
-                                    <select name="status" id="status" class="form-select">
-                                        <option value="pending" <?php echo $appointment_detail['status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
-                                        <option value="confirmed" <?php echo $appointment_detail['status'] === 'confirmed' ? 'selected' : ''; ?>>Confirmed</option>
-                                        <option value="cancelled" <?php echo $appointment_detail['status'] === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                                        <option value="completed" <?php echo $appointment_detail['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
-                                    </select>
-                                </div>
-                                <button type="submit" name="update_status" class="form-button">Update Status</button>
-                                
-                                <?php if (isset($status_message)): ?>
-                                <div class="status-message"><?php echo $status_message; ?></div>
-                                <?php endif; ?>
-                            </form>
-                        </div>
+                        <?php if ($appointment_detail['status'] === 'pending'): ?>
+							<div class="status-form">
+								<form method="post">
+									<div class="form-group">
+										<label for="status" class="form-label">Update Status</label>
+										<select name="status" id="status" class="form-select">
+											<option value="pending" selected>Pending</option>
+											<option value="confirmed">Confirmed</option>
+											<option value="cancelled">Cancelled</option>
+											<option value="completed">Completed</option>
+										</select>
+									</div>
+									<button type="submit" name="update_status" class="form-button">Update Status</button>
+
+									<?php if (isset($status_message)): ?>
+									<div class="status-message"><?php echo $status_message; ?></div>
+									<?php endif; ?>
+								</form>
+							</div>
+						<?php endif; ?>
+
                     </div>
                 </div>
             <?php else: ?>

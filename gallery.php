@@ -33,17 +33,20 @@ require('pdo.php');
 	<!--CSS FILE-->
 	<link rel="stylesheet" href="css/gallery.css">
 	<link rel="stylesheet" href="css/navbar-scrolled.css">
+	
 	<!--JS FILE-->
 	<script src="js/gallery.js"></script>
     <title>Gallery</title>
 </head>
+
 <body class = "fade-in">
-    <?php require("header.php"); ?>  
+     <?php require("header.php"); ?> 
     <div class="hero-section">
-        <div class="container">
+	
+        <div class="container ">
             <h1 class="display-10 slide-in">Discover the world's top Photos</h1>
             <?php
-				require('search-bar.php');
+				require('include/search-bar.php');
 			?>
         </div>
     </div>

@@ -10,9 +10,11 @@
 <nav class="navbar navbar-expand-lg nav-sticky" id = "navbar">
     <div class="container-fluid">
         <a class="navbar-brand fs-3 momento-logo" href="/momento/index.php">Momento</a>
+		
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+		
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto gap-4 align-items-center">
 				<!-- CHAT-ICON -->
@@ -172,7 +174,7 @@
 
                 <?php if (!isset($_SESSION['data'])): ?>
                     <li class="nav-item"><a class="nav-link" href="account/register.php">Sign up</a></li>
-                    <li class="login btn"><a class="text-white text-center text-decoration-none" href="account/login.php">Login</a></li>                <?php else: ?>
+                    <li class="login btn"><a class="text-white text-center text-decoration-none" style = "display:block;width:100%;height:100%;" href="account/login.php">Login</a></li>                <?php else: ?>
                     <ul class="list-unstyled m-0 p-0">
                         <div class="dropdown-button">
 							<?php 

@@ -46,7 +46,7 @@ if(empty($_GET['query'])){
         <div class="container">
             <h1 class="display-10 slide-in">Discover the world's top Photos</h1>
             <?php
-				require('search-bar.php');
+				require('include/search-bar.php');
 			?>
         </div>
     </div>
