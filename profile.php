@@ -13,14 +13,17 @@ if (isset($_GET['username'])) {
     $profileUsername = $_SESSION['data']['username'];
 	
 }
+$sql_check_user_profiles = null;
 if(isset($_SESSION['data']['username'])){
-	$sql_check_user_profiles = $pdo->prepare('select account_type from accounts where id = ?');
+		$sql_check_user_profiles = $pdo->prepare('select account_type from accounts where id = ?');
 $sql_check_user_profiles->execute([$_SESSION['data']['id']]);
 if($sql_check_user_profiles->fetch()['account_type']=='user' && !isset($_GET['username'])){
 	header('location:index.php');
 	exit();
 }
+
 }
+
 
 
 //TO-CHECK-IF-IT-IS-MY-PF-OR-NOT
@@ -255,10 +258,9 @@ input:focus {
 						color: #212529; border: 1px solid #212529; text-decoration: none;">
 				<i class="fas fa-comment-dots" style = "font-size:15px;"></i>
 			  </a>
-				<?php if($account_type=='user'){?>
+				<?php if(isset($_SESSION['data'])){?>
 			  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal" onclick="handleButtonClick()">
 				<?php 
-					if(isset($_SESSION['data'])){
 					$sql = $pdo->prepare('select * from reviews where user_id = ?');
 					$sql->execute([$_SESSION['data']['id']]);
 					$result = $sql->fetch();
@@ -272,9 +274,7 @@ input:focus {
 					}else{
 						echo "Leave a Review";
 					}
-					}else{
-						echo "Leave a Review";
-					}
+					
 				?>
 				</button>
 				<a href = "appointment/index.php?photographer_id=<?=$id?>" class="btn btn-dark">
