@@ -85,6 +85,8 @@ if(!$isMyProfile){
     <title>Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
@@ -467,8 +469,9 @@ input:focus {
 						<input type="file" id="file" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="image" required>
 						<?php if($isMyProfile){?>
 
-						  <button id="image-upload-btn btn-primary" type="button" onclick="triggerFileInput('file');" class="action-btn">
-							<i class="bi bi-bookmark"></i> Upload
+						  <button id="image-upload-btn" type="button" onclick="triggerFileInput('file');" class=" btn btn-dark">
+							<i class="bi bi-arrow-up-circle"></i>
+								upload
 						  </button>
 						<?php }?>
 						<canvas id="imageCanvas" style="display:none;"></canvas>
