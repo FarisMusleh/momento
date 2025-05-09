@@ -17,7 +17,9 @@ $sql_check_user_profiles = null;
 if(isset($_SESSION['data']['username'])){
 		$sql_check_user_profiles = $pdo->prepare('select account_type from accounts where id = ?');
 $sql_check_user_profiles->execute([$_SESSION['data']['id']]);
-if($sql_check_user_profiles->fetch()['account_type']=='user' && !isset($_GET['username'])){
+$user_account_type = $sql_check_user_profiles->fetch()['account_type'];
+if($user_account_type=='user' && !isset($_GET['username'])){
+
 	header('location:index.php');
 	exit();
 }
@@ -258,7 +260,7 @@ input:focus {
 						color: #212529; border: 1px solid #212529; text-decoration: none;">
 				<i class="fas fa-comment-dots" style = "font-size:15px;"></i>
 			  </a>
-				<?php if(isset($_SESSION['data'])){?>
+				<?php if(isset($_SESSION['data']) && $user_account_type == "user"){?>
 			  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal" onclick="handleButtonClick()">
 				<?php 
 					$sql = $pdo->prepare('select * from reviews where user_id = ?');
@@ -465,7 +467,7 @@ input:focus {
 						<input type="file" id="file" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="image" required>
 						<?php if($isMyProfile){?>
 
-						  <button id="image-upload-btn" type="button" onclick="triggerFileInput('file');" class="action-btn">
+						  <button id="image-upload-btn btn-primary" type="button" onclick="triggerFileInput('file');" class="action-btn">
 							<i class="bi bi-bookmark"></i> Upload
 						  </button>
 						<?php }?>

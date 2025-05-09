@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../../pdo.php';
+require '../pdo.php';
 
 // Check if the user is authorized to access this page
 if (!isset($_SESSION['create_profile'])) {
