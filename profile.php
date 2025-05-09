@@ -373,10 +373,10 @@ input:focus {
                         </div>
 						<?php if($isMyProfile){?>
                         <a class="btn btn-light text-dark border-dark hover-dark" style="width: 150px;" href="edit-profile.php">
-							Edit Profile
+						<i class="bi bi-pencil-square"></i>	Edit Profile
 						</a>
 						<a class="btn btn-light text-dark border-dark hover-dark" style="width: 150px;" href="dashboard.php">
-							Dashboard
+							<i class="bi bi-bar-chart-line"></i> Dashboard
 						</a>
 						
 						<?php }?>
