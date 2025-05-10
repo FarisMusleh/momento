@@ -65,7 +65,7 @@
                         <li style="margin-bottom: 14px;"><a href="/privacy"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Privacy
                                 Policy</a></li>
-                        <li style="margin-bottom: 14px;"><a href="/terms"
+                        <li style="margin-bottom: 14px;"><a href="termss.php"
                                 style="color: #d1d5db; text-decoration: none; font-size: 14px; transition: all 0.3s ease; display: block;">Terms
                                 of Service</a></li>
                     </ul>
