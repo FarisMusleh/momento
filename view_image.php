@@ -45,29 +45,36 @@
   <meta charset="UTF-8">
   <title>Image Review - Moomento</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+  <link rel="stylesheet" href="css/header.css">
   <style>
     :root {
-      --primary: #0d6efd;
-      --text-dark: #212529;
-      --text-muted: #6c757d;
-      --bg-light: #f8f9fa;
-      --border-light: #dee2e6;
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --primary-dark: #1e40af;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --bg-light: #f1f5f9;
+      --border-light: #e2e8f0;
+      --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --transition: all 0.3s ease;
     }
     
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-dark);
-      background-color: white;
-      line-height: 1.6;
+      background-color: #f8fafc;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
     }
-	.page-container{
-		max-width: 1200px;
+
+    .page-container {
+      max-width: 1280px;
       margin: 0 auto;
       padding: 0 24px;
-	}
+    }
 
-    
     .content-area {
       display: grid;
       grid-template-columns: 1fr;
@@ -81,11 +88,18 @@
       }
     }
     
+    /* Image Card */
     .image-card {
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
-      background-color: var(--bg-light);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      background-color: white;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .image-card:hover {
+      box-shadow: var(--hover-shadow);
     }
     
     .image-preview {
@@ -94,64 +108,79 @@
       display: block;
       max-height: 80vh;
       object-fit: contain;
+      background-color: #f8fafc;
+      cursor: zoom-in;
     }
     
+    /* Info Card */
     .info-card {
       position: sticky;
       top: 24px;
-      padding: 24px;
-      border-radius: 12px;
-      background-color: var(--bg-light);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 28px;
+      border-radius: 16px;
+      background-color: white;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+    }
+    
+    .info-card:hover {
+      box-shadow: var(--hover-shadow);
     }
     
     .image-title {
       font-size: 1.75rem;
-      font-weight: 600;
-      margin-bottom: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+      letter-spacing: -0.5px;
     }
     
     .info-item {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       color: var(--text-muted);
+      font-size: 0.95rem;
     }
     
     .info-item i {
-      margin-right: 10px;
+      margin-right: 12px;
       width: 20px;
+      color: var(--primary);
     }
     
     .user-link {
-      color: var(--text-dark);
+      color: var(--primary-dark);
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-weight: 600;
+      transition: var(--transition);
     }
     
     .user-link:hover {
       color: var(--primary);
+      text-decoration: underline;
     }
     
+    /* Action Buttons */
     .action-bar {
       display: flex;
       gap: 16px;
-      margin-top: 24px;
+      margin-top: 28px;
       flex-wrap: wrap;
     }
     
     .action-btn {
       display: flex;
       align-items: center;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 50px;
-      font-weight: 500;
+      font-weight: 600;
       border: none;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: var(--bg-light);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: var(--transition);
+      color: var(--text-dark);
     }
     
     .action-btn:hover {
@@ -160,7 +189,8 @@
     }
     
     .action-btn i {
-      margin-right: 8px;
+      margin-right: 10px;
+      font-size: 1.1rem;
     }
     
     .action-btn.like-btn {
@@ -168,8 +198,8 @@
     }
     
     .action-btn.like-btn.liked {
-      color: #e74c3c;
-      background-color: #fde8e7;
+      color: #e11d48;
+      background-color: #ffe4e6;
     }
     
     .action-btn.primary-btn {
@@ -177,44 +207,62 @@
       color: white;
     }
     
+    .action-btn.primary-btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
     .action-counter {
       font-size: 0.875rem;
       margin-left: 6px;
+      font-weight: 600;
     }
     
+    /* Tags */
     .tag-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       margin: 24px 0;
     }
     
     .tag {
-      padding: 4px 12px;
-      background-color: white;
+      padding: 6px 14px;
+      background-color: var(--primary-light);
       border-radius: 50px;
-      font-size: 0.875rem;
-      color: var(--text-muted);
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      font-weight: 500;
+      transition: var(--transition);
     }
     
+    .tag:hover {
+      background-color: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Comments Section */
     .comments-section {
       margin-top: 40px;
-      padding: 24px;
-      border-radius: 12px;
+      padding: 28px;
+      border-radius: 16px;
       background-color: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      box-shadow: var(--card-shadow);
     }
     
     .section-title {
-      font-size: 1.25rem;
-      font-weight: 600;
+      font-size: 1.35rem;
+      font-weight: 700;
       margin-bottom: 24px;
       display: flex;
       align-items: center;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
     }
     
     .section-title i {
-      margin-right: 10px;
+      margin-right: 12px;
+      color: var(--primary);
     }
     
     .comment-form {
@@ -222,54 +270,64 @@
     }
     
     .comment-textarea {
-      width: 100%;
-      padding: 16px;
+      width: calc(100% - 32px);
+      padding: 18px;
       border-radius: 12px;
       border: 1px solid var(--border-light);
-      background-color: white;
+      background-color: var(--bg-light);
       resize: none;
       margin-bottom: 16px;
-      transition: border-color 0.2s;
+      transition: var(--transition);
+      font-family: inherit;
+      font-size: 0.95rem;
     }
     
     .comment-textarea:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
     }
     
     .comment {
-      padding-bottom: 20px;
+      padding: 20px;
       margin-bottom: 20px;
-      border-bottom: 1px solid var(--border-light);
+      border-radius: 12px;
+      border-bottom: none;
+      background-color: var(--bg-light);
+      transition: var(--transition);
     }
     
-    .comment:last-child {
-      border-bottom: none;
+    .comment:hover {
+      background-color: #e8f1ff;
     }
     
     .comment-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      align-items: center;
     }
     
     .comment-user {
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-dark);
+      font-size: 1.05rem;
     }
     
     .comment-time {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
+      font-weight: 500;
     }
     
     .comment-text {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      line-height: 1.6;
     }
     
     .comment-actions {
       display: flex;
-      gap: 16px;
+      gap: 20px;
     }
     
     .comment-action {
@@ -277,22 +335,26 @@
       color: var(--text-muted);
       background: none;
       border: none;
-      padding: 0;
+      padding: 6px 12px;
       cursor: pointer;
-      transition: color 0.2s;
+      transition: var(--transition);
       display: flex;
       align-items: center;
+      border-radius: 20px;
+      font-weight: 500;
     }
     
     .comment-action:hover {
-      color: var(--text-dark);
+      color: var(--primary);
+      background-color: rgba(37, 99, 235, 0.1);
     }
     
     .comment-action i {
-      margin-right: 4px;
-      font-size: 0.75rem;
+      margin-right: 6px;
+      font-size: 0.9rem;
     }
     
+    /* Similar Images */
     .similar-images {
       margin-top: 40px;
     }
@@ -300,69 +362,32 @@
     .similar-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
+      gap: 20px;
+      margin-top: 20px;
     }
     
     .similar-item {
       overflow: hidden;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      position: relative;
     }
     
     .similar-item:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--hover-shadow);
     }
     
     .similar-img {
       width: 100%;
-      max-height: 200px;
+      height: 150px;
       object-fit: cover;
+      transition: var(--transition);
     }
     
-    .footer {
-      text-align: center;
-      padding: 32px 0;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border-light);
-      margin-top: 40px;
-    }
-    
-    .share-tooltip {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .tooltip-text {
-      position: absolute;
-      bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    .tooltip-text.visible {
-      visibility: visible;
-      opacity: 1;
-    }
-    
-    /* Dark mode toggle */
-    .dark-mode-toggle {
-      margin-left: auto;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.25rem;
-      color: var(--text-dark);
+    .similar-item:hover .similar-img {
+      transform: scale(1.05);
     }
     
     /* Lightbox */
@@ -391,43 +416,145 @@
       max-width: 90%;
       max-height: 90%;
       object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
     
     .lightbox-close {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 30px;
+      right: 30px;
       color: white;
-      font-size: 2rem;
+      font-size: 2.5rem;
       cursor: pointer;
-      background: none;
+      background: rgba(0, 0, 0, 0.3);
       border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
     }
-	.like-comment-btn.liked {
-  color: #e74c3c;
-}
-	.like-comment-btn.liked i {
-  color: #e74c3c;
-}
-.like-comment-btn:hover {
-  transform: scale(1.05);
-}
+    
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+    
+    /* Like button states */
+    .like-comment-btn.liked {
+      color: #e11d48;
+    }
+    
+    .like-comment-btn.liked i {
+      color: #e11d48;
+    }
+    
+    .like-comment-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Description area */
+    .description-section {
+      margin-top: 24px;
+      padding: 20px;
+      background-color: var(--bg-light);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .description-section h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+    }
+    
+    /* Responsive Improvements */
+    @media (max-width: 768px) {
+      .page-container {
+        padding: 0 16px;
+      }
+      
+      .content-area {
+        margin: 20px 0;
+        gap: 24px;
+      }
+      
+      .info-card {
+        position: relative;
+        top: 0;
+      }
+      
+      .image-title {
+        font-size: 1.5rem;
+      }
+      
+      .comments-section, .info-card {
+        padding: 20px;
+      }
+      
+      .action-bar {
+        justify-content: center;
+      }
+    }
+    
+    /* Tooltip improvement */
+    .share-tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip-text {
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--primary-dark);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    
+    .tooltip-text.visible {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--primary-dark) transparent transparent transparent;
+    }
   </style>
-   <!-- BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Include Bootstrap Icons if not already -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-	<!-- Bootstrap + Icons -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- GOOGLE FONTS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-	
-    <!-- CUSTOM CSS -->
-    <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
 	<!-- Navigation -->
@@ -479,9 +606,6 @@
 				  <i class="bi <?= $liked ? 'bi-heart-fill' : 'bi-heart' ?>"></i> Like&nbsp;
 				  <span class="comment-like-counter"><?= $comment['likes']??"" ?></span>
 				</button>
-
-
-
               </div>
             </div>
 			<?php }?>
@@ -586,8 +710,8 @@
           </div>
         </div>
         
-        <div class="mt-4">
-          <h4 class="mb-2">Description</h4>
+        <div class="description-section mt-4">
+          <h4>Description</h4>
           <p><?=$img['description']?></p>
         </div>
       </div>
@@ -723,7 +847,7 @@ commentForm.addEventListener('submit', (e) => {
         </div>
         <p class="comment-text">${data.comment.text}</p>
         <div class="comment-actions">
-          <button class="comment-action"><i class="bi bi-heart"></i> Like</button>
+          <button class="comment-action like-comment-btn"><i class="bi bi-heart"></i> Like <span class="comment-like-counter">0</span></button>
         </div>
       `;
       commentsList.prepend(newComment);
@@ -770,18 +894,20 @@ commentForm.addEventListener('submit', (e) => {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
     
-    darkModeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const icon = darkModeToggle.querySelector('i');
-      
-      if (body.classList.contains('dark-mode')) {
-        icon.classList.remove('bi-moon');
-        icon.classList.add('bi-sun');
-      } else {
-        icon.classList.remove('bi-sun');
-        icon.classList.add('bi-moon');
-      }
-    });
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const icon = darkModeToggle.querySelector('i');
+        
+        if (body.classList.contains('dark-mode')) {
+          icon.classList.remove('bi-moon');
+          icon.classList.add('bi-sun');
+        } else {
+          icon.classList.remove('bi-sun');
+          icon.classList.add('bi-moon');
+        }
+      });
+    }
     
     // Lightbox functionality
     const mainImage = document.getElementById('mainImage');
