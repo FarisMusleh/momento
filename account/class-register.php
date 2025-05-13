@@ -1,6 +1,8 @@
 <?php
 require('../pdo.php');
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class register {
     private $pdo;
@@ -16,7 +18,6 @@ class register {
             $password = !empty($data['password']) ? $data['password'] : null;
             $hashed = password_hash($password, PASSWORD_DEFAULT);
             $account = $data['account'] ?? null;
-            $gender = $data['gender'] ?? null;
             
             // First check if the email already exists
             $checkUser = $this->pdo->prepare("SELECT id, username, email, account_type, picture FROM accounts WHERE email = ?");
@@ -42,8 +43,7 @@ class register {
                     
                     if (!$hasProfile || empty($hasProfile[0])) {
                         // User exists but has no complete profile, redirect to create profile
-                        $_SESSION['create_profile'] = $existingUser['id'];
-                        $_SESSION['data'] = [
+                        $_SESSION['create_profile'] = [
                             'id' => $existingUser['id'],
                             'email' => $existingUser['email'],
                             'username' => $existingUser['username'],
@@ -73,26 +73,23 @@ class register {
 
             $last_id = $this->pdo->lastInsertId();
 
-            // Insert into profile table
+            // Insert into profile table - FIXED PARAMETER COUNT
             if ($account === "user") {
-                $sql = $this->pdo->prepare("INSERT INTO user_profiles(id, gender) VALUES(?, ?)");
-                $sql->execute([$last_id, $gender]);
+                $sql = $this->pdo->prepare("INSERT INTO user_profiles(id) VALUES(?)");
+                $sql->execute([$last_id]);
             } elseif ($account === "business") {
-                $sql = $this->pdo->prepare("INSERT INTO business_profiles(id, gender) VALUES(?, ?)");
-                $sql->execute([$last_id, $gender]);
+                $sql = $this->pdo->prepare("INSERT INTO business_profiles(id) VALUES(?)");
+                $sql->execute([$last_id]);
             }
             
-            $_SESSION['create_profile'] = $last_id;
-            // Set default profile picture or empty value
-            $picture = null; // Default picture can be set here if needed
-            
-            $_SESSION['data'] = [
-                'id' => $last_id,
-                'email' => $email,
-                'username' => $username,
-                'type' => $account,
-                'picture' => $picture
-            ];
+            $_SESSION['create_profile'] = [
+                            'id' => $last_id,
+                            'email' => $email,
+                            'username' => $username,
+                            'type' => $account
+                        ];
+
+           
             header("Location: create_profile.php");
             exit();
             

@@ -9,6 +9,15 @@ if (!isset($_SESSION['data'])) {
 $data = $_SESSION['data'];
 require('pdo.php');
 
+$mainCategory = [
+    'wars' => ['tank', 'soldier', 'battle', 'explosion', 'ruins', 'military', 'gun', 'destroyed', 'army','gaza'],
+    'graduation' => ['graduation', 'cap', 'diploma', 'certificate', 'graduate', 'ceremony'],
+    'wedding' => ['wedding', 'bride', 'groom', 'ring', 'ceremony', 'dress', 'cake'],
+    'nature' => ['tree', 'mountain', 'river', 'lake', 'sunset', 'forest', 'nature'],
+    'tourism' => ['tourism', 'travel', 'landmark', 'beach', 'resort', 'hotel'],
+    'architecture' => ['building', 'architecture', 'bridge', 'tower', 'skyscraper', 'monument']
+];
+
 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
 if (isset($_POST['upload']) && isset($_FILES['file'])) {
@@ -27,14 +36,13 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     if ($imageInfo) {
         $width = $imageInfo[0];
         $height = $imageInfo[1];
-        if ($width < 600 || $height < 600) {
-			$_SESSION['message'] = "Image not allowed : Image size too small.";
+        if ($width < 1 || $height < 1) {
+            $_SESSION['message'] = "Image not allowed : Image size too small.";
             header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit();
         }
     }
 
-    // STEP 1: NSFW check
     $chNsfw = curl_init("http://127.0.0.1:5000/classify/nsfw");
     curl_setopt_array($chNsfw, [
         CURLOPT_POST => true,
@@ -51,58 +59,69 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
         exit;
     }
 
-	// STEP 2: CLIP classification + violence detection (combined)
-	$chClip = curl_init("http://127.0.0.1:5000/classify/clip");
-	curl_setopt_array($chClip, [
-		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => ['file' => $cFile],
-		CURLOPT_RETURNTRANSFER => true
-	]);
-	$responseClip = curl_exec($chClip);
-	curl_close($chClip);
+    $chClip = curl_init("http://127.0.0.1:5000/classify/clip");
+    curl_setopt_array($chClip, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => ['file' => $cFile],
+        CURLOPT_RETURNTRANSFER => true
+    ]);
+    $responseClip = curl_exec($chClip);
+    curl_close($chClip);
 
-	// Decode response
-	$resultClip = json_decode($responseClip, true);
-	$topLabels = $resultClip['labels'] ?? [];
-	$isViolent = $resultClip['flag_violence'] ?? false; // Will be true/false
-	if($isViolent){
-		exit();
-	}
-	// Save to disk
-	$uniqueId = uniqid('img_', true);
-	$targetDir = "uploads/Images/";
-	$newFileName = $uniqueId . '.' . $fileExt;
-	$targetFilePath = $targetDir . $newFileName;
+    $resultClip = json_decode($responseClip, true);
+    $topLabels = !empty($resultClip['clip_labels']) ? $resultClip['clip_labels'] : $resultClip['labels'];
+    $isViolent = $resultClip['is_gory'] ?? false;
+    $caption = $resultClip['caption'] ?? '';
 
-	if (!is_dir($targetDir)) {
-		mkdir($targetDir, 0755, true);
-	}
-
+    $uniqueId = uniqid('img_', true);
+    $targetDir = "uploads/Images/";
+    $newFileName = $uniqueId . '.' . $fileExt;
+    $targetFilePath = $targetDir . $newFileName;
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
 
     if (move_uploaded_file($filePath, $targetFilePath)) {
-        // Save to DB
+        $finalDescription = trim($_POST['description']) !== '' ? $_POST['description'] : $caption;
+
         try {
-            $sql = $pdo->prepare('INSERT INTO images (user_id, url, title, file_name, description, label) VALUES (?, ?, ?, ?, ?, ?)');
+            $sql = $pdo->prepare('INSERT INTO images (user_id, url, title, file_name, description, label, is_sensitive) VALUES (?, ?, ?, ?, ?, ?, ?)');
             $sql->execute([
                 $data['id'],
                 $targetFilePath,
                 $_POST['title'],
                 $newFileName,
-                $_POST['description'],
-                json_encode($topLabels)
+                $finalDescription,
+                json_encode($topLabels),
+				$isViolent
             ]);
-			$_SESSION['message'] = "Image Uploaded Successfully";
-			$_SESSION['color'] = "green";
+			
+            $categoryCounts = [];
+
+			foreach ($mainCategories as $mainCategory => $keywords) {
+				foreach ($topLabels as $label) {
+					if (in_array(strtolower($label), $keywords)) {
+						$categoryCounts[$mainCategory] = ($categoryCounts[$mainCategory] ?? 0) + 1;
+					}
+				}
+			}
+
+			foreach ($categoryCounts as $category => $count) {
+				$stmt = $pdo->prepare("INSERT INTO photographer_category_scores (photographer_id, category, score)
+					VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score = score + VALUES(score)");
+				$stmt->execute([$data['id'], $category, $count]);
+			}
+
+            $_SESSION['message'] = "Image Uploaded Successfully";
+            $_SESSION['color'] = "green";
         } catch (Exception $e) {
             $_SESSION['message'] = "File upload failed.";
             exit;
         }
-
         header('Location: profile.php');
         exit;
     } else {
         $_SESSION['message'] = "File upload failed.";
     }
-	
 }
 ?>

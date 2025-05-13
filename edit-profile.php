@@ -398,7 +398,12 @@
        
         <div class="profile-header">
             <div class="profile-avatar-container">
-                <img src="<?=$data['picture']?>" class="profile-avatar" alt="Profile Picture">
+				<?php
+					$pfp_sql = $pdo->prepare('select picture from accounts where id = ?');
+					$pfp_sql->execute([$data['id']]);
+					$result_pfp = $pfp_sql->fetch();
+				?>
+                <img src="<?=$result_pfp['picture']?>" class="profile-avatar" alt="Profile Picture">
                 <form id="profileUploadForm" action="upload-profile-img.php" method="POST" enctype="multipart/form-data">
                     <input type="file" name="profileFile" id="profileFile" class="d-none" accept="image/*" onchange="previewImage(this)" data-type="profile">
                     <div class="avatar-upload-btn" onclick="triggerFileInput('profileFile');">
@@ -504,7 +509,7 @@
                     $result = $stmt->fetch(PDO::FETCH_ASSOC);
                     
                     if($result['account_type']=="user"){
-                        $sql = $pdo->prepare('SELECT name, social_links, bio FROM user_profiles WHERE id = ?');
+                        $sql = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?');
                         $sql->execute([$data['id']]);
                         $info = $sql->fetch(PDO::FETCH_ASSOC);
                         $name = $info['name']??null;

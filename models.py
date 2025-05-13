@@ -1,142 +1,149 @@
-from flask import Flask, request, jsonify, render_template
-from sentence_transformers import SentenceTransformer
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from PIL import Image
 import torch
-from transformers import AutoModelForImageClassification, ViTImageProcessor, CLIPProcessor, CLIPModel
-from categories import categories  # Ensure categories is defined in a separate file
-from flask_cors import CORS
 import re
+import spacy
+from sentence_transformers import SentenceTransformer
+from transformers import (
+    AutoModelForImageClassification,
+    ViTImageProcessor,
+    CLIPProcessor,
+    CLIPModel,
+    BlipProcessor,
+    BlipForConditionalGeneration
+)
+from categories import categories, category_alias_map
+import faiss
+from better_profanity import profanity
 
-# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Load Sentence-BERT model for NLP-based similarity
 nlp_model = SentenceTransformer('all-MiniLM-L6-v2')
-
-# Precompute category embeddings using Sentence-BERT
 category_embeddings = nlp_model.encode(categories, convert_to_tensor=True)
 
-# Load NSFW classification models
+category_matrix = category_embeddings.cpu().numpy().astype('float32')
+faiss_index = faiss.IndexFlatL2(category_matrix.shape[1])
+faiss_index.add(category_matrix)
+
 nsfw_model = AutoModelForImageClassification.from_pretrained("Falconsai/nsfw_image_detection")
 nsfw_processor = ViTImageProcessor.from_pretrained("Falconsai/nsfw_image_detection")
 
-# Load CLIP model and processor
-clip_model_name = "openai/clip-vit-base-patch32"
-clip_model = CLIPModel.from_pretrained(clip_model_name)
-clip_processor = CLIPProcessor.from_pretrained(clip_model_name)
+clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-# Helper function for NSFW classification
+blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+
+nlp = spacy.load("en_core_web_sm")
+
+profanity.load_censor_words()
+
+RE_MULTISPACE = re.compile(r'\s+')
+RE_SPECIAL = re.compile(r'[^a-zA-Z0-9\s]')
+VIOLENT_KEYWORDS = {"blood", "bloody", "gore", "gory", "violent", "violence", "injury", "death", "explosion", "gun","war","dead"}
+
+def clean_text(text):
+    text = text.strip().lower()
+    text = RE_MULTISPACE.sub(' ', text)
+    text = RE_SPECIAL.sub('', text)
+    return text
+
 def classify_nsfw_image(image):
     with torch.no_grad():
         inputs = nsfw_processor(images=image, return_tensors="pt")
         outputs = nsfw_model(**inputs)
-        logits = outputs.logits
+        label_id = outputs.logits.argmax(-1).item()
+        return nsfw_model.config.id2label[label_id]
 
-    predicted_label = logits.argmax(-1).item()
-    label = nsfw_model.config.id2label[predicted_label]
-    return label
+def extract_keywords_spacy(caption):
+    doc = nlp(caption)
+    keywords = set()
+    keywords.update(ent.text for ent in doc.ents if ent.label_ in ["GPE", "LOC", "PERSON", "ORG"])
+    keywords.update(token.text for token in doc if token.pos_ in ["NOUN", "PROPN"] and not token.is_stop)
+    return list(keywords)
 
-# Helper function for CLIP-based classification
-def classify_clip_image(image):
-    inputs = clip_processor(text=categories, images=image, return_tensors="pt", padding=True)
-    outputs = clip_model(**inputs)
+def classify_clip_image(image, threshold=0.2, top_n=5):
+    clip_inputs = clip_processor(text=categories, images=image, return_tensors="pt", padding=True)
+    with torch.no_grad():
+        clip_outputs = clip_model(**clip_inputs)
+        probs = clip_outputs.logits_per_image.softmax(dim=1)[0]
 
-    # Get probabilities
-    probs = outputs.logits_per_image.softmax(dim=1)[0]
+    sorted_indices = torch.argsort(probs, descending=True)
+    top_labels = [categories[i] for i in sorted_indices[:top_n] if probs[i].item() > threshold]
 
-    # Get top 5 matches
-    top_n = 5
-    threshold = 0.00
-    sorted_indices = torch.argsort(probs, descending=True)[:top_n]
+    blip_inputs = blip_processor(image, return_tensors="pt")
+    with torch.no_grad():
+        blip_output = blip_model.generate(**blip_inputs)
+    caption = blip_processor.decode(blip_output[0], skip_special_tokens=True)
 
-    # Filter results based on threshold and return only labels
-    top_labels = [categories[i] for i in sorted_indices if probs[i].item() > threshold]
-    return top_labels
+    extracted_keywords = extract_keywords_spacy(caption)
+    detected_keywords = set(kw.lower() for kw in extracted_keywords)
+    is_gory = bool(VIOLENT_KEYWORDS.intersection(detected_keywords))
+    return {
+        'labels': extracted_keywords,
+        'caption': caption,
+        'is_gory': is_gory,
+        'clip_labels': top_labels 
+    }
 
-# Helper function for NLP-based similarity search
-def search_similar_category(query):
-    query = query.strip()  # Remove leading and trailing spaces
-    query = re.sub(r'\s+', ' ', query)  # Replace multiple spaces with a single space
-    query = re.sub(r'[^a-zA-Z0-9\s]', '', query)  # Remove special characters (except spaces)
-    query = query.lower()
-    """Find similar categories using NLP-based similarity search."""
-    # Encode the search query to vector
-    query_embedding = nlp_model.encode([query], convert_to_tensor=True)
 
-    # Calculate cosine similarity between the query and category embeddings
-    similarities = cosine_similarity(query_embedding.cpu().numpy(), category_embeddings.cpu().numpy())
-    
-    # Get the top 5 most similar categories
-    top_indices = np.argsort(similarities[0])[::-1][:5]
-    similar_categories = [categories[i] for i in top_indices]
-
-    return similar_categories
+def search_similar_category(query, top_k=3):
+    query = clean_text(query)
+    query_embedding = nlp_model.encode([query], convert_to_tensor=True).cpu().numpy().astype('float32')
+    distances, indices = faiss_index.search(query_embedding, top_k)
+    expanded_categories = []
+    for i, idx in enumerate(indices[0]):
+        category = categories[idx]
+        if i == 0 and category in category_alias_map:
+            expanded_categories.extend(category_alias_map[category])
+        else:
+            expanded_categories.append(category)   
+    return list(dict.fromkeys(expanded_categories)) 
 
 
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')
-
     if not query:
         return jsonify({"error": "Query parameter is required"}), 400
-
-    # Get similar categories for the search query
     similar_categories = search_similar_category(query)
-    
     return jsonify({"similar_categories": similar_categories})
 
 @app.route('/classify/nsfw', methods=['POST'])
 def classify_nsfw():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-
+    file = request.files.get('file')
+    if not file or file.filename == '':
+        return jsonify({'error': 'No file uploaded'}), 400
     try:
-        img = Image.open(file.stream)
-
-        # Classify using NSFW model
+        img = Image.open(file.stream).convert("RGB")
         label = classify_nsfw_image(img)
-        return jsonify({'label': label})  # Return NSFW classification result
-
+        return jsonify({'label': label})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/classify/clip', methods=['POST'])
 def classify_clip():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-
+    file = request.files.get('file')
+    if not file or file.filename == '':
+        return jsonify({'error': 'No file uploaded'}), 400
     try:
-        img = Image.open(file.stream)
-
-        # Get top matching labels using CLIP model
-        labels = classify_clip_image(img)
-
-        # Define violence-related keywords
-        violent_keywords = {'violence', 'blood', 'war', 'gore', 'explosion', 'injury'}
-
-        # Check for violence flags
-        label_set = {label.lower() for label in labels}
-        is_violent = not violent_keywords.isdisjoint(label_set)
-
-        return jsonify({
-            "labels": labels,
-            "flag_violence": is_violent
-        })
-
+        img = Image.open(file.stream).convert("RGB")
+        result = classify_clip_image(img)
+        return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/check-text', methods=['POST'])
+def check_text():
+    data = request.get_json()
+    text = data.get('text', '')
+
+    is_profane = profanity.contains_profanity(text)
+    censored = profanity.censor(text)
+
+    return jsonify({'text': text, 'is_bad': is_profane, 'censored': censored})
 
 if __name__ == '__main__':
     app.run(debug=True)

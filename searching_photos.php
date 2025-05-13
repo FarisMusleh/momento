@@ -54,36 +54,50 @@ if(empty($_GET['query'])){
     <!-- Image Gallery Section -->
     <div class="container-fluid p-5">
         <div class="image-gallery" style = "">
-            <?php
+           <?php
 				if (isset($_GET['query'])) {
-					
 					$search_query = $_GET['query'] ?? '';
-					
 					$flask_url = 'http://127.0.0.1:5000/search?query=' . urlencode($search_query);
 
-					// Initialize cURL session
 					$ch = curl_init();
 					curl_setopt($ch, CURLOPT_URL, $flask_url);
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 					$response = curl_exec($ch);
 
-					if($response === false) {
-						$_SESSION['error-message']="Something went wrong!";
+					if ($response === false) {
+						$_SESSION['error-message'] = "Something went wrong!";
 					}
-					
+
 					$response_data = json_decode($response, true);
 					curl_close($ch);
-					if (isset($response_data['similar_categories'])) {
-						$sql = "SELECT images.id,url,username,views,label,likes,picture,(likes * 100.0 / NULLIF(views, 0)) AS like_percentage FROM 
-						images,accounts WHERE images.label LIKE ? and images.user_id = accounts.id ORDER BY like_percentage DESC, views DESC;";
+
+					if (isset($response_data['similar_categories']) && is_array($response_data['similar_categories'])) {
+						$placeholders = [];
+						$params = [];
+
+						foreach ($response_data['similar_categories'] as $category) {
+							$placeholders[] = "images.label LIKE ?";
+							$params[] = "%" . $category . "%";
+						}
+
+						$whereClause = implode(" OR ", $placeholders);
+
+						$sql = "SELECT images.id, url, username, views, label, likes, picture,
+									   (likes * 100.0 / NULLIF(views, 0)) AS like_percentage
+								FROM images
+								JOIN accounts ON images.user_id = accounts.id
+								WHERE $whereClause
+								ORDER BY like_percentage DESC, views DESC";
+
 						$stmt = $pdo->prepare($sql);
-						$stmt->execute(['%' .$response_data['similar_categories'][0]. '%']);
+						$stmt->execute($params);
+
 						if ($stmt->rowCount() > 0) {
 							$images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-							foreach($images as $image) {
+							foreach ($images as $image) {
 								$btnClass = '';
-								if(isset($_SESSION['data'])){
+								if (isset($_SESSION['data'])) {
 									$stmt = $pdo->prepare("SELECT 1 FROM likes WHERE user_id = ? AND image_id = ?");
 									$stmt->execute([$data['id'], $image['id']]);
 									$liked = $stmt->fetch();
@@ -107,22 +121,22 @@ if(empty($_GET['query'])){
 								echo '<span><i class="fas fa-eye"></i> ' . $image['views'] . '</span>';
 								echo '</div>';
 								echo '</div>';
-								echo '</div>'; 
+								echo '</div>';
 							}
 						} else {
 							$_SESSION['error-message'] = "Sorry, we couldn't find any matches";
 						}
 					}
 				}
-			
-			?>
-        </div>
-		<div style = "display:flex;justify-content:center;font-size:26px;"><?=$_SESSION['error-message']??""?></div>
-		<?php
-			if(isset($_SESSION['error-message'])){
-				unset($_SESSION['error-message']);
-			}
-		?>
+				?>
+				</div>
+				<div style="display:flex;justify-content:center;font-size:26px;"><?=$_SESSION['error-message']??""?></div>
+				<?php
+				if (isset($_SESSION['error-message'])) {
+					unset($_SESSION['error-message']);
+				}
+				?>
+
     </div>
 	<script src="js/like-handler.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -230,6 +230,17 @@
 								  <span>Dashboard</span>
 								  <div class="navbar-hover-indicator"></div>
 								</a>
+								  <a href="/momento/appointment/services.php" class="navbar-menu-item">
+								<i class="fas fa-concierge-bell" style="color: red; margin-right: 15px;"></i>
+								  <span>Services</span>
+								  <div class="navbar-hover-indicator"></div>
+								</a>
+								  <a href="/momento/appointment/appointments_inbox.php" class="navbar-menu-item">
+								  <i class="fas fa-calendar-alt" style="color: red; margin-right: 15px;"></i>
+								  <span> Appointments</span>
+								  <div class="navbar-hover-indicator"></div>
+								</a>
+
 								<?php endif; ?> 
 								<a href="/momento/edit-profile.php" class="navbar-menu-item">
 								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

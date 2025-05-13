@@ -1,55 +1,371 @@
 <?php
-	session_start();
+	if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 	if(isset($_SESSION['data'])){
 		header('location: ../index.php');
 		exit();
 	}
 ?>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	<link href = "../css/bootstrap/bootstrap.css" rel = "stylesheet">
-	<style>
-	body{
-		background:url(img/road.jpg) no-repeat;
-		background-size: cover;
-		backdrop-filter: blur(3px);
-	}
-	h1 {
-		position: relative;
-		text-align:right;
-	}
-	h1::before {
-		background-color: #f0ad4e;
-		content: "";
-		position: absolute;
-		width: 250px;
-		height: 30px;
-		right: -2px;
-		bottom: 0;
-		z-index: -1;
-		transform: rotate(-3deg);
-	}
-	@media (max-width: 829px) {
-		h1 {
-			display: none;
-		}
-	}
-	.unselect{
-		user-select: none;
-	}
-	.form-check-input {
-    width: 1em;
-    height: 1em;
-    border: 1.5px solid #6c757d; /* Visible gray border */
-    border-radius: 0.25rem;
-  }
-  
-  #showTermsBtn {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Register | HotelSnap</title>
+    <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray-dark: #333333;
+            --gray-medium: #666666;
+            --gray-light: #dddddd;
+            --gray-very-light: #f5f5f5;
+            --accent: #4285F4; /* Google blue */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-very-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .auth-hero {
+            flex: 1;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+                url('img/road.jpg') no-repeat center center;
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .auth-hero-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .auth-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .auth-hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .auth-hero .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-hero .logo i {
+            color: var(--white);
+            margin-right: 10px;
+        }
+
+        .auth-hero a {
+            color: var(--white);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .auth-hero a:hover {
+            color: var(--gray-light);
+        }
+
+        .auth-forms {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .form-container {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            border: 1px solid var(--gray-light);
+        }
+
+        .form-header {
+            padding: 1.5rem;
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: var(--gray-very-light);
+        }
+
+        .form-control:focus {
+            border-color: var(--gray-medium);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+            outline: none;
+            background-color: var(--white);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            color: var(--gray-medium);
+        }
+
+        /* Radio Button Styles */
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 5px;
+            background-color: var(--gray-very-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background-color: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .radio-option input[type="radio"]:focus + .radio-label {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--gray-very-light);
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            margin-right: 10px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked ~ .checkmark {
+            background-color: var(--black);
+            border-color: var(--black);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid var(--white);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            cursor: pointer;
+        }
+
+        .checkbox-label a {
+            color: var(--black);
+            text-decoration: underline;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--gray-dark);
+        }
+
+        .btn-google {
+            background: var(--white);
+            color: var(--gray-dark);
+            border: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-google:hover {
+            background: var(--gray-very-light);
+            border-color: var(--gray-medium);
+        }
+
+        .btn-google i {
+            margin-right: 10px;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            color: var(--gray-medium);
+        }
+
+        .form-footer a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--gray-medium);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .divider-text {
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-hero {
+                padding: 2rem 1rem;
+                text-align: center;
+            }
+
+            .auth-hero-content {
+                max-width: 100%;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+		  #showTermsBtn {
             
             text-decoration:underline;
             color: black;
@@ -100,32 +416,7 @@
         .close:hover {
             color: #000;
         }
-
-        h2 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #111827;
-        }
-
-        h3 {
-            font-size: 18px;
-            margin-top: 20px;
-            color: #1f2937;
-        }
-
-        p,
-        li {
-            margin: 10px 0;
-            color: #374151;
-            line-height: 1.6;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        @keyframes fadeIn {
+		        @keyframes fadeIn {
             from {
                 opacity: 0;
             }
@@ -146,94 +437,113 @@
                 opacity: 1;
             }
         }
-  
-  
-	</style>
-	<link href="../css/toaster.css" rel="stylesheet"/>
-	<script src="../js/toaster.js"/>
+		.btn:disabled{
+			opacity: 0.6 !important;
+			cursor: not-allowed !important;
+		}
+    </style>
 </head>
-<body class = 'bg-dark'>
-<div class="modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"></span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-hero">
+            <div class="auth-hero-content">
+                <div class="logo">
+                   <i class="fas fa-camera"></i>
+                    <span>Momento</span>
+                </div>
+
+                <p>Join Momento to share your photography, discover talented creators, and book sessions with ease—all in one place.</p>
+<p>Already have an account? <a href="signin.html">Sign in here</a> to continue capturing and exploring moments that matter.</p>
+
+            </div>
+        </div>
+
+        <div class="auth-forms">
+            <div class="form-container">
+                <div>
+                    <div class="form-header">
+                        <h2>Create Your Account</h2>
+                    </div>
+                    <div class="form-body">
+
+                        <div id="register-message" class="form-message"></div>
+                        <form id="register" method = "post" action = "class-register.php">
+                            <div class="form-group">
+                                <label>Account Type</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="user-account" name="account" value="user" checked>
+                                        <label for="user-account" class="radio-label">
+                                            <i class="fas fa-user" style="margin-right: 8px;"></i>
+                                            User
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="business-account" name="account" value="business">
+                                        <label for="business-account" class="radio-label">
+                                            <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
+                                            Business
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-name">Username</label>
+                                <input type="text" id="register-name" class="form-control" name = "username"
+                                    placeholder="Enter your full name" required>
+                                <i class="fas fa-user input-icon"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-email">Email Address</label>
+                                <input type="email" id="register-email" class="form-control" name = "email"
+                                    placeholder="Enter your email" required>
+                                <i class="fas fa-envelope input-icon"></i>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-password">Password</label>
+                                <input type="password" id="register-password" class="form-control" name = "password"
+                                    placeholder="Create a password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>  
+                            <div class="checkbox-group" style="margin-bottom: 1rem;">
+                                <input type="checkbox" id="terms-agreement" required>
+                                <label for="terms-agreement" class="checkmark"></label>
+                                <label for="terms-agreement" class="checkbox-label">
+                                    I agree to the <a href="#" id = "showTermsBtn">Terms of Service</a>
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn" id = "submit" disabled>Create Account</button>
+                            </div>
+							<input type = "hidden" name = "enter">
+                        </form>
+                        
+                        <div class="divider">
+                            <span class="divider-text">OR</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn btn-google" onclick="location.href='social-media/authentication.php/?auth=google'">
+                                <i class="fab fa-google"></i>
+                                Sign up with Google
+                            </button>
+                        </div>
+                        
+                   <!--      <div class="form-footer">
+                            <p>Already have an account? <a href="signin.html">Sign In</a></p>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-<script>toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!');</script>
-	<div class="d-flex align-items-center vh-100 vw-100 flex-row justify-content-around">
-		<div class = 'p-5 py-4 h-auto min-w-custom bg-light' style = 'width:500px;min-width:400px;'>
-			<h2 class = 'text-center unselect'>Create a user account</h2>
-			<form method = "post" action = "class-register.php">
-				<!--ACCOUNT TYPE-->
-				<div class = "d-flex justify-content-around my-3">
-					<input type="radio" class="btn-check" name="account" id="success-outlined" autocomplete="off" value = "user" checked>
-					<label class="btn btn-outline-success rounded-0" for="success-outlined">User account</label>
-					<input type="radio" class="btn-check" name="account" id="danger-outlined" autocomplete="off" value = "business">
-					<label class="btn btn-outline-danger rounded-0" for="danger-outlined">Business account</label>
-				</div>
-				<!--USERNAME-->
-				<div class="form-floating mb-3">
-					<input type="text" class="form-control" id="username" placeholder="Username" name = "username" autocomplete="username" value = "" required>
-					<label for="username">Username</label>
-					<div class="" id = "username-status"></div>
-				</div>
-				<!--EMAIL-->
-				<div class="form-floating mb-3">
-					<input type="email" class="form-control" id="email" placeholder="name@example.com" name = "email" value = "" autocomplete="email" required>
-					<label for="email">Email address</label>
-				</div>
-				<!--PASSWORD-->
-				<div class="form-floating">
-					<input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off" name = "password" required>
-					<label for="password" class = "form-label">Password</label>
-				</div>
-				<!--GENDER-->
-				<div class = "d-flex gap-3 mt-3 unselect">
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="gender" id="male" value="male" checked="" value = "male">
-						<label class="form-check-label" for="male">Male</label>
-					</div>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="gender" id="female" value="female">
-						<label class="form-check-label" for="female">Female</label>
-					</div>
-				</div>
-				<div class="mt-3">
-					<input type = "checkbox" class="form-check-input" id="agree">
-					<lable><a id="showTermsBtn">Show Terms</a></label>
-				</div>
-				<!--REGISTER-->
-				<div class = "d-flex align-items-center justify-content-center">
-					<button id = "submit" type="submit" class="btn btn-primary rounded-0 mt-4 w-100" name = "enter" disabled>REGISTER</button>
-				</div>		
-			</form>
-			<small>Already have momento account?<a href = "login.php">login</a></small>
-		</div>
-		<h1 class = "unselect">JOIN OUR<br> COMMUNITY</h1>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<div id="termsModal" class="modal">
+
+
+
+<div id="termsModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2>Terms & Conditions for Momento</h2>
@@ -321,60 +631,17 @@
         window.onclick = (event) => {
             if (event.target == modal) modal.style.display = "none";
         }
+		  const checkbox = document.getElementById('terms-agreement');
+		  const submitBtn = document.getElementById('submit');
+
+		  checkbox.addEventListener('change', function () {
+			submitBtn.disabled = !this.checked;
+		  });
+		  
     </script>
 
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
 </body>
 </html>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  const checkbox = document.getElementById('agree');
-  const submitBtn = document.getElementById('submit');
-
-  checkbox.addEventListener('change', function () {
-    submitBtn.disabled = !this.checked;
-  });
-	$(document).ready(function(){
-		$('#username').on('input', function(){
-			let temp = $(this).val();
-			if(temp.length > 0){
-				setTimeout(function() {
-					$.ajax({
-						url: 'check-username.php',
-						type: 'post',
-						data: {key:temp},
-						success: function(response){
-							if(response==true){
-								if ($('#username').hasClass('is-invalid')) {
-									$('#username').removeClass('is-invalid');								
-								}
-								$("#username").addClass("is-valid");
-								$('#username-status').text("Username is available.");									
-							}else{
-								if ($('#username').hasClass('is-valid')) {
-									$('#username').removeClass('is-valid');
-								}
-								$("#username").addClass("is-invalid");
-								$('#username-status').text("A user with that username already exist.");								
-							}
-						}
-					});
-				});
-			}else{
-				$('#username-status').text('');
-				if($("#username").hasClass("is-valid")){
-					$("#username").removeClass("is-valid");
-				}else if($("#username").hasClass("is-invalid")){
-					$("#username").removeClass("is-invalid");
-				}
-			}
-		});
-	});
-</script>
