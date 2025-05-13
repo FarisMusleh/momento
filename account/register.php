@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Register | HotelSnap</title>
+    <title>Register | Momento</title>
     <style>
         :root {
             --black: #000000;
@@ -454,7 +454,7 @@
                 </div>
 
                 <p>Join Momento to share your photography, discover talented creators, and book sessions with ease—all in one place.</p>
-<p>Already have an account? <a href="signin.html">Sign in here</a> to continue capturing and exploring moments that matter.</p>
+<p>Already have an account? <a href="login.php">Sign in here</a> to continue capturing and exploring moments that matter.</p>
 
             </div>
         </div>
