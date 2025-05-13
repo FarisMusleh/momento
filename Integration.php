@@ -1,3 +1,10 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require 'pdo.php';
+$data = $_SESSION['data'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +24,13 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap"
         rel="stylesheet">
+     <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="css/header.css">
 
     <style>
         :root {
@@ -463,24 +477,43 @@
                 font-size: 0.9rem;
             }
         }
+
+        h1,
+        h2 {
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            overflow-x: auto;
+        }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <div class="container">
-            <h1 class="h1 text-light">Integration Options</h1>
-            <p>Choose the right method to incorporate our media resources into your workflow with API integration, RSS
-                feeds, or direct downloads.</p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="#integrations" class="btn-custom btn-journalism">API Integration</a>
-                <a href="#integrations" class="btn-custom btn-education">RSS Feeds</a>
-                <a href="#integrations" class="btn-custom btn-research">Direct Download</a>
-            </div>
-        </div>
-    </header>
-
+<?php require("header.php"); ?>  
     <main class="py-5">
         <div class="container">
             <section class="mb-60">
@@ -535,8 +568,8 @@
                                     <h3>RESTful API</h3>
                                     <p>Full-featured REST API with JSON responses for easy integration with any
                                         platform.</p>
-                                    <a href="/api/documentation" class="btn-custom btn-outline-journalism">View API
-                                        Docs</a>
+                                    <!--  <a href="/api/documentation" class="btn-custom btn-outline-journalism">View API
+                                        Docs</a> -->
                                 </div>
                             </div>
                             <div class="col">
@@ -548,8 +581,8 @@
                                     <h3>Category Feeds</h3>
                                     <p>Topic-specific image feeds tailored to different professional
                                         requirements.</p>
-                                    <a href="/rss/categories" class="btn-custom btn-outline-education">Browse
-                                        Categories</a>
+                                    <!--  <a href="/rss/categories" class="btn-custom btn-outline-education">Browse
+                                        Categories</a> -->
                                 </div>
                             </div>
 
@@ -562,8 +595,8 @@
                                     <h3>Image Formats</h3>
                                     <p>Download images in JPEG, PNG, and TIFF formats for various
                                         applications.</p>
-                                    <a href="/download/formats" class="btn-custom btn-outline-research">View
-                                        Formats</a>
+                                    <!--  <a href="/download/formats" class="btn-custom btn-outline-research">View
+                                        Formats</a> -->
                                 </div>
                             </div>
                         </div>
@@ -573,5 +606,68 @@
                                 <p class="card-text">Get started with our API in minutes. Here's a basic example:</p>
 
                                 <div class="api-endpoint mb-3">
-                                    <code>GET http://localhost/momento/api/</code>
+                                    <code>GET http://localhost/momento/api_categories.php</code>
                                 </div>
+                                <h2 style="margin-top: 30px;">🧾 Query Parameters</h2>
+                                <table style="margin-top: 20px; margin-bottom: 5px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Default</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>category</code></td>
+                                            <td>string or array</td>
+                                            <td>No</td>
+                                            <td>"war"</td>
+                                            <td>Search category. Can be a single string or array.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>page</code></td>
+                                            <td>integer</td>
+                                            <td>No</td>
+                                            <td>1</td>
+                                            <td>Page number for pagination.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>per_page</code></td>
+                                            <td>integer</td>
+                                            <td>No</td>
+                                            <td>10</td>
+                                            <td>Number of results per page (maximum 50).</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <h2 style="margin-top: 30px;">📦 Sample JSON Response</h2>
+                                <pre><code>{
+                            "original_query": "war",
+                            "resolved_categories": ["war", "battle", "conflict"],
+                            "page": 1,
+                            "per_page": 10,
+                            "count": 3,
+                            "images": [
+                                 {
+                                    "id": 12,
+                                    "file_name": "warrior.jpg",
+                                    "label": ["war", "battle"],
+                                    "likes": 102,
+                                    "created_at": "2025-05-12 15:23:54",
+                                    "url": "/momento/uploads/Images/warrior.jpg"
+                                    },
+                                    {
+                                    "id": 13,
+                                    "file_name": "explosion.jpg",
+                                    "label": ["war", "conflict"],
+                                    "likes": 99,
+                                    "created_at": "2025-05-11 12:45:10",
+                                    "url": "/momento/uploads/Images/explosion.jpg"
+                                    }
+                                ]
+                            }
+</code></pre>
