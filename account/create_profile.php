@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-print($_SESSION['create_profile']['type']);
+
 // Get account type from the session
 $accountType = $_SESSION['create_profile']['type'] ?? '';
 ?>

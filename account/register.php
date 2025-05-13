@@ -454,8 +454,7 @@
                 </div>
 
                 <p>Join Momento to share your photography, discover talented creators, and book sessions with ease—all in one place.</p>
-<p>Already have an account? <a href="login.php">Sign in here</a> to continue capturing and exploring moments that matter.</p>
-
+                <p>Already have an account? <a href="login.php">Sign in here</a> to continue capturing and exploring moments that matter.</p>
             </div>
         </div>
 
