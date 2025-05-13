@@ -12,7 +12,7 @@ $data = $_SESSION['data'] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Global Media Hub | Integration Options</title>
+    <title>Momento | Integration Options</title>
     <meta name="description"
         content="Access our content through API integration, RSS feeds, or direct image downloads to incorporate into your workflow.">
 
