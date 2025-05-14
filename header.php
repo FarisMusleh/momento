@@ -7,10 +7,6 @@
 		$data = $_SESSION['data'];
 	
 	
-	$query = "SELECT COUNT(*) AS unseen_appointments FROM appointments WHERE photographer_id = ? AND seen = 0";
-	$stmt = $pdo->prepare($query);
-	$stmt->execute([$data['id']]);
-	$appointmentCount = $stmt->fetch()['unseen_appointments'];
 ?>
 
 <style>
@@ -106,12 +102,26 @@
 				<?php }?>
 				<!-- END-CHAT-ICON -->
 				<!--ICON-BTN-->
+				<?php 
+				if(isset($_SESSION['data'])){
+					
+					$stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?'); 
+								$stmt->execute([$_SESSION['data']['id']]); 
+								$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
+				if($account_type['account_type']=='business'){
+					$query = "SELECT COUNT(*) AS unseen_appointments FROM appointments WHERE photographer_id = ? AND seen = 0";
+					$stmt = $pdo->prepare($query);
+					$stmt->execute([$data['id']]);
+					$appointmentCount = $stmt->fetch()['unseen_appointments'];
+				?>
+				
 				<a href="appointment/appointments_inbox.php" class="icon-button" title="Appointments">
 					<i class="fas fa-calendar-check"></i>
 					<?php if ($appointmentCount > 0): ?>
 						<span class="badge"><?= $appointmentCount ?></span>
 					<?php endif; ?>
 				</a>
+				<?php }}?>
                 <li class="nav-item"><a class="nav-link" href="/momento/index.php">HOME</a></li>
                <!-- Ultra-Professional Categories Dropdown -->
                 <li class="nav-item dropdown dropdown-hover">
@@ -241,9 +251,7 @@
 							<div class="navbar-user-info"> 
 							  <div class="navbar-user-name"> 
 								<?php 
-								$stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?'); 
-								$stmt->execute([$_SESSION['data']['id']]); 
-								$account_type = $stmt->fetch(PDO::FETCH_ASSOC); 
+								 
 								
 								if ($account_type['account_type'] === 'user') { 
 								  $profileData = $pdo->prepare('SELECT name FROM user_profiles WHERE id = ?'); 
