@@ -903,6 +903,7 @@ $reviews = $sql_reviews->fetchAll();
                             <label for="category">Category</label>
                             <select id="category" name="category" required>
                                 <option value="">Select a category</option>
+								<option value="general">General</option>
                                 <?php foreach($services as $row): ?>
                                 <option value="<?=$row['category']??""?>"><?=$row['category']??""?></option>
                                 <?php endforeach; ?>

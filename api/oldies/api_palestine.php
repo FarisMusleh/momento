@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 
 // API-KEY-CHECK
+/*
 $headers = getallheaders();
 $apiKey = isset($headers['X-API-Key']) ? $headers['X-API-Key'] : null;
 
@@ -22,6 +23,7 @@ if (!$keyInfo) {
     echo json_encode(["error" => "Invalid or inactive API key"]);
     exit;
 }
+*/
 
 
 $categories = ['war', 'gaza', 'palestine'];//CATEGORIES

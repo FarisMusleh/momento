@@ -625,7 +625,7 @@
 
 			$similar = [];
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$labels = json_decode($row['label'], true);
+				if(isset($labels)){$labels = json_decode($row['label'], true);
 				$common = array_intersect($current_labels, $labels);
 				if (count($common) > 0) {
 					$similar[] = [
@@ -634,7 +634,7 @@
 						'common_count' => count($common)
 					];
 				}
-			}
+			}}
 
 			// Step 3: Sort by number of matching labels, then limit to 4
 			usort($similar, fn($a, $b) => $b['common_count'] - $a['common_count']);
@@ -679,9 +679,11 @@
         
         <div class="tag-list">
 		  <?php 
+		  if(isset($img['label'])){
 			foreach(json_decode($img['label']) as $row){
 				echo '<span class="tag" style = "text-transform: capitalize;">'.$row.'</span>';
 			};
+		  }
 		  ?>
         </div>
         <?php if(isset($_SESSION['data'])){

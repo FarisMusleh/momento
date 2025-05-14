@@ -282,16 +282,16 @@
                     </div>
                     <div class="form-body">
                         <div id="signin-message" class="form-message"></div>
-                        <form id="signin">
+                        <form id="signin" method = "post" action = "class-login.php">
                             <div class="form-group">
                                 <label for="signin-email">Email Address</label>
-                                <input type="email" id="signin-email" class="form-control"
+                                <input type="email" id="signin-email" class="form-control" name = "email"
                                     placeholder="Enter your email" required>
                                 <i class="fas fa-envelope input-icon"></i>
                             </div>
                             <div class="form-group">
                                 <label for="signin-password">Password</label>
-                                <input type="password" id="signin-password" class="form-control"
+                                <input type="password" id="signin-password" class="form-control" name = "password"
                                     placeholder="Enter your password" required>
                                 <i class="fas fa-lock input-icon"></i>
                             </div>

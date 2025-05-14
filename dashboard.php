@@ -53,6 +53,36 @@ $stmtUpcoming = $pdo->prepare("
 ");
 $stmtUpcoming->execute([$data['id']]);
 $upcomingAppointments = $stmtUpcoming->fetchAll(PDO::FETCH_ASSOC);
+
+$photographer_views_chart = $pdo->prepare("
+    SELECT DATE(view_date) AS view_day, COUNT(*) AS views
+    FROM photographer_view_logs
+    WHERE photographer_id = :pid AND view_date >= CURDATE() - INTERVAL 14 DAY
+    GROUP BY view_day
+    ORDER BY view_day
+");
+$photographer_views_chart->execute(['pid' => $data['id']]);
+
+
+$rawData = [];
+while ($row = $photographer_views_chart->fetch(PDO::FETCH_ASSOC)) {
+    $rawData[$row['view_day']] = (int)$row['views'];
+}
+
+// Prepare chart data with all 15 days
+$labels = [];
+$data = [];
+for ($i = 14; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $labels[] = date('M j', strtotime($date)); // e.g. "May 14"
+    $data[] = $rawData[$date] ?? 0;
+}
+
+// Convert to JS-friendly format
+$labels_js = json_encode($labels);
+$data_js = json_encode($data);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -557,6 +587,10 @@ $upcomingAppointments = $stmtUpcoming->fetchAll(PDO::FETCH_ASSOC);
         }
 
         // Initialize charts
+		
+		
+		
+		
         function initCharts() {
             // Views Chart
             const viewsCtx = document.getElementById('viewsChart').getContext('2d');

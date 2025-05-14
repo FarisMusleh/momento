@@ -5,12 +5,52 @@
     require_once('pdo.php');
 	if(isset($_SESSION['data']))
 		$data = $_SESSION['data'];
+	
+	
+	$query = "SELECT COUNT(*) AS unseen_appointments FROM appointments WHERE photographer_id = ? AND seen = 0";
+	$stmt = $pdo->prepare($query);
+	$stmt->execute([$data['id']]);
+	$appointmentCount = $stmt->fetch()['unseen_appointments'];
 ?>
+
+<style>
+.icon-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	background-color: #5a6d7c; /* Circle color */
+	color: white;
+	border-radius: 50%;
+	text-decoration: none;
+	position: relative;
+	font-size: 22px;
+	transition: background-color 0.3s;
+}
+
+.icon-button:hover {
+	background-color: #4e5f6d;
+}
+
+.icon-button .badge {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	background-color: red;
+	color: white;
+	border-radius: 50%;
+	padding: 2px 6px;
+	font-size: 12px;
+	line-height: 1;
+}
+</style>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <nav class="navbar navbar-expand-lg nav-sticky" id = "navbar">
     <div class="container-fluid">
         <a class="navbar-brand fs-3 momento-logo" href="/momento/index.php">Momento</a>
-		
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -65,6 +105,13 @@
 				</div>
 				<?php }?>
 				<!-- END-CHAT-ICON -->
+				<!--ICON-BTN-->
+				<a href="appointment/appointments_inbox.php" class="icon-button" title="Appointments">
+					<i class="fas fa-calendar-check"></i>
+					<?php if ($appointmentCount > 0): ?>
+						<span class="badge"><?= $appointmentCount ?></span>
+					<?php endif; ?>
+				</a>
                 <li class="nav-item"><a class="nav-link" href="/momento/index.php">HOME</a></li>
                <!-- Ultra-Professional Categories Dropdown -->
                 <li class="nav-item dropdown dropdown-hover">

@@ -9,6 +9,11 @@ if (!isset($_SESSION['data']['id'])) {
 }
 $user_id = $_SESSION['data']['id'];
 
+$updateSeen = "UPDATE appointments SET seen = 1 WHERE photographer_id = :photographer_id AND seen = 0";
+$stmt = $pdo->prepare($updateSeen);
+$stmt->bindParam(':photographer_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+
 $sql_account_type = $pdo->prepare('select account_type from accounts where id = ?');
 $sql_account_type->execute([$user_id]);
 $type = $sql_account_type->fetch();

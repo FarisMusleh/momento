@@ -2,7 +2,8 @@
 require_once '../pdo.php';
 header('Content-Type: application/json');
 
-// API Key Check
+// API-KEY-CHECK
+/*
 $headers = getallheaders();
 $apiKey = isset($headers['X-API-Key']) ? $headers['X-API-Key'] : null;
 
@@ -21,17 +22,20 @@ if (!$keyInfo) {
     echo json_encode(["error" => "Invalid or inactive API key"]);
     exit;
 }
+*/
 
-// Category Similarity + Caching
+
+//SIMILAR-CATEGORIES-AND-CACHING
 function fetch_similar_categories_with_cache($query) {
     $cacheDir = __DIR__ . '/cache';
     if (!is_dir($cacheDir)) {
-        mkdir($cacheDir, 0755, true);
+        mkdir($cacheDir, 0755, true); // Create cache folder if it doesn't exist
     }
 
     $cacheFile = $cacheDir . '/category_' . md5($query) . '.json';
-    $cacheDuration = 300; // 5 minutes
+    $cacheDuration = 300; // Cache for 300 seconds (5 minutes)
 
+    // Check if cache exists and is fresh
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheDuration) {
         $data = json_decode(file_get_contents($cacheFile), true);
         if (isset($data['similar_categories'])) {
@@ -39,17 +43,23 @@ function fetch_similar_categories_with_cache($query) {
         }
     }
 
+    //IF-NO-VALID-CACHE-CALL-PYTHON-API
     $url = 'http://127.0.0.1:5000/search?query=' . urlencode($query);
+
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
     $response = curl_exec($ch);
+
     if (curl_errno($ch)) {
         curl_close($ch);
         return [];
     }
+
     curl_close($ch);
 
     $data = json_decode($response, true);
+
     if (isset($data['similar_categories'])) {
         file_put_contents($cacheFile, json_encode($data));
         return $data['similar_categories'];
@@ -58,23 +68,33 @@ function fetch_similar_categories_with_cache($query) {
     return [];
 }
 
-// Handle Input
+//GET-CATEGORIES
 $categoryInput = isset($_GET['category']) ? $_GET['category'] : 'war';
 
+//OPERATION-ON-THE-CATEGORIES
 if (is_array($categoryInput)) {
     $categories = $categoryInput;
 } else {
+    //SIMILAR-CATEGORIES
     $smartCategories = fetch_similar_categories_with_cache($categoryInput);
-    $categories = !empty($smartCategories) ? $smartCategories : explode(',', $categoryInput);
+
+    if (!empty($smartCategories)) {
+        $categories = $smartCategories;
+    } else {
+        $categories = explode(',', $categoryInput);
+    }
 }
 
-// Pagination
-$page = isset($_GET['page']) ? max((int)$_GET['page'], 1) : 1;
-$perPage = isset($_GET['per_page']) ? min(max((int)$_GET['per_page'], 1), 50) : 10;
-$offset = ($page - 1) * $perPage;
-$days = 7;
+//PAGINATION
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perPage = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+$page = max($page, 1);
+$perPage = min(max($perPage, 1), 50);
 
-// Build SQL
+$offset = ($page - 1) * $perPage;
+$days = 7;//WEEK
+
+//DYNAMIC-SQL
 $whereParts = [];
 $params = [
     ':days' => $days,
@@ -90,6 +110,7 @@ foreach ($categories as $index => $cat) {
 
 $whereSql = implode(' OR ', $whereParts);
 
+//FINAL-SQL
 $sql = "
     SELECT id, file_name, label, likes, created_at
     FROM images
@@ -101,6 +122,7 @@ $sql = "
 
 $stmt = $pdo->prepare($sql);
 
+//BINDING
 foreach ($params as $key => $value) {
     $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
 }
@@ -108,6 +130,7 @@ foreach ($params as $key => $value) {
 $stmt->execute();
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+//CONVERTING
 $baseUrl = '/momento/uploads/Images/';
 foreach ($images as &$image) {
     $image['url'] = $baseUrl . $image['file_name'];
@@ -115,7 +138,7 @@ foreach ($images as &$image) {
 }
 unset($image);
 
-// JSON Output
+//JSON
 echo json_encode([
     "original_query" => $categoryInput,
     "resolved_categories" => $categories,

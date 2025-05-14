@@ -4,13 +4,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require '../pdo.php';
 
-// Check if the user is authorized to access this page
 if (!isset($_SESSION['create_profile'])) {
     header('location:../index.php');
     exit();
 }
 
-// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_SESSION['create_profile']['id'];
     $name = $_POST['name'] ?? '';
@@ -22,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     
     try {
-        // Update the accounts table with location and picture
+
         if ($picture) {
             $stmtAccount = $pdo->prepare("
                 UPDATE accounts 
@@ -31,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             $stmtAccount->execute([$location, $picture, $userId]);
             
-            // Update session with picture path
             $_SESSION['data']['picture'] = '/momento/Uploads/ProfilePicture/img_1.jpg';
         } else {
             $stmtAccount = $pdo->prepare("
@@ -41,10 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             $stmtAccount->execute([$location, $userId]);
         }
-        
-        // Get the account type and update the corresponding profile
+
         if ($type === 'user') {
-            // Update user profile - only name is needed
+  
             $stmtProfile = $pdo->prepare("
                 UPDATE user_profiles 
                 SET name = ?
@@ -61,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ];
         } 
         elseif ($type === 'business') {
-            // Update business profile - name, contact number, bio, job
+        
             $bio = $_POST['bio'] ?? '';
             $job = $_POST['job'] ?? '';
 
@@ -82,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ];
         }
 
-        // Clean up and redirect
+
         unset($_SESSION['create_profile']);
         header('Location: ../index.php');
         exit();
@@ -92,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get account type from the session
 $accountType = $_SESSION['create_profile']['type'] ?? '';
 ?>
 

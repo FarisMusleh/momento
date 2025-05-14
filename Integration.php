@@ -600,74 +600,112 @@ $data = $_SESSION['data'] ?? null;
                                 </div>
                             </div>
                         </div>
-                        <div class="card mt-5 ">
-                            <div class="card-body">
-                                <h4 class="card-title">API Quick Start</h4>
-                                <p class="card-text">Get started with our API in minutes. Here's a basic example:</p>
+                        <div class="card mt-5">
+						<div class="card-body">
+							<h4 class="card-title">API Quick Start</h4>
+							<div style="margin-top: 30px;">
+								<h2>🔑 Your API Key</h2>
+								<?php if (isset($_SESSION['data']['id'])): ?>
+									<button class="btn btn-dark" id="generateBtn">Generate API Key</button>
+									<p style="margin-top: 15px;"><strong>Result:</strong> <span id="apiKeyResult"></span></p>
+									<script>
+										document.getElementById('generateBtn').addEventListener('click', function () {
+											fetch('api/generator.php', { method: 'POST' })
+												.then(response => response.text())
+												.then(data => {
+													document.getElementById('apiKeyResult').innerHTML = data;
+												});
+										});
+									</script>
+								<?php else: ?>
+									<p>You must be logged in to generate an API key.</p>
+								<?php endif; ?>
+							</div>
+							<p class="card-text">Get started with our API in minutes. Here's a basic example:</p>
 
-                                <div class="api-endpoint mb-3">
-                                    <code>GET http://localhost/momento/api_categories.php</code>
-                                </div>
-                                <h2 style="margin-top: 30px;">🧾 Query Parameters</h2>
-                                <table style="margin-top: 20px; margin-bottom: 5px;">
-                                    <thead>
-                                        <tr>
-                                            <th>Parameter</th>
-                                            <th>Type</th>
-                                            <th>Required</th>
-                                            <th>Default</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>category</code></td>
-                                            <td>string or array</td>
-                                            <td>No</td>
-                                            <td>"war"</td>
-                                            <td>Search category. Can be a single string or array.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>page</code></td>
-                                            <td>integer</td>
-                                            <td>No</td>
-                                            <td>1</td>
-                                            <td>Page number for pagination.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>per_page</code></td>
-                                            <td>integer</td>
-                                            <td>No</td>
-                                            <td>10</td>
-                                            <td>Number of results per page (maximum 50).</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+							<div class="api-endpoint mb-3">
+								<code>GET http://localhost/momento/api_categories.php</code>
+							</div>
+							
+							<div style="margin-top: 30px;">
+								<h2>🧾 Query Parameters</h2>
+								<table style="margin-top: 20px; margin-bottom: 5px;">
+									<thead>
+										<tr>
+											<th>Parameter</th>
+											<th>Type</th>
+											<th>Required</th>
+											<th>Default</th>
+											<th>Description</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><code>category</code></td>
+											<td>string or array</td>
+											<td>No</td>
+											<td>"war"</td>
+											<td>Search category. Can be a single string or array.</td>
+										</tr>
+										<tr>
+											<td><code>page</code></td>
+											<td>integer</td>
+											<td>No</td>
+											<td>1</td>
+											<td>Page number for pagination.</td>
+										</tr>
+										<tr>
+											<td><code>per_page</code></td>
+											<td>integer</td>
+											<td>No</td>
+											<td>10</td>
+											<td>Number of results per page (maximum 50).</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 
-                                <h2 style="margin-top: 30px;">📦 Sample JSON Response</h2>
-                                <pre><code>{
-                            "original_query": "war",
-                            "resolved_categories": ["war", "battle", "conflict"],
-                            "page": 1,
-                            "per_page": 10,
-                            "count": 3,
-                            "images": [
-                                 {
-                                    "id": 12,
-                                    "file_name": "warrior.jpg",
-                                    "label": ["war", "battle"],
-                                    "likes": 102,
-                                    "created_at": "2025-05-12 15:23:54",
-                                    "url": "/momento/uploads/Images/warrior.jpg"
-                                    },
-                                    {
-                                    "id": 13,
-                                    "file_name": "explosion.jpg",
-                                    "label": ["war", "conflict"],
-                                    "likes": 99,
-                                    "created_at": "2025-05-11 12:45:10",
-                                    "url": "/momento/uploads/Images/explosion.jpg"
-                                    }
-                                ]
-                            }
+							<div style="margin-top: 30px;">
+								<h2>📦 Sample JSON Response</h2>
+			<pre><code>{
+	"original_query": "war",
+	"resolved_categories": ["war", "battle", "conflict"],
+	"page": 1,
+	"per_page": 10,
+	"count": 3,
+	"images": [
+		{
+			"id": 12,
+			"file_name": "warrior.jpg",
+			"label": ["war", "battle"],
+			"likes": 102,
+			"created_at": "2025-05-12 15:23:54",
+			"url": "/momento/uploads/Images/warrior.jpg"
+		},
+		{
+			"id": 13,
+			"file_name": "explosion.jpg",
+			"label": ["war", "conflict"],
+			"likes": 99,
+			"created_at": "2025-05-11 12:45:10",
+			"url": "/momento/uploads/Images/explosion.jpg"
+		}
+	]
+}</code></pre>
+							</div>
+							<div style="margin-top: 30px;">
+							<h2>📦 Sample Fetching</h2>
+			<pre><code>
+fetch("http://localhost/momento/api/api_categories.php?category=wedding&page=1", {
+    method: "GET",
+    headers: {
+        "X-API-Key": "YOUR-API-KEY"
+    }
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error(error));
 </code></pre>
+							</div>
+						</div>
+					</div>

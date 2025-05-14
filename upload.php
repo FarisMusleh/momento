@@ -10,7 +10,7 @@ $data = $_SESSION['data'];
 require('pdo.php');
 
 $mainCategory = [
-    'wars' => ['tank', 'soldier', 'battle', 'explosion', 'ruins', 'military', 'gun', 'destroyed', 'army','gaza'],
+    'wars' => ['tank', 'soldier', 'battle', 'explosion', 'ruins', 'military', 'gun', 'destroyed', 'army','gaza','gore','bloody','dead'],
     'graduation' => ['graduation', 'cap', 'diploma', 'certificate', 'graduate', 'ceremony'],
     'wedding' => ['wedding', 'bride', 'groom', 'ring', 'ceremony', 'dress', 'cake'],
     'nature' => ['tree', 'mountain', 'river', 'lake', 'sunset', 'forest', 'nature'],
@@ -98,10 +98,10 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
 			
             $categoryCounts = [];
 
-			foreach ($mainCategories as $mainCategory => $keywords) {
+			foreach ($mainCategory as $category => $keywords) {
 				foreach ($topLabels as $label) {
 					if (in_array(strtolower($label), $keywords)) {
-						$categoryCounts[$mainCategory] = ($categoryCounts[$mainCategory] ?? 0) + 1;
+						$categoryCounts[$category] = ($categoryCounts[$category] ?? 0) + 1;
 					}
 				}
 			}
@@ -111,7 +111,6 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
 					VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score = score + VALUES(score)");
 				$stmt->execute([$data['id'], $category, $count]);
 			}
-
             $_SESSION['message'] = "Image Uploaded Successfully";
             $_SESSION['color'] = "green";
         } catch (Exception $e) {
