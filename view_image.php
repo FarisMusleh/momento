@@ -620,12 +620,13 @@
 			$current_labels = json_decode($current['label'], true);
 
 			// Step 2: Find other images with similar labels
-			$stmt = $pdo->prepare("SELECT id, label, url FROM images WHERE id != ?");
-			$stmt->execute([$_GET['id']]);
+			$stmt_i = $pdo->prepare("SELECT id, label, url FROM images WHERE id != ?");
+			$stmt_i->execute([$_GET['id']]);
+			$res = $stmt_i->fetchAll();
 
 			$similar = [];
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				if(isset($labels)){$labels = json_decode($row['label'], true);
+			foreach($res as $row) {
+				$labels = json_decode($row['label'], true);
 				$common = array_intersect($current_labels, $labels);
 				if (count($common) > 0) {
 					$similar[] = [
@@ -634,7 +635,7 @@
 						'common_count' => count($common)
 					];
 				}
-			}}
+			}
 
 			// Step 3: Sort by number of matching labels, then limit to 4
 			usort($similar, fn($a, $b) => $b['common_count'] - $a['common_count']);
