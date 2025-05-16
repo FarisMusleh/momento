@@ -80,7 +80,7 @@ def classify_clip_image(image, threshold=0.2, top_n=5):
 
     extracted_keywords = extract_keywords_spacy(caption)
     detected_keywords = set(kw.lower() for kw in extracted_keywords)
-    is_gory = bool(VIOLENT_KEYWORDS.intersection(detected_keywords))
+    is_gory = bool(VIOLENT_KEYWORDS.intersection(set(detected_keywords) | set(top_labels)))
     return {
         'labels': extracted_keywords,
         'caption': caption,

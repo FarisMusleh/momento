@@ -7,7 +7,7 @@ categories = [
             "business","finance","economy","health","medicine","sports","fitness","lifestyle","cat",
             "education","learning","school","college","university","students",
             "children","youth","adults","seniors","family","relationships",
-            "friends","community","social","society","environment",
+            "friends","community","society","environment",
             "nature","wildlife","animal","plants","ecosystem",
             "climate","weather","earth","space","universe",
             "galaxy","stars","planets","solar system",
@@ -39,8 +39,8 @@ categories = [
 ]
              
 category_alias_map = {
-        "war": ['tank', 'soldier', 'battle', 'explosion', 'ruins', 'military', 'gun', 'destroyed', 'army','gaza'],
-        "graduation": ['graduation', 'cap', 'diploma', 'certificate', 'graduate', 'ceremony'],
+        "war": ['tank', 'soldier', 'battle', 'explosion', 'ruins', 'military', 'gun', 'destroyed', 'army','gaza','rubble '],
+        "graduation": ['graduation', 'cap', 'diploma', 'certificate', 'graduate','student', 'school', 'university'],
         "wedding": ['wedding', 'bride', 'groom', 'ring', 'ceremony', 'dress', 'cake'],
         "nature" :['tree', 'mountain', 'river', 'lake', 'sunset', 'forest', 'nature'],
         "tourism" : ['tourism', 'travel', 'landmark', 'beach', 'resort', 'hotel'],
