@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2025 at 02:48 PM
+-- Generation Time: May 16, 2025 at 07:24 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -48,11 +48,17 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `username`, `email`, `password`, `account_type`, `picture`, `location`, `lon`, `lat`, `provider`, `provider_id`, `created_at`, `updated_at`) VALUES
-(103, 'test', 'farisassaf03@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/google_115829613571035348563.jpg', 'Australia', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '115829613571035348563', '2025-05-13 20:15:20', '2025-05-13 20:15:20'),
-(104, 'testafter', 'testafter@g.c', '$2y$10$nxJCu/JjGKAznb11HCTT7eLEIDnSRnBDrX9Iqf7zvbMImeO4G9kAW', 'business', '/momento/Uploads/ProfilePicture/img_1.jpg', 'Burundi', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-13 23:27:27', '2025-05-13 23:39:43'),
-(105, 'testu', 'testu@g.c', '$2y$10$RImYjHUB9PaNDPRex8IvUu3MM568niZFinJxOc4w5ILJofTXR1Ai2', 'user', '/momento/Uploads/ProfilePicture/img_1.jpg', 'Cyprus', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-13 23:40:44', '2025-05-13 23:41:23'),
-(106, 'oshiro', 'farismusleh2032003@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/google_113031318110845926527.jpg', 'Azerbaijan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '113031318110845926527', '2025-05-14 07:53:42', '2025-05-14 07:53:42'),
-(107, 'app', 'app@g.c', '$2y$10$a8uU7fz81TR9IITspR4dxOyjJQexWReIM7ZR9PxbFHMudDA/Tg286', 'user', '/momento/Uploads/ProfilePicture/img_1.jpg', 'Bahamas', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-14 11:02:49', '2025-05-14 11:02:58');
+(113, 'waleed_alnablisieha', 'waleedalnablisieha2017@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/google_118369701700260045816.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '118369701700260045816', '2025-05-16 12:49:32', '2025-05-16 12:49:32'),
+(114, 'waleed', 'waleed.alnablisieha03@gmail.com', '', 'business', '/momento/uploads/ProfilePicture/google_103444607268620559817.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'google', '103444607268620559817', '2025-05-16 13:40:41', '2025-05-16 13:40:41'),
+(115, 'waleed2024', 'waleedalnablisieha2024@gmail.com', '$2y$10$VCNqIUCHHySh5Qu29MSga.dqliYB9cxzEg9ASSplH9c8b1m1av2dO', 'business', '/momento/uploads/ProfilePicture/img_6827414da86aa7.86368289.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 13:43:59', '2025-05-16 13:44:45'),
+(116, 'waleed2025', 'waleedalnablisieha2025@gmail.com', '$2y$10$xL5QkRnFbEnCrw.DN6j65.4u52wiGPy40JpIfZTg4sWIxGFpqXxDu', 'business', '/momento/uploads/ProfilePicture/img_68274345d72b46.56348570.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 13:48:10', '2025-05-16 13:53:09'),
+(117, 'waleed2026', 'waleedalnablisieha2026@gmail.com', '$2y$10$PTNGTeY9SCBsg6GbAZ5DgOZ7be2ekmU9iXbp0.s7M5LtamMlRp7MW', 'user', '/momento/Uploads/ProfilePicture/img_1.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 13:53:39', '2025-05-16 13:54:11'),
+(118, 'waleed2022', 'waleedalnablisieha2022@gmail.com', '$2y$10$.SJwPlRTViRxKYNEpTv6nOuIpeqHK2zKM5CQ6mp9hf6z92pLoOiXW', 'user', '/momento/Uploads/ProfilePicture/img_1.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 13:54:41', '2025-05-16 13:55:23'),
+(119, 'waleed2021', 'waleedalnablisieha2021@gmail.com', '$2y$10$juxhj2/u8BpnapTjSQ1dJO6dioNwrBNj3KnZ2goGfjESN2j1xkNUi', 'business', '/momento/uploads/ProfilePicture/img_68274525438831.20148780.jpg', 'Turkey', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 13:56:14', '2025-05-16 14:01:10'),
+(120, 'waleed-graduation', 'waleedalnablisieha2020@gmail.com', '$2y$10$oTsNS2MjI/V9AbKhPWMp3.pWAEY.F3YhVGk4LHQzgkkX9utzDgjRO', 'business', '/momento/uploads/ProfilePicture/img_6827477c763154.02274146.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 14:01:46', '2025-05-16 14:11:08'),
+(121, 'waleed2019', 'waleedalnablisieha2019@gmail.com', '$2y$10$bB0ncgUnVb8HyTifyJC2ju2CSZOcmBr1gu3jSaeevEoZSltZpYOLq', 'business', '/momento/uploads/ProfilePicture/img_68274f9962c2f2.98052675.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 14:15:22', '2025-05-16 14:45:45'),
+(122, 'waleed2018', 'waleedalnablisieha2018@gmail.com', '$2y$10$ESUZLWvWSWrEt3EiwpYIf.bweATPEczoHkjUPnSlu43h41GVmNKCG', 'business', '/momento/uploads/ProfilePicture/img_68275481e3ebc9.46824185.jpg', 'Jordan', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 14:49:52', '2025-05-16 15:06:42'),
+(123, 'waleed-war', 'waleedalnablisieha2016@gmail.com', '$2y$10$mUXfoSimSos9IHH7Du67d..WsoaUhdZm1GOco20DBGQS8VoDS65qa', 'business', '/momento/uploads/ProfilePicture/img_68275b3807ae89.70879146.jpeg', 'Palestine', 0.000000000000000000000000000000, 0.000000000000000000000000000000, 'local', NULL, '2025-05-16 15:10:24', '2025-05-16 15:35:20');
 
 -- --------------------------------------------------------
 
@@ -67,13 +73,6 @@ CREATE TABLE `api_keys` (
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `api_keys`
---
-
-INSERT INTO `api_keys` (`id`, `api_key`, `user_id`, `is_active`, `created_at`) VALUES
-(1, '335aa9ec70256599bab3a1ed3c712c044f1bce4e8de8703f77256d958ee53ea1', 105, 1, '2025-05-14 03:22:35');
 
 -- --------------------------------------------------------
 
@@ -99,13 +98,6 @@ CREATE TABLE `appointments` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `appointments`
---
-
-INSERT INTO `appointments` (`id`, `user_id`, `photographer_id`, `full_name`, `email`, `phone_number`, `category`, `location`, `duration_minutes`, `date`, `notes`, `status`, `payment_method`, `seen`, `created_at`) VALUES
-(11, 107, 103, 'rew', 'fdas@g.c', '321', 'Event', 'studio', 60, '2025-05-12 12:00', 'fdsa', 'confirmed', 'cash', 1, '2025-05-14 14:04:01');
-
 -- --------------------------------------------------------
 
 --
@@ -123,13 +115,6 @@ CREATE TABLE `appointment_services` (
   `detail_3` varchar(96) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `appointment_services`
---
-
-INSERT INTO `appointment_services` (`id`, `photographer_id`, `category`, `description`, `price`, `detail_1`, `detail_2`, `detail_3`, `created_at`) VALUES
-(9, 103, 'Event', 'dfsa', 321, '321', '321', '321', '2025-05-14 14:03:37');
 
 -- --------------------------------------------------------
 
@@ -157,9 +142,15 @@ CREATE TABLE `business_profiles` (
 --
 
 INSERT INTO `business_profiles` (`id`, `business_name`, `contact_number`, `social_links`, `bio`, `job`, `total_rate`, `total_reviews`, `total_likes`, `total_views`, `created_at`, `updated_at`) VALUES
-(103, 'Faris', NULL, NULL, '', NULL, 0, 0, 2, 14, '2025-05-13 20:15:20', '2025-05-14 12:46:36'),
-(104, 'ft7e', '01231231231', NULL, '32132', 'fdsa', 0, 0, 0, 0, '2025-05-13 23:27:27', '2025-05-13 23:39:43'),
-(106, '̇Oshiro', NULL, NULL, '', NULL, 0, 0, 6, 17, '2025-05-14 07:53:42', '2025-05-14 12:46:37');
+(113, 'Waleed Alnablisieha', NULL, '{\"facebook\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"twitter\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"linked-in\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"instagram\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\"}', 'Front End Developer . using a latest technologies to develop a dynamic and responsive web pages .\r\n', 'web developer', 0, 0, 9, 2, '2025-05-16 12:49:32', '2025-05-16 17:20:14'),
+(114, 'waleed alnablisieha', NULL, NULL, '', NULL, 0, 0, 8, 7, '2025-05-16 13:40:41', '2025-05-16 17:20:27'),
+(115, 'waleed2024', '0798708036', NULL, 'wedding photographer', 'wedding photographer', 0, 0, 4, 2, '2025-05-16 13:43:59', '2025-05-16 17:19:34'),
+(116, 'waleed2025', '0798708036', NULL, 'cars photographer', 'cars photographer', 0, 0, 9, 1, '2025-05-16 13:48:10', '2025-05-16 17:20:07'),
+(119, 'waleed-Istanbul', '0798708036', NULL, 'Istanbul photographer', '', 0, 0, 10, 2, '2025-05-16 13:56:15', '2025-05-16 17:20:33'),
+(120, 'waleed-graduation', '0798708036', '{\"facebook\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"twitter\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"linked-in\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"instagram\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\"}', 'graduation photographer', 'graduation photographer', 0, 0, 7, 5, '2025-05-16 14:01:46', '2025-05-16 17:19:55'),
+(121, 'waleed-Nature', '0798708036', '{\"facebook\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"twitter\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"linked-in\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"instagram\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\"}', 'Nature photographer', 'Nature photographer', 0, 0, 7, 1, '2025-05-16 14:15:22', '2025-05-16 17:20:39'),
+(122, 'waleed-Art', '0798708036', NULL, 'Art photographer', 'Art photographer', 0, 0, 6, 3, '2025-05-16 14:49:52', '2025-05-16 17:20:09'),
+(123, 'waleed-war', '0798708036', '{\"facebook\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"twitter\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"linked-in\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\",\"instagram\":\"https:\\/\\/www.facebook.com\\/AbuKhaleed2003\\/\"}', 'war photographer', 'war photographer', 0, 0, 5, 8, '2025-05-16 15:10:24', '2025-05-16 17:20:25');
 
 -- --------------------------------------------------------
 
@@ -181,8 +172,7 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `user_id`, `image_id`, `comment`, `likes`, `created_at`) VALUES
-(77, 106, 280, 'tesdt', 1, '2025-05-14 11:22:35'),
-(78, 106, 280, '****', 0, '2025-05-14 11:22:42');
+(86, 122, 337, 'galata kulesi . ne kadar güzelsin be ❤', 0, '2025-05-16 18:09:30');
 
 -- --------------------------------------------------------
 
@@ -196,13 +186,6 @@ CREATE TABLE `comment_likes` (
   `comment_id` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `comment_likes`
---
-
-INSERT INTO `comment_likes` (`id`, `user_id`, `comment_id`, `created_at`) VALUES
-(34, 106, 77, '2025-05-14 11:22:38');
 
 -- --------------------------------------------------------
 
@@ -222,11 +205,17 @@ CREATE TABLE `conversations` (
 --
 
 INSERT INTO `conversations` (`id`, `sender_Id`, `receiver_id`, `created_at`) VALUES
-(47, 103, 1, '2025-05-13 20:15:20'),
-(48, 104, 1, '2025-05-13 23:39:43'),
-(49, 105, 1, '2025-05-13 23:41:23'),
-(50, 106, 1, '2025-05-14 07:53:42'),
-(51, 107, 1, '2025-05-14 11:02:58');
+(57, 113, 1, '2025-05-16 12:49:32'),
+(58, 114, 1, '2025-05-16 13:40:42'),
+(59, 115, 1, '2025-05-16 13:44:29'),
+(60, 116, 1, '2025-05-16 13:48:38'),
+(61, 117, 1, '2025-05-16 13:54:11'),
+(62, 118, 1, '2025-05-16 13:55:24'),
+(63, 119, 1, '2025-05-16 13:57:22'),
+(64, 120, 1, '2025-05-16 14:02:21'),
+(65, 121, 1, '2025-05-16 14:21:38'),
+(66, 122, 1, '2025-05-16 14:50:30'),
+(67, 123, 1, '2025-05-16 15:10:57');
 
 -- --------------------------------------------------------
 
@@ -243,6 +232,19 @@ CREATE TABLE `experience` (
   `job` varchar(128) NOT NULL,
   `achievements` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `experience`
+--
+
+INSERT INTO `experience` (`id`, `user_id`, `start_date`, `end_date`, `company`, `job`, `achievements`) VALUES
+(17, 113, '2024-10-15', 'present', 'Sky Cloud Technologies', 'Developer', ''),
+(18, 115, '2025-05-16', 'present', 'wedding planner', 'wedding photographers', ''),
+(19, 116, '2025-04-22', 'present', 'cars photorapher', 'cars developer', ''),
+(20, 120, '2025-05-12', 'present', 'graduation photographer', 'graduation photographer', ''),
+(21, 121, '2025-05-04', 'present', 'Nature photographers', 'Nature photographers', ''),
+(22, 122, '2025-05-04', 'present', 'Art photographer', 'Art photographer', ''),
+(23, 123, '2025-05-05', 'present', 'war ', 'war photographers', '');
 
 -- --------------------------------------------------------
 
@@ -283,36 +285,74 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`id`, `user_id`, `label`, `title`, `description`, `views`, `likes`, `file_name`, `url`, `is_sensitive`, `created_at`, `updated_at`) VALUES
-(276, 103, 'null', '', '', 4, 2, 'img_6823b3f011bef8.36846466.jpg', 'uploads/Images/img_6823b3f011bef8.36846466.jpg', 0, '2025-05-13 21:04:48', '2025-05-14 09:26:00'),
-(278, 106, '[\"gaza\"]', '', 'a man is lying on the ground with his head down', 2, 0, 'img_6824504ca494e1.29799288.jpg', 'uploads/Images/img_6824504ca494e1.29799288.jpg', 0, '2025-05-14 08:11:56', '2025-05-14 12:08:46'),
-(279, 106, '[\"tank\"]', '', 'a small toy tank with wheels on it', 1, 0, 'img_682451e639e048.57902453.jpg', 'uploads/Images/img_682451e639e048.57902453.jpg', 0, '2025-05-14 08:18:46', '2025-05-14 09:21:55'),
-(280, 106, '[\"dog\"]', '', 'three dogs are sitting on a wooden bench', 1, 1, 'img_682452bd4d3187.19261059.jpg', 'uploads/Images/img_682452bd4d3187.19261059.jpg', 0, '2025-05-14 08:22:21', '2025-05-14 08:22:28'),
-(281, 106, '[\"blood\"]', '', 'blood splashing on a white background', 1, 0, 'img_68245330dc90b1.50680719.jpg', 'uploads/Images/img_68245330dc90b1.50680719.jpg', 1, '2025-05-14 08:24:16', '2025-05-14 08:26:20'),
-(282, 106, '[\"tank\"]', '', 'a small toy tank with wheels on it', 2, 2, 'img_682453e838faf3.76509861.jpg', 'uploads/Images/img_682453e838faf3.76509861.jpg', 0, '2025-05-14 08:27:20', '2025-05-14 12:46:37'),
-(283, 106, '[\"tank\"]', 'ttt', 'a black and white photo of a tank', 2, 2, 'img_6824540fe0a8b1.00003819.jpg', 'uploads/Images/img_6824540fe0a8b1.00003819.jpg', 0, '2025-05-14 08:27:59', '2025-05-14 09:26:19'),
-(284, 106, '[\"dog\"]', '', 'three dogs are sitting on a wooden bench', 0, 0, 'img_682454273d6a85.53477694.jpg', 'uploads/Images/img_682454273d6a85.53477694.jpg', 0, '2025-05-14 08:28:23', '2025-05-14 08:28:23'),
-(285, 106, '[\"air\",\"group\",\"balloons\",\"city\"]', '', 'a group of hot air balloons flying over a city', 1, 1, 'img_682454357db650.89577711.jpg', 'uploads/Images/img_682454357db650.89577711.jpg', 0, '2025-05-14 08:28:37', '2025-05-14 08:49:41'),
-(286, 106, '[\"cat\"]', '', 'a small kitten sitting on a tiled floor', 1, 0, 'img_6824544a1902e3.59895572.jpg', 'uploads/Images/img_6824544a1902e3.59895572.jpg', 0, '2025-05-14 08:28:58', '2025-05-14 08:29:00'),
-(287, 106, '[\"air\",\"group\",\"balloons\",\"city\"]', '', 'a group of hot air balloons flying over a city', 0, 0, 'img_6824545fb2d396.12612628.jpg', 'uploads/Images/img_6824545fb2d396.12612628.jpg', 0, '2025-05-14 08:29:19', '2025-05-14 08:29:19'),
-(288, 106, '[\"lion\"]', '', 'a black and white photo of a lion', 0, 0, 'img_68245471e71fc3.50934835.jpg', 'uploads/Images/img_68245471e71fc3.50934835.jpg', 0, '2025-05-14 08:29:37', '2025-05-14 08:29:37'),
-(289, 106, '[\"food\",\"health\"]', '', 'a bowl of salad with chicken, vegetables and eggs', 1, 0, 'img_6824547e1ed733.64307749.jpg', 'uploads/Images/img_6824547e1ed733.64307749.jpg', 0, '2025-05-14 08:29:50', '2025-05-14 10:06:47'),
-(290, 106, '[\"tourism\"]', '', 'rafting on the river', 0, 0, 'img_6824548c1c31e9.09080336.jpg', 'uploads/Images/img_6824548c1c31e9.09080336.jpg', 0, '2025-05-14 08:30:04', '2025-05-14 08:30:04'),
-(291, 106, '[\"tank\"]', '', 'a small toy tank with wheels on it', 1, 0, 'img_6824549735cef3.40295308.jpg', 'uploads/Images/img_6824549735cef3.40295308.jpg', 0, '2025-05-14 08:30:15', '2025-05-14 08:30:19'),
-(292, 106, '[\"cat\"]', '', 'a small kitten sitting on a tiled floor', 1, 0, 'img_682454b2492800.21012747.jpg', 'uploads/Images/img_682454b2492800.21012747.jpg', 0, '2025-05-14 08:30:42', '2025-05-14 09:03:07'),
-(293, 106, '[\"gaza\"]', '', 'a man walks through the rubble of a building in the aftermath', 1, 0, 'img_682454c8c05318.06544176.jpg', 'uploads/Images/img_682454c8c05318.06544176.jpg', 0, '2025-05-14 08:31:04', '2025-05-14 08:31:07'),
-(294, 106, '[\"palestine\"]', '', 'a young boy waves a palestinian flag', 0, 0, 'img_682454d80f7592.44346089.jpg', 'uploads/Images/img_682454d80f7592.44346089.jpg', 0, '2025-05-14 08:31:20', '2025-05-14 08:31:20'),
-(295, 106, '[\"palestine\"]', '', 'a young boy waves a palestinian flag', 0, 0, 'img_682454e0d29d53.85257623.jpg', 'uploads/Images/img_682454e0d29d53.85257623.jpg', 0, '2025-05-14 08:31:28', '2025-05-14 08:31:28'),
-(296, 106, '[\"gaza\"]', '', 'a man is lying on the ground with his head down', 0, 0, 'img_682454eb2c2db0.30638281.jpg', 'uploads/Images/img_682454eb2c2db0.30638281.jpg', 0, '2025-05-14 08:31:39', '2025-05-14 08:31:39'),
-(297, 106, '[\"cat\"]', '', 'a small kitten sitting on a tiled floor', 2, 0, 'img_682454f5363480.55238794.jpg', 'uploads/Images/img_682454f5363480.55238794.jpg', 0, '2025-05-14 08:31:49', '2025-05-14 09:35:08'),
-(298, 103, '[\"desert\"]', '', 'a person walking across a desert', 1, 0, 'img_68246e142e8c92.26551909.jpg', 'uploads/Images/img_68246e142e8c92.26551909.jpg', 0, '2025-05-14 10:19:00', '2025-05-14 12:46:36'),
-(299, 103, '[\"tank\"]', '', 'a small toy tank with wheels on it', 1, 0, 'img_68246e4fbec9a5.16884591.jpg', 'uploads/Images/img_68246e4fbec9a5.16884591.jpg', 0, '2025-05-14 10:19:59', '2025-05-14 10:21:16'),
-(305, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 1, 0, 'img_682470ab196df5.72128218.jpg', 'uploads/Images/img_682470ab196df5.72128218.jpg', 0, '2025-05-14 10:30:03', '2025-05-14 10:30:05'),
-(306, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 1, 0, 'img_682470d0b37ee1.77060263.jpg', 'uploads/Images/img_682470d0b37ee1.77060263.jpg', 0, '2025-05-14 10:30:40', '2025-05-14 10:30:43'),
-(307, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 1, 0, 'img_6824714fb91725.09721200.jpg', 'uploads/Images/img_6824714fb91725.09721200.jpg', 0, '2025-05-14 10:32:47', '2025-05-14 10:32:49'),
-(308, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 1, 0, 'img_68247235d42629.29863720.jpg', 'uploads/Images/img_68247235d42629.29863720.jpg', 0, '2025-05-14 10:36:37', '2025-05-14 10:36:43'),
-(309, 103, '[\"gaza\"]', '', 'a view of the destroyed city of mogad, iraq, on april 29, 2014', 0, 0, 'img_6824729b5d3585.17388516.jpg', 'uploads/Images/img_6824729b5d3585.17388516.jpg', 0, '2025-05-14 10:38:19', '2025-05-14 10:38:19'),
-(310, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 0, 0, 'img_682472aeb6c214.81911279.jpg', 'uploads/Images/img_682472aeb6c214.81911279.jpg', 0, '2025-05-14 10:38:38', '2025-05-14 10:38:38'),
-(311, 103, '[\"gore\",\"war\"]', '', 'a man is buried in the mud', 0, 0, 'img_682473093c9ae3.76606452.jpg', 'uploads/Images/img_682473093c9ae3.76606452.jpg', 0, '2025-05-14 10:40:09', '2025-05-14 10:40:09');
+(314, 113, '[\"tree\",\"car\",\"flowers\"]', '', 'a car parked in front of a tree with pink flowers', 1, 1, 'img_68273fc09fe6f1.37885879.jpg', 'uploads/Images/img_68273fc09fe6f1.37885879.jpg', 0, '2025-05-16 13:38:09', '2025-05-16 17:18:37'),
+(315, 113, '[\"tower\"]', '', 'the eiff tower', 0, 1, 'img_68273fe85b40e9.48068564.jpg', 'uploads/Images/img_68273fe85b40e9.48068564.jpg', 0, '2025-05-16 13:38:48', '2025-05-16 17:19:25'),
+(316, 113, '[\"smart cities\"]', '', 'the bridge is tall', 0, 2, 'img_68274002d9e7e7.96611732.jpg', 'uploads/Images/img_68274002d9e7e7.96611732.jpg', 0, '2025-05-16 13:39:14', '2025-05-16 17:19:03'),
+(317, 113, '[\"architecture\"]', '', 'a large red building', 0, 2, 'img_682740268b5577.48121411.jpg', 'uploads/Images/img_682740268b5577.48121411.jpg', 0, '2025-05-16 13:39:50', '2025-05-16 17:20:14'),
+(318, 114, '[\"architecture\"]', '', 'the building in which the hotel is located', 1, 1, 'img_68274097b5aad4.45377747.jpg', 'uploads/Images/img_68274097b5aad4.45377747.jpg', 0, '2025-05-16 13:41:43', '2025-05-16 17:18:38'),
+(319, 114, '[\"corner\",\"hotel\"]', '', 'the hotel at the corner', 1, 2, 'img_682740b72affd6.93274183.jpg', 'uploads/Images/img_682740b72affd6.93274183.jpg', 0, '2025-05-16 13:42:15', '2025-05-16 17:20:26'),
+(321, 114, '[\"tourism\"]', '', 'the ri hotel in new york', 1, 1, 'img_682740dc860e66.46940171.jpg', 'uploads/Images/img_682740dc860e66.46940171.jpg', 0, '2025-05-16 13:42:52', '2025-05-16 17:18:41'),
+(322, 114, '[\"city\",\"view\",\"room\"]', '', 'a room with a view of the city', 1, 3, 'img_682740ec0160c3.82487646.jpg', 'uploads/Images/img_682740ec0160c3.82487646.jpg', 0, '2025-05-16 13:43:08', '2025-05-16 15:07:24'),
+(323, 115, '[\"social\"]', '', 'a bride and groom pose for a photo', 0, 1, 'img_68274167edb6f5.58383646.jpg', 'uploads/Images/img_68274167edb6f5.58383646.jpg', 0, '2025-05-16 13:45:11', '2025-05-16 17:19:32'),
+(324, 115, '[\"wedding\"]', '', 'a woman in a wedding dress with a veil', 0, 1, 'img_682741792b0313.49672348.jpg', 'uploads/Images/img_682741792b0313.49672348.jpg', 0, '2025-05-16 13:45:29', '2025-05-16 15:07:34'),
+(325, 115, '[\"wedding\"]', '', 'a bride and groom walking through a wedding ceremony', 1, 1, 'img_68274190854c11.36486220.jpg', 'uploads/Images/img_68274190854c11.36486220.jpg', 0, '2025-05-16 13:45:52', '2025-05-16 17:18:43'),
+(326, 115, '[\"wedding\"]', '', 'a couple standing in the water at sunset', 0, 1, 'img_682741a47e5235.40824846.jpg', 'uploads/Images/img_682741a47e5235.40824846.jpg', 0, '2025-05-16 13:46:12', '2025-05-16 17:19:34'),
+(327, 115, '[\"social\"]', '', 'a bride and groom share a moment together', 1, 0, 'img_682741b6e64058.21297577.jpg', 'uploads/Images/img_682741b6e64058.21297577.jpg', 0, '2025-05-16 13:46:30', '2025-05-16 14:23:46'),
+(328, 116, '[\"cars\"]', '', 'the dodge challenger gtx is driving on a highway', 0, 2, 'img_6827424bdebb86.75520953.jpg', 'uploads/Images/img_6827424bdebb86.75520953.jpg', 0, '2025-05-16 13:48:59', '2025-05-16 17:20:07'),
+(329, 116, '[\"cars\"]', '', 'a red ferrari parked in a parking lot', 0, 2, 'img_68274257c30c16.77000977.jpg', 'uploads/Images/img_68274257c30c16.77000977.jpg', 0, '2025-05-16 13:49:11', '2025-05-16 17:20:05'),
+(330, 116, '[\"cars\",\"electric vehicles\"]', '', 'a black sports car', 0, 1, 'img_6827426862bce8.58263104.jpg', 'uploads/Images/img_6827426862bce8.58263104.jpg', 0, '2025-05-16 13:49:28', '2025-05-16 14:48:41'),
+(331, 116, '[\"cars\"]', '', 'a white race car driving down a wet road', 0, 1, 'img_682742df39c2e4.07886041.jpg', 'uploads/Images/img_682742df39c2e4.07886041.jpg', 0, '2025-05-16 13:51:27', '2025-05-16 17:18:34'),
+(332, 116, '[\"glcr\",\"suv\",\"mercedes\",\"building\"]', '', 'the mercedes glcr suv is parked outside a building', 1, 1, 'img_682742eb16c358.57774693.jpg', 'uploads/Images/img_682742eb16c358.57774693.jpg', 0, '2025-05-16 13:51:39', '2025-05-16 17:20:04'),
+(333, 116, '[\"electric vehicles\"]', '', 'the mercedes gle suv parked on a wooden platform', 0, 2, 'img_682742f6d8a209.02578666.jpg', 'uploads/Images/img_682742f6d8a209.02578666.jpg', 0, '2025-05-16 13:51:50', '2025-05-16 17:18:45'),
+(334, 119, '[\"smart cities\",\"architecture\"]', '', 'a bridge over the water', 0, 2, 'img_6827445a3f2f83.46303821.jpg', 'uploads/Images/img_6827445a3f2f83.46303821.jpg', 0, '2025-05-16 13:57:46', '2025-05-16 17:20:33'),
+(335, 119, '[\"rock\",\"person\",\"water\"]', '', 'a person sitting on a rock in the water', 0, 2, 'img_68274469a2a880.42996031.jpg', 'uploads/Images/img_68274469a2a880.42996031.jpg', 0, '2025-05-16 13:58:01', '2025-05-16 17:19:13'),
+(336, 119, '[\"smart cities\"]', '', 'a concrete wall', 1, 1, 'img_68274479be58d1.01731990.jpg', 'uploads/Images/img_68274479be58d1.01731990.jpg', 0, '2025-05-16 13:58:17', '2025-05-16 17:20:01'),
+(337, 119, '[\"tower\"]', '', 'a tall tower with a clock on top of it', 1, 1, 'img_6827448f48de10.21205314.jpg', 'uploads/Images/img_6827448f48de10.21205314.jpg', 0, '2025-05-16 13:58:39', '2025-05-16 15:08:02'),
+(338, 119, '[\"smart cities\"]', '', 'the city of istanbul', 0, 1, 'img_682744e223ba71.55052528.jpg', 'uploads/Images/img_682744e223ba71.55052528.jpg', 0, '2025-05-16 14:00:02', '2025-05-16 17:19:39'),
+(339, 119, '[\"smart cities\"]', '', 'the bridge is red', 0, 1, 'img_682744f3899405.32727408.jpg', 'uploads/Images/img_682744f3899405.32727408.jpg', 0, '2025-05-16 14:00:19', '2025-05-16 17:19:42'),
+(340, 119, '[\"smart cities\"]', '', 'a large body of water', 0, 2, 'img_68274505ee8a43.07755624.jpg', 'uploads/Images/img_68274505ee8a43.07755624.jpg', 0, '2025-05-16 14:00:37', '2025-05-16 17:20:31'),
+(341, 120, '[\"graduation\"]', '', 'a woman in a graduation gown holding a sign', 1, 2, 'img_68274581135257.53234595.jpg', 'uploads/Images/img_68274581135257.53234595.jpg', 0, '2025-05-16 14:02:41', '2025-05-16 17:19:06'),
+(342, 120, '[\"graduation\"]', '', 'a person holding a diploma and a red ribbon', 2, 1, 'img_6827459c35f125.31744819.jpg', 'uploads/Images/img_6827459c35f125.31744819.jpg', 0, '2025-05-16 14:03:08', '2025-05-16 17:19:17'),
+(343, 120, '[\"graduation\"]', '', 'a group of graduates', 1, 0, 'img_682745ab38c600.60530053.jpg', 'uploads/Images/img_682745ab38c600.60530053.jpg', 0, '2025-05-16 14:03:23', '2025-05-16 14:03:41'),
+(345, 120, '[\"graduation\"]', '', 'a woman in a graduation gown walking down a path', 0, 1, 'img_682746ced3cd96.96740898.jpg', 'uploads/Images/img_682746ced3cd96.96740898.jpg', 0, '2025-05-16 14:08:14', '2025-05-16 17:19:44'),
+(346, 120, '[\"graduation\"]', '', 'a group of people holding up their hats', 0, 1, 'img_6827470cc3e009.65492428.jpg', 'uploads/Images/img_6827470cc3e009.65492428.jpg', 0, '2025-05-16 14:09:16', '2025-05-16 17:19:46'),
+(347, 120, '[\"graduation\"]', '', 'a person holding a diploma in their hand', 0, 1, 'img_68274725846e82.16332338.jpg', 'uploads/Images/img_68274725846e82.16332338.jpg', 0, '2025-05-16 14:09:41', '2025-05-16 17:19:52'),
+(348, 120, '[\"graduation\"]', '', 'a group of people standing on a hill', 0, 1, 'img_68274747777280.55250051.jpg', 'uploads/Images/img_68274747777280.55250051.jpg', 0, '2025-05-16 14:10:15', '2025-05-16 17:19:55'),
+(349, 114, '[\"hotel\",\"night\"]', '', 'the hotel at night', 1, 1, 'img_68274c5634b540.30793938.jpg', 'uploads/Images/img_68274c5634b540.30793938.jpg', 0, '2025-05-16 14:31:50', '2025-05-16 17:20:16'),
+(351, 121, '[\"nature\",\"nature\"]', '', 'a pathway with flowers and trees in the background', 0, 1, 'img_68274d9b026bd7.14306353.jpg', 'uploads/Images/img_68274d9b026bd7.14306353.jpg', 0, '2025-05-16 14:37:15', '2025-05-16 17:19:59'),
+(352, 121, '[\"nature\",\"nature\"]', '', 'a pond with purple flowers and a bridge', 0, 2, 'img_68274dab6b79e0.00894266.jpg', 'uploads/Images/img_68274dab6b79e0.00894266.jpg', 0, '2025-05-16 14:37:31', '2025-05-16 17:18:48'),
+(353, 121, '[\"bunch\",\"leaves\",\"ground\"]', '', 'a bunch of leaves on the ground', 0, 0, 'img_68274eeed9a4a8.93901644.jpg', 'uploads/Images/img_68274eeed9a4a8.93901644.jpg', 0, '2025-05-16 14:42:54', '2025-05-16 14:42:54'),
+(354, 121, '[\"beach\"]', '', 'palm trees on the beach in the caribbean islands', 1, 2, 'img_68274efd849927.19614160.jpg', 'uploads/Images/img_68274efd849927.19614160.jpg', 0, '2025-05-16 14:43:09', '2025-05-16 17:18:52'),
+(355, 121, '[\"nature\",\"nature\"]', '', 'a forest filled with lots of red leaves', 0, 2, 'img_68274f0fd86130.75798264.jpg', 'uploads/Images/img_68274f0fd86130.75798264.jpg', 0, '2025-05-16 14:43:27', '2025-05-16 17:20:39'),
+(356, 121, '[\"islands\",\"seychelles\",\"view\",\"polyand\",\"beach\",\"vegetation\"]', '', 'aerial view of a beach and tropical vegetation in the seychelles islands, french polyand', 0, 0, 'img_68274f273467c8.76212731.jpg', 'uploads/Images/img_68274f273467c8.76212731.jpg', 0, '2025-05-16 14:43:51', '2025-05-16 14:43:51'),
+(357, 121, '[\"field\",\"sky\",\"dirt\",\"road\"]', '', 'a dirt road in a field with a blue sky', 0, 0, 'img_68274f3f3f2526.07790249.jpg', 'uploads/Images/img_68274f3f3f2526.07790249.jpg', 0, '2025-05-16 14:44:15', '2025-05-16 14:44:15'),
+(358, 121, '[\"ukraine\"]', '', 'a small cabin sits on the edge of a lake', 0, 0, 'img_68274f5ab24b94.06219059.jpg', 'uploads/Images/img_68274f5ab24b94.06219059.jpg', 0, '2025-05-16 14:44:42', '2025-05-16 14:44:42'),
+(359, 121, '[\"hill\",\"house\"]', '', 'a large hill with a house on top of it', 0, 0, 'img_68274f80f2f846.60780798.jpg', 'uploads/Images/img_68274f80f2f846.60780798.jpg', 0, '2025-05-16 14:45:20', '2025-05-16 14:45:20'),
+(360, 122, '[\"painting\",\"landscape\"]', '', 'a painting of a black and white landscape', 1, 2, 'img_6827524f83a316.74550285.jpg', 'uploads/Images/img_6827524f83a316.74550285.jpg', 0, '2025-05-16 14:57:19', '2025-05-16 17:19:01'),
+(361, 122, '[\"vase\",\"flower\",\"painting\"]', '', 'a painting of a flower in a vase', 1, 2, 'img_6827526303b848.65782670.jpg', 'uploads/Images/img_6827526303b848.65782670.jpg', 0, '2025-05-16 14:57:39', '2025-05-16 17:18:59'),
+(362, 122, '[\"church\",\"painting\",\"people\",\"group\"]', '', 'a painting of a group of people in a church', 0, 0, 'img_68275277d41579.08721670.jpg', 'uploads/Images/img_68275277d41579.08721670.jpg', 0, '2025-05-16 14:57:59', '2025-05-16 14:57:59'),
+(363, 122, '[\"city\",\"painting\",\"buildings\",\"water\"]', '', 'a painting of a city with buildings reflected in the water', 1, 2, 'img_6827529927d820.77583628.jpg', 'uploads/Images/img_6827529927d820.77583628.jpg', 0, '2025-05-16 14:58:33', '2025-05-16 17:20:09'),
+(364, 122, '[\"ecosystem\"]', '', 'a group of trees', 0, 0, 'img_682753215262d3.78530012.jpg', 'uploads/Images/img_682753215262d3.78530012.jpg', 0, '2025-05-16 15:00:49', '2025-05-16 15:00:49'),
+(365, 122, '[\"wall\",\"photographs\"]', '', 'a wall with black and white photographs on it', 0, 0, 'img_6827540fb7c7c3.19901497.jpg', 'uploads/Images/img_6827540fb7c7c3.19901497.jpg', 0, '2025-05-16 15:04:47', '2025-05-16 15:04:47'),
+(366, 122, '[\"art\"]', '', 'a black and white photo of a woman in a black dress', 0, 0, 'img_6827541fc4b933.99984663.jpg', 'uploads/Images/img_6827541fc4b933.99984663.jpg', 0, '2025-05-16 15:05:03', '2025-05-16 15:05:03'),
+(367, 122, '[\"graffiti\"]', '', 'a mural on the side of a building', 0, 0, 'img_68275430a9a3f0.72101045.jpg', 'uploads/Images/img_68275430a9a3f0.72101045.jpg', 0, '2025-05-16 15:05:20', '2025-05-16 15:05:20'),
+(368, 122, '[\"painting\",\"paint\"]', '', 'a painting with pink and blue paint', 0, 0, 'img_6827545a8ff460.88426686.jpg', 'uploads/Images/img_6827545a8ff460.88426686.jpg', 0, '2025-05-16 15:06:02', '2025-05-16 15:06:02'),
+(369, 122, '[\"architecture\"]', '', 'a building with a bunch of colorful flowers on the side', 0, 0, 'img_68275472897b96.77881102.jpg', 'uploads/Images/img_68275472897b96.77881102.jpg', 0, '2025-05-16 15:06:26', '2025-05-16 15:06:26'),
+(370, 123, '[\"war\",\"afghanistan\"]', '', 'a soldier smokes a cigarette in the desert', 0, 0, 'img_6827577363dbe4.61265042.jpg', 'uploads/Images/img_6827577363dbe4.61265042.jpg', 1, '2025-05-16 15:19:15', '2025-05-16 15:19:15'),
+(371, 123, '[\"gaza\"]', '', 'a group of people standing around a fire', 0, 0, 'img_6827578202e8a0.82032115.jpg', 'uploads/Images/img_6827578202e8a0.82032115.jpg', 0, '2025-05-16 15:19:30', '2025-05-16 15:19:30'),
+(372, 123, '[\"afghanistan\"]', '', 'a soldier with a gun and a flag', 2, 1, 'img_68275792386b45.36872710.jpg', 'uploads/Images/img_68275792386b45.36872710.jpg', 1, '2025-05-16 15:19:46', '2025-05-16 17:17:23'),
+(373, 123, '[\"gaza\"]', '', 'a view of the devastated city of mogad, iraq', 1, 0, 'img_682757a1258933.58008824.jpg', 'uploads/Images/img_682757a1258933.58008824.jpg', 0, '2025-05-16 15:20:01', '2025-05-16 15:21:56'),
+(374, 123, '[\"gaza\"]', '', 'people walk through the rubble of a building in the city of aleppo', 1, 1, 'img_682757b7ea6587.07980269.jpg', 'uploads/Images/img_682757b7ea6587.07980269.jpg', 0, '2025-05-16 15:20:23', '2025-05-16 17:20:25'),
+(375, 123, '[\"gaza\"]', '', 'a boy walks through the rubble of a building in the city of aleppo', 1, 1, 'img_682757c80269a1.96038312.jpg', 'uploads/Images/img_682757c80269a1.96038312.jpg', 0, '2025-05-16 15:20:40', '2025-05-16 17:20:23'),
+(376, 123, '[\"cannons\",\"fort\",\"san\"]', '', 'cannons at fort san', 0, 0, 'img_682757e3793796.72626081.jpg', 'uploads/Images/img_682757e3793796.72626081.jpg', 0, '2025-05-16 15:21:07', '2025-05-16 15:21:07'),
+(378, 123, '[\"gaza\"]', '', 'a man carries a child in the rubble of a street in the city of peshawar', 1, 1, 'img_68275808928b27.59279271.jpg', 'uploads/Images/img_68275808928b27.59279271.jpg', 0, '2025-05-16 15:21:44', '2025-05-16 17:20:19'),
+(379, 123, '[\"gore\",\"blood\"]', '', 'a person washing their hands in a sink', 1, 0, 'img_682758fce12309.17375248.jpg', 'uploads/Images/img_682758fce12309.17375248.jpg', 1, '2025-05-16 15:25:48', '2025-05-16 15:26:11'),
+(380, 113, '[\"flag\",\"river\",\"bridge\"]', '', 'a bridge over a river with a flag hanging from it', 0, 1, 'img_68275ea14d8253.79827305.jpg', 'uploads/Images/img_68275ea14d8253.79827305.jpg', 0, '2025-05-16 15:49:53', '2025-05-16 17:19:27'),
+(381, 113, '[\"tourism\"]', '', 'a boat is going down a narrow canal', 1, 1, 'img_68275ed795d002.86911967.jpg', 'uploads/Images/img_68275ed795d002.86911967.jpg', 0, '2025-05-16 15:50:47', '2025-05-16 17:19:10'),
+(382, 113, '[\"smart cities\"]', '', 'the city skyline at night', 0, 1, 'img_682761e8888ed9.04792735.jpg', 'uploads/Images/img_682761e8888ed9.04792735.jpg', 0, '2025-05-16 16:03:52', '2025-05-16 17:19:29'),
+(383, 121, '[\"nature\",\"nature\"]', '', 'a tree is sitting on a rock in the middle of a river', 0, 0, 'img_68276419c4c2d9.99184103.jpg', 'uploads/Images/img_68276419c4c2d9.99184103.jpg', 0, '2025-05-16 16:13:13', '2025-05-16 16:13:13'),
+(384, 121, '[\"electric vehicles\"]', '', 'a road with a yellow line in the middle', 0, 0, 'img_68276447a0e995.52783646.jpg', 'uploads/Images/img_68276447a0e995.52783646.jpg', 0, '2025-05-16 16:13:59', '2025-05-16 16:13:59'),
+(385, 121, '[\"rock\",\"ocean\"]', '', 'a large rock in the ocean', 0, 0, 'img_68276463bf4577.71029053.jpg', 'uploads/Images/img_68276463bf4577.71029053.jpg', 0, '2025-05-16 16:14:27', '2025-05-16 16:14:27');
 
 -- --------------------------------------------------------
 
@@ -346,33 +386,33 @@ CREATE TABLE `image_view_logs` (
 --
 
 INSERT INTO `image_view_logs` (`id`, `image_id`, `user_id`, `view_date`) VALUES
-(192, 276, 103, '2025-05-13'),
-(208, 276, 103, '2025-05-14'),
-(193, 276, 105, '2025-05-14'),
-(194, 276, 106, '2025-05-14'),
-(222, 278, 103, '2025-05-14'),
-(197, 278, 106, '2025-05-14'),
-(195, 279, 106, '2025-05-14'),
-(196, 280, 106, '2025-05-14'),
-(198, 281, 106, '2025-05-14'),
-(207, 282, 103, '2025-05-14'),
-(199, 282, 106, '2025-05-14'),
-(209, 283, 103, '2025-05-14'),
-(200, 283, 106, '2025-05-14'),
-(205, 285, 106, '2025-05-14'),
-(201, 286, 106, '2025-05-14'),
-(211, 289, 103, '2025-05-14'),
-(202, 291, 106, '2025-05-14'),
-(206, 292, 106, '2025-05-14'),
-(203, 293, 106, '2025-05-14'),
-(210, 297, 103, '2025-05-14'),
-(204, 297, 106, '2025-05-14'),
-(212, 298, 103, '2025-05-14'),
-(213, 299, 103, '2025-05-14'),
-(218, 305, 103, '2025-05-14'),
-(219, 306, 103, '2025-05-14'),
-(220, 307, 103, '2025-05-14'),
-(221, 308, 103, '2025-05-14');
+(258, 314, 121, '2025-05-16'),
+(255, 318, 114, '2025-05-16'),
+(253, 319, 114, '2025-05-16'),
+(254, 321, 114, '2025-05-16'),
+(256, 322, 114, '2025-05-16'),
+(271, 325, 123, '2025-05-16'),
+(250, 327, 121, '2025-05-16'),
+(249, 332, 121, '2025-05-16'),
+(269, 336, 123, '2025-05-16'),
+(262, 337, 122, '2025-05-16'),
+(245, 341, 120, '2025-05-16'),
+(247, 342, 120, '2025-05-16'),
+(275, 342, 121, '2025-05-16'),
+(246, 343, 120, '2025-05-16'),
+(257, 349, 114, '2025-05-16'),
+(274, 354, 121, '2025-05-16'),
+(260, 360, 122, '2025-05-16'),
+(259, 361, 122, '2025-05-16'),
+(261, 363, 122, '2025-05-16'),
+(273, 372, 121, '2025-05-16'),
+(270, 372, 123, '2025-05-16'),
+(263, 373, 123, '2025-05-16'),
+(264, 374, 123, '2025-05-16'),
+(265, 375, 123, '2025-05-16'),
+(266, 378, 123, '2025-05-16'),
+(268, 379, 123, '2025-05-16'),
+(272, 381, 113, '2025-05-16');
 
 -- --------------------------------------------------------
 
@@ -392,14 +432,70 @@ CREATE TABLE `likes` (
 --
 
 INSERT INTO `likes` (`id`, `user_id`, `image_id`, `created_at`) VALUES
-(222, 105, 276, '2025-05-13 23:41:36'),
-(224, 106, 280, '2025-05-14 08:22:28'),
-(226, 106, 283, '2025-05-14 08:28:09'),
-(227, 106, 285, '2025-05-14 08:49:41'),
-(228, 106, 282, '2025-05-14 09:02:37'),
-(240, 103, 276, '2025-05-14 09:26:00'),
-(241, 103, 283, '2025-05-14 09:26:19'),
-(245, 103, 282, '2025-05-14 12:46:37');
+(254, 121, 322, '2025-05-16 14:48:40'),
+(255, 121, 322, '2025-05-16 14:48:41'),
+(256, 121, 330, '2025-05-16 14:48:41'),
+(257, 122, 322, '2025-05-16 15:07:24'),
+(258, 122, 319, '2025-05-16 15:07:25'),
+(259, 122, 317, '2025-05-16 15:07:27'),
+(260, 122, 316, '2025-05-16 15:07:28'),
+(261, 122, 333, '2025-05-16 15:07:29'),
+(262, 122, 334, '2025-05-16 15:07:31'),
+(263, 122, 335, '2025-05-16 15:07:32'),
+(264, 122, 324, '2025-05-16 15:07:34'),
+(265, 122, 341, '2025-05-16 15:07:37'),
+(266, 122, 328, '2025-05-16 15:07:38'),
+(267, 122, 329, '2025-05-16 15:07:39'),
+(268, 122, 340, '2025-05-16 15:07:40'),
+(269, 122, 360, '2025-05-16 15:07:42'),
+(270, 122, 361, '2025-05-16 15:07:44'),
+(271, 122, 363, '2025-05-16 15:07:46'),
+(272, 122, 352, '2025-05-16 15:07:52'),
+(273, 122, 354, '2025-05-16 15:07:56'),
+(274, 122, 355, '2025-05-16 15:07:58'),
+(275, 122, 337, '2025-05-16 15:08:00'),
+(277, 123, 372, '2025-05-16 15:37:07'),
+(278, 121, 331, '2025-05-16 17:18:34'),
+(279, 121, 314, '2025-05-16 17:18:37'),
+(280, 121, 318, '2025-05-16 17:18:38'),
+(281, 121, 321, '2025-05-16 17:18:40'),
+(282, 121, 325, '2025-05-16 17:18:43'),
+(283, 121, 333, '2025-05-16 17:18:45'),
+(284, 121, 352, '2025-05-16 17:18:48'),
+(285, 121, 354, '2025-05-16 17:18:50'),
+(286, 121, 361, '2025-05-16 17:18:58'),
+(287, 121, 360, '2025-05-16 17:19:01'),
+(288, 121, 316, '2025-05-16 17:19:03'),
+(289, 121, 341, '2025-05-16 17:19:06'),
+(290, 121, 381, '2025-05-16 17:19:10'),
+(291, 121, 335, '2025-05-16 17:19:13'),
+(292, 121, 342, '2025-05-16 17:19:17'),
+(293, 121, 315, '2025-05-16 17:19:24'),
+(294, 121, 380, '2025-05-16 17:19:27'),
+(295, 121, 382, '2025-05-16 17:19:29'),
+(296, 121, 323, '2025-05-16 17:19:32'),
+(297, 121, 326, '2025-05-16 17:19:34'),
+(299, 121, 338, '2025-05-16 17:19:39'),
+(300, 121, 339, '2025-05-16 17:19:42'),
+(301, 121, 345, '2025-05-16 17:19:44'),
+(302, 121, 346, '2025-05-16 17:19:46'),
+(303, 121, 347, '2025-05-16 17:19:52'),
+(304, 121, 348, '2025-05-16 17:19:55'),
+(305, 121, 351, '2025-05-16 17:19:59'),
+(306, 121, 336, '2025-05-16 17:20:01'),
+(307, 121, 332, '2025-05-16 17:20:04'),
+(308, 121, 329, '2025-05-16 17:20:05'),
+(309, 121, 328, '2025-05-16 17:20:07'),
+(310, 121, 363, '2025-05-16 17:20:09'),
+(311, 121, 317, '2025-05-16 17:20:14'),
+(312, 121, 349, '2025-05-16 17:20:16'),
+(313, 121, 378, '2025-05-16 17:20:19'),
+(314, 121, 375, '2025-05-16 17:20:23'),
+(315, 121, 374, '2025-05-16 17:20:25'),
+(316, 121, 319, '2025-05-16 17:20:26'),
+(317, 121, 340, '2025-05-16 17:20:31'),
+(318, 121, 334, '2025-05-16 17:20:33'),
+(319, 121, 355, '2025-05-16 17:20:39');
 
 -- --------------------------------------------------------
 
@@ -450,7 +546,21 @@ CREATE TABLE `photographer_category_scores` (
 --
 
 INSERT INTO `photographer_category_scores` (`photographer_id`, `category`, `score`) VALUES
-(103, 'wars', 2);
+(113, 'architecture', 3),
+(113, 'nature', 2),
+(113, 'tourism', 1),
+(113, 'wars', 1),
+(114, 'architecture', 1),
+(114, 'tourism', 3),
+(115, 'wedding', 3),
+(116, 'architecture', 1),
+(119, 'architecture', 2),
+(120, 'graduation', 7),
+(120, 'wars', 1),
+(121, 'nature', 8),
+(121, 'tourism', 2),
+(122, 'architecture', 1),
+(123, 'wars', 7);
 
 -- --------------------------------------------------------
 
@@ -470,10 +580,8 @@ CREATE TABLE `photographer_view_logs` (
 --
 
 INSERT INTO `photographer_view_logs` (`id`, `photographer_id`, `user_id`, `view_date`) VALUES
-(15, 103, 106, '2025-05-14'),
-(17, 103, 107, '2025-05-14'),
-(14, 104, 105, '2025-05-14'),
-(16, 106, 103, '2025-05-14');
+(21, 119, 123, '2025-05-16'),
+(22, 121, 113, '2025-05-16');
 
 -- --------------------------------------------------------
 
@@ -508,8 +616,8 @@ CREATE TABLE `user_profiles` (
 --
 
 INSERT INTO `user_profiles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(105, 'ffffffffffffffffffffffffffffffffffff', '2025-05-13 23:40:44', '2025-05-13 23:41:23'),
-(107, 'app', '2025-05-14 11:02:49', '2025-05-14 11:02:58');
+(117, 'waleed', '2025-05-16 13:53:39', '2025-05-16 13:54:11'),
+(118, 'waleed-Istanbul', '2025-05-16 13:54:41', '2025-05-16 13:55:24');
 
 --
 -- Indexes for dumped tables
@@ -671,13 +779,13 @@ ALTER TABLE `user_profiles`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- AUTO_INCREMENT for table `api_keys`
 --
 ALTER TABLE `api_keys`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `appointments`
@@ -689,13 +797,13 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `appointment_services`
 --
 ALTER TABLE `appointment_services`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `comment_likes`
@@ -707,13 +815,13 @@ ALTER TABLE `comment_likes`
 -- AUTO_INCREMENT for table `conversations`
 --
 ALTER TABLE `conversations`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `experience`
 --
 ALTER TABLE `experience`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `followers`
@@ -725,19 +833,19 @@ ALTER TABLE `followers`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=386;
 
 --
 -- AUTO_INCREMENT for table `image_view_logs`
 --
 ALTER TABLE `image_view_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -755,7 +863,7 @@ ALTER TABLE `paypal_payments`
 -- AUTO_INCREMENT for table `photographer_view_logs`
 --
 ALTER TABLE `photographer_view_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `reviews`
