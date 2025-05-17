@@ -187,7 +187,7 @@
 .suggestion-list {
 	display:none;
   position: absolute;
-  top: 46px; /* Align with bottom of search bar */
+  top: 0px !important; /* Align with bottom of search bar */
   left: 0;
   right: 0;
   background: rgba(90, 90, 90, 1);
@@ -195,7 +195,7 @@
   border-radius: 23px 23px 23px 23px; /* Rounded only on bottom corners */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   padding: 8px;
-  margin-top: 0; /* No margin to connect with search bar */
+  margin-top: 20px; /* No margin to connect with search bar */
   z-index: 990; /* Just below search bar z-index */
   max-height: 350px;
   overflow-y: auto;

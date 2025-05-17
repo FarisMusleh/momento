@@ -612,39 +612,67 @@
           </div>
         </div>
         
-        <!-- Similar Images -->
-		<?php
-			$stmt = $pdo->prepare("SELECT label FROM images WHERE id = ?");
+        <?php
+			// 1. Get current image data
+			$stmt = $pdo->prepare("SELECT id, label, url, description FROM images WHERE id = ?");
 			$stmt->execute([$_GET['id']]);
 			$current = $stmt->fetch(PDO::FETCH_ASSOC);
-			$current_labels = json_decode($current['label'], true);
 
-			// Step 2: Find other images with similar labels
-			$stmt_i = $pdo->prepare("SELECT id, label, url FROM images WHERE id != ?");
-			$stmt_i->execute([$_GET['id']]);
-			$res = $stmt_i->fetchAll();
+			$imagePath = __DIR__ . '/' . $current['url'];
+			$caption = $current['description'];
+
+			// 2. Send to Flask to get best keyword
+			$curl = curl_init();
+			$postFields = [
+				'image' => new CURLFile($imagePath),
+				'caption' => $caption,
+				'keywords' => json_encode(json_decode($current['label'], true))  // Ensure valid JSON string
+			];
+
+
+			curl_setopt_array($curl, [
+				CURLOPT_URL => "http://127.0.0.1:5000/get_best_keyword",
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_POST => true,
+				CURLOPT_POSTFIELDS => $postFields
+			]);
+
+			$response = curl_exec($curl);
+			if (curl_errno($curl)) {
+				die("Keyword extraction failed: " . curl_error($curl));
+			}
+			curl_close($curl);
+
+			$result = json_decode($response, true);
+			$bestKeyword = $result['best_keyword'] ?? null;
+
+			if (!$bestKeyword) {
+				die("No keyword received from AI service.");
+			}
+
+			// 3. Find similar images based on that keyword
+			$stmt_sim = $pdo->prepare("SELECT id, label, url FROM images WHERE id != ?");
+			$stmt_sim->execute([$_GET['id']]);
+			$res = $stmt_sim->fetchAll();
 
 			$similar = [];
-			foreach($res as $row) {
+			foreach ($res as $row) {
 				$labels = json_decode($row['label'], true);
-				$common = array_intersect($current_labels, $labels);
-				if (count($common) > 0) {
+				if (in_array($bestKeyword, $labels)) {
 					$similar[] = [
 						'id' => $row['id'],
-						'image_url' => $row['url'],
-						'common_count' => count($common)
+						'image_url' => $row['url']
 					];
 				}
 			}
 
-			// Step 3: Sort by number of matching labels, then limit to 4
-			usort($similar, fn($a, $b) => $b['common_count'] - $a['common_count']);
+			// 4. Limit to 4
 			$similar_image_results = array_slice($similar, 0, 4);
 		?>
 		<div class="similar-images">
 		  <h3 class="section-title">
 			<i class="bi bi-grid"></i>
-			Similar Images
+			Similar Images (Keyword: <?= htmlspecialchars($bestKeyword) ?>)
 		  </h3>
 		  <div class="similar-grid">
 			<?php foreach ($similar_image_results as $image): ?>

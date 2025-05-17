@@ -187,10 +187,10 @@
 .suggestion-list {
 	display:none;
   position: absolute;
-  top: 46px; /* Align with bottom of search bar */
+  top: 55px; /* Align with bottom of search bar */
   left: 0;
   right: 0;
-  background: rgba(90, 90, 90, 1);
+  background: rgba(240, 240, 240, 1);
   backdrop-filter: blur(3px);
   border-radius: 23px 23px 23px 23px; /* Rounded only on bottom corners */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -227,7 +227,7 @@
   margin: 6px 0;
   font-size: 15px;
   transition: all 0.3s ease;
-  color: white;
+  color: black !important;
   justify-content: space-between;
   border-bottom: none;
   background-color: rgba(255, 255, 255, 0.1);
@@ -242,6 +242,7 @@
 .suggestion-list .user-info {
   display: flex;
   align-items: center;
+  color:black;
   gap: 14px;
   flex: 1;
 }
@@ -257,8 +258,9 @@
 
 .username-edit {
   font-family: 'Poppins', sans-serif;
+  color:black;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: black;
   text-decoration: none;
   transition: all 0.2s ease;
   font-size: 15px;
@@ -266,7 +268,7 @@
 }
 
 .username-edit:hover {
-  color: white;
+  color: black;
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 

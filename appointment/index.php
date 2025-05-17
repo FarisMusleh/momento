@@ -842,6 +842,7 @@ $reviews = $sql_reviews->fetchAll();
         <div class="container">
             <div class="appointment-container">
                 <div class="appointment-info">
+					<?php if($services){ ?>
                     <h2>Our Photography Services</h2>
                     <div class="service-type">
                         <?php foreach($services as $service): ?>
@@ -863,7 +864,8 @@ $reviews = $sql_reviews->fetchAll();
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    
+                    <?php }?>
+					<?php if($reviews){ ?>
                     <div class="testimonials">
                         <h3>Client Testimonials</h3>
                         <?php foreach($reviews as $row): ?>
@@ -873,6 +875,7 @@ $reviews = $sql_reviews->fetchAll();
                             </div>
                         <?php endforeach; ?>
                     </div>
+					<?php }?>
                 </div>
                 
                 <div class="appointment-form">

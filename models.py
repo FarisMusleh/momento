@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import torch
 import re
 import spacy
@@ -16,6 +16,7 @@ from transformers import (
 from categories import categories, category_alias_map
 import faiss
 from better_profanity import profanity
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -50,6 +51,22 @@ def clean_text(text):
     text = RE_SPECIAL.sub('', text)
     return text
 
+def get_most_relevant_keyword(image, keywords):
+    if not keywords:
+        return None
+
+    prompts = [f"A photo of {word}" for word in keywords]
+
+    inputs = clip_processor(text=prompts, images=image, return_tensors="pt", padding=True)
+    outputs = clip_model(**inputs)
+    logits_per_image = outputs.logits_per_image
+    probs = logits_per_image.softmax(dim=1)
+
+    best_idx = probs.argmax().item()
+    return keywords[best_idx]
+
+
+
 def classify_nsfw_image(image):
     with torch.no_grad():
         inputs = nsfw_processor(images=image, return_tensors="pt")
@@ -80,7 +97,12 @@ def classify_clip_image(image, threshold=0.2, top_n=5):
 
     extracted_keywords = extract_keywords_spacy(caption)
     detected_keywords = set(kw.lower() for kw in extracted_keywords)
-    is_gory = bool(VIOLENT_KEYWORDS.intersection(set(detected_keywords) | set(top_labels)))
+
+    top_labels_lower = [label.lower() for label in top_labels]
+
+    is_gory = bool(VIOLENT_KEYWORDS.intersection(set(detected_keywords) | set(top_labels_lower)))
+
+
     return {
         'labels': extracted_keywords,
         'caption': caption,
@@ -101,6 +123,28 @@ def search_similar_category(query, top_k=3):
         else:
             expanded_categories.append(category)   
     return list(dict.fromkeys(expanded_categories)) 
+
+
+@app.route('/get_best_keyword', methods=['POST'])
+def get_best_keyword():
+    image_file = request.files.get('image')
+    caption = request.form.get('caption')
+    keywords_json = request.form.get('keywords')
+
+    if not image_file or not caption or not keywords_json:
+        return jsonify({'error': 'Missing image, caption, or keywords'}), 400
+
+    try:
+        keywords = json.loads(keywords_json)
+    except Exception:
+        return jsonify({'error': 'Invalid keywords format'}), 400
+
+    image = Image.open(image_file.stream)
+    
+    best_keyword = get_most_relevant_keyword(image, keywords)
+    
+    return jsonify({'best_keyword': best_keyword})
+
 
 
 @app.route('/search', methods=['GET'])

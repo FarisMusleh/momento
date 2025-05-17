@@ -8,6 +8,9 @@ require('pdo.php');
 if (isset($_SESSION['data'])) {
     $data = $_SESSION['data'];
 }
+function safe_divide($a, $b) {
+    return $b != 0 ? $a / $b : 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +34,43 @@ if (isset($_SESSION['data'])) {
     <link rel="stylesheet" href="css/header.css">
 	<link rel="stylesheet" href="css/navbar-scrolled.css">
     <link rel="stylesheet" href="css/photographers.css">
+	<style>
+		.favorite-btn {
+    position: absolute;
+    top: 100px;
+    right: 25px;
+}
 
+.follow-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+}
+
+.follow-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.follow-btn:active {
+    transform: scale(0.98);
+}
+
+.follow-btn.unfollow {
+    background-color: #dc3545;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.follow-btn.unfollow:hover {
+    background-color: #a71d2a;
+}
+	</style>
 </head>
 <body class = "fade-in">
 
@@ -80,8 +119,8 @@ echo '
         <div class="card-header">
             <img src="'.$row['picture'].'" alt="Julia Smith" class="profile-image-cards">
             <div class="favorite-btn">
-                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            </div>
+				<button class="follow-btn" data-username="$row["username"]">Follow</button>
+			</div>
         </div>
         <div class="card-content">
             <a href = "/momento/profile.php?username='.$row['username'].'"><h3 class="username">'.$row["business_name"].'</h3></a>
@@ -92,7 +131,7 @@ echo '
             <div class="rate">$120 / hour</div>
             <div class="rating">
                 <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                '.$row['total_rate'].'&nbsp;('.$row['total_reviews'].' reviews)
+                '.safe_divide($row['total_rate'],$row['total_reviews']).'&nbsp;('.$row['total_reviews'].' reviews)
             </div>
             <div class="divider"></div>
             <div class="tags">

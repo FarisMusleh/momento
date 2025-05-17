@@ -68,7 +68,7 @@ function is_valid_image($url) {
     return $headers && strpos($headers[0], '200') !== false;
 }
 
-$stmt = $pdo->prepare('SELECT url,id FROM images WHERE user_id = ?');
+$stmt = $pdo->prepare('SELECT url,id,is_sensitive,label FROM images WHERE user_id = ?');
 $stmt->execute([$id]);
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -244,7 +244,128 @@ input:focus {
     pointer-events: auto;
 }
 
-</style>
+		:root {
+        --warning-bg: rgba(0, 0, 0, 0.85);
+        --text-light: #f8fafc;
+        --text-secondary: #e2e8f0;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --blur-intensity: 20px;
+        --card-radius: 8px;
+    }
+	      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--card-radius);
+        transition: var(--transition);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sensitive-content {
+        position: relative;
+        isolation: isolate; /* Creates new stacking context */
+    }
+    
+    .sensitive-image {
+        filter: blur(var(--blur-intensity));
+        transition: var(--transition);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.05);
+        border-radius: var(--card-radius);
+    }
+    
+    .content-warning {
+        position: absolute;
+        inset: 0;
+        background: var(--warning-bg);
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: var(--card-radius);
+        backdrop-filter: blur(2px);
+        transition: var(--transition);
+        z-index: 10; /* Higher than image but lower than hover overlay */
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    .warning-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #f59e0b;
+    }
+    
+    .warning-heading {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+    }
+    
+    .warning-description {
+        color: var(--text-secondary);
+        max-width: 28ch;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+    
+    .reveal-button {
+        padding: 0.7rem 1.5rem;
+        background-color: var(--primary-color);
+        color: black;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .reveal-button:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .no-blur {
+        filter: blur(0);
+        transform: scale(1);
+    }
+    
+    .hide-warning {
+        opacity: 0;
+        pointer-events: none;
+    }
+    
+    /* Improved hover overlay positioning */
+    .hover-overlay {
+        z-index: 20; /* Highest z-index to ensure it's always on top */
+        background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+        opacity: 0;
+        transition: var(--transition);
+    }
+    
+    .gallery-item:hover .hover-overlay {
+        opacity: 1;
+    }
+    
+    /* Ensure the image link doesn't interfere with warning */
+    .gallery-item > a {
+        z-index: 5; /* Between image and warning */
+    }
+	</style>
 	
 	
 </head>
@@ -265,8 +386,8 @@ input:focus {
 				<?php if(isset($_SESSION['data']) && $user_account_type == "user"){?>
 			  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal" onclick="handleButtonClick()">
 				<?php 
-					$sql = $pdo->prepare('select * from reviews where user_id = ?');
-					$sql->execute([$_SESSION['data']['id']]);
+					$sql = $pdo->prepare('select * from reviews where user_id = ? and photographer_id = ?');
+					$sql->execute([$_SESSION['data']['id'],$id]);
 					$result = $sql->fetch();
 					if($result){
 						echo "Update the Review";
@@ -548,38 +669,69 @@ input:focus {
 
 					<div class="gallery-container">
 <?php foreach($images as $image): ?>
-    <?php $image_url = $image["url"]; ?>  
-    <div class="image-container position-relative" style="overflow: hidden; border-radius: 8px;">
+    <?php 
+        $image_url = $image["url"];  
+        $btnClass = '';
+        if (isset($_SESSION['data'])) {
+            $stmt = $pdo->prepare("SELECT 1 FROM likes WHERE user_id = ? AND image_id = ?");
+            $stmt->execute([$data['id'], $image['id']]);
+            $liked = $stmt->fetch();
+            $btnClass = $liked ? 'liked-button' : '';
+        }
+    ?>  
 
-        <!-- Image -->
-        <img src="<?= htmlspecialchars($image_url) ?>" class="gallery-image w-100" alt="Gallery Image" style="display: block;">
+    <div class="image-container position-relative sensitive-content" style="overflow: hidden; border-radius: 8px;">
+        
+        <!-- Sensitive Image Handling -->
+        <?php if ($image['is_sensitive'] == 1): ?>
+            <img loading="lazy" src="<?= htmlspecialchars($image_url) ?>" 
+                 class="gallery-image w-100 sensitive-image blur" 
+                 alt="<?= htmlspecialchars($image['label']) ?>" 
+                 style="display: block;">
+            
+            <div class="content-warning">
+                <div class="warning-icon">⚠️</div>
+                <h3 class="warning-heading">Sensitive Content</h3>
+                <p class="warning-description">This image contains content that may be disturbing to some viewers.</p>
+                <button class="reveal-button" onclick="revealImage(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                    </svg>
+                    View Content
+                </button>
+            </div>
+        <?php else: ?>
+            <img src="<?= htmlspecialchars($image_url) ?>" class="gallery-image w-100" alt="Gallery Image" style="display: block;">
+        <?php endif; ?>
 
         <!-- Clickable overlay link -->
-        <a href="view_image.php?id=<?= $image['id'] ?>" 
-           class="position-absolute top-0 start-0 w-100 h-100" 
-           style="z-index: 1;"></a>
+        <a href="view_image.php?id=<?= $image['id'] ?>" class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1;"></a>
 
-        <!-- Buttons that appear on hover -->
-        <div class="overlay-buttons position-absolute top-0 end-0 p-2 d-flex gap-2"
-             style="z-index: 3;">
-
-            <a href="download_handler.php/?imageId=<?= $image['id'] ?>" 
-               class="btn btn-sm btn-light" 
-               onclick="event.stopPropagation();">
+        <!-- Overlay buttons (download, delete, like) -->
+        <div class="overlay-buttons position-absolute top-0 end-0 p-2 d-flex gap-2" style="z-index: 3;">
+            <!-- Download -->
+            <a href="download_handler.php/?imageId=<?= $image['id'] ?>" class="btn btn-sm btn-light" onclick="event.stopPropagation();">
                 <i class="fas fa-download"></i>
             </a>
 
+            <!-- Like Button -->
+            <?php if(isset($_SESSION['data'])): ?>
+                <button class="btn btn-sm like-btn <?= $btnClass ?>" data-image-id="<?= $image['id'] ?>" onclick="event.stopPropagation();">
+                    <i class="bi bi-suit-heart-fill"></i>
+                </button>
+            <?php endif; ?>
+
+            <!-- Delete (Only for my profile) -->
             <?php if($isMyProfile): ?>
-                <button type="button" 
-                        class="btn btn-sm btn-danger" 
-                        onclick="event.stopPropagation(); confirmDelete(<?= $image['id'] ?>);">
+                <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); confirmDelete(<?= $image['id'] ?>);">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             <?php endif; ?>
         </div>
-
     </div>
 <?php endforeach; ?>
+
 
 
 
@@ -662,7 +814,22 @@ input:focus {
 		}
 	?>
 	
-	
+	<script src="js/like-handler.js"></script>
+<script>
+    function revealImage(button) {
+        const container = button.closest('.image-container');
+        const image = container.querySelector('.sensitive-image');
+        const warning = container.querySelector('.content-warning');
+
+        image.classList.add('no-blur');
+        warning.classList.add('hide-warning');
+
+        image.oncontextmenu = function() {
+            return false;
+        };
+    }
+</script>
+
 	<script>
 
 const stars = document.querySelectorAll('#starRating i');

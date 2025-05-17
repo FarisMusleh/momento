@@ -104,7 +104,6 @@
 				<!--ICON-BTN-->
 				<?php 
 				if(isset($_SESSION['data'])){
-					
 					$stmt = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?'); 
 								$stmt->execute([$_SESSION['data']['id']]); 
 								$account_type = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -115,13 +114,21 @@
 					$appointmentCount = $stmt->fetch()['unseen_appointments'];
 				?>
 				
-				<a href="appointment/appointments_inbox.php" class="icon-button" title="Appointments">
+				<a href="/momento/appointment/appointments_inbox.php" class="icon-button" title="Appointments">
 					<i class="fas fa-calendar-check"></i>
 					<?php if ($appointmentCount > 0): ?>
 						<span class="badge"><?= $appointmentCount ?></span>
 					<?php endif; ?>
 				</a>
-				<?php }}?>
+				<?php }else{
+					?>
+					<a href="/momento/appointment/appointments_inbox.php" class="icon-button" title="Appointments">
+					<i class="fas fa-calendar-check"></i>
+					</a>
+					<?php
+				}
+				
+				}?>
                 <li class="nav-item"><a class="nav-link" href="/momento/index.php">HOME</a></li>
                <!-- Ultra-Professional Categories Dropdown -->
                 <li class="nav-item dropdown dropdown-hover">

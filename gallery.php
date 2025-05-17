@@ -191,6 +191,7 @@ require('pdo.php');
         $userLocation = 'USA'; // This can be dynamic later
         $sql = "
             SELECT 
+				
                 images.id,
                 images.label,
                 images.description,
@@ -209,7 +210,7 @@ require('pdo.php');
             FROM images
             JOIN accounts ON images.user_id = accounts.id
             ORDER BY score DESC
-            LIMIT 50
+            
         ";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userLocation', $userLocation);
@@ -228,8 +229,9 @@ require('pdo.php');
                 // Check if image is marked as sensitive
                 if ($image['is_sensitive'] == 1) {
                     // Show blurred version with warning
-                    echo '<img loading="lazy" id = "myImage" src="' . htmlspecialchars($image['url']) . '" class="w-100 sensitive-image" alt="' . htmlspecialchars($image['label']) . '">';
-                    echo '<div class="content-warning" id = "warningOverlay">';
+                    echo '<img loading="lazy" src="' . htmlspecialchars($image['url']) . '" class="w-100 sensitive-image blur" alt="' . htmlspecialchars($image['label']) . '">';
+					echo '<div class="content-warning">';
+
                     echo '<div class="warning-icon">⚠️</div>';
                     echo '<h3 class="warning-heading">Sensitive Content</h3>';
                     echo '<p class="warning-description">This image contains content that may be disturbing to some viewers.</p>';
@@ -272,9 +274,10 @@ require('pdo.php');
 <script src="js/like-handler.js"></script>
 
     <script>
-        function revealImage() {
-            const image = document.getElementById('myImage');
-            const warning = document.getElementById('warningOverlay');
+        function revealImage(button) {
+			const container = button.closest('.gallery-item');
+            const image = container.querySelector('.sensitive-image');
+			const warning = container.querySelector('.content-warning');
             
             image.classList.add('no-blur');
             warning.classList.add('hide-warning');

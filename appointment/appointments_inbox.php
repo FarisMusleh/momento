@@ -9,16 +9,24 @@ if (!isset($_SESSION['data']['id'])) {
 }
 $user_id = $_SESSION['data']['id'];
 
-$updateSeen = "UPDATE appointments SET seen = 1 WHERE photographer_id = :photographer_id AND seen = 0";
-$stmt = $pdo->prepare($updateSeen);
-$stmt->bindParam(':photographer_id', $user_id, PDO::PARAM_INT);
-$stmt->execute();
-
-$sql_account_type = $pdo->prepare('select account_type from accounts where id = ?');
+// Check account type
+$sql_account_type = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
 $sql_account_type->execute([$user_id]);
 $type = $sql_account_type->fetch();
-if($type['account_type']!='business'){
-    header('Location: ../index.php');
+$is_business = ($type['account_type'] == 'business');
+
+// Mark notifications as seen for the correct user type
+if ($is_business) {
+    $updateSeen = "UPDATE appointments SET seen = 1 WHERE photographer_id = :user_id AND seen = 0";
+    $stmt = $pdo->prepare($updateSeen);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+} else {
+    // For regular users, mark their appointments as seen
+    $updateSeen = "UPDATE appointments SET seen = 1 WHERE user_id = :user_id AND seen = 0";
+    $stmt = $pdo->prepare($updateSeen);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
 }
 
 $viewing_details = false;
@@ -27,9 +35,16 @@ if (isset($_GET['view']) && is_numeric($_GET['view'])) {
     $viewing_details = true;
     $appointment_id = (int)$_GET['view'];
     
-    // Fetch the specific appointment
+    // Fetch the specific appointment based on account type
     try {
-        $query = "SELECT * FROM appointments WHERE id = $appointment_id AND photographer_id = $user_id";
+        if ($is_business) {
+            $query = "SELECT * FROM appointments WHERE id = $appointment_id AND photographer_id = $user_id";
+        } else {
+            $query = "SELECT appointments.*, business_profiles.business_name, accounts.picture 
+                     FROM business_profiles , appointments
+                     LEFT JOIN accounts ON appointments.photographer_id = accounts.id
+                     WHERE appointments.id = $appointment_id AND appointments.user_id = $user_id AND business_profiles.id = accounts.id";
+        }
         $result = $pdo->query($query);
         $appointment_detail = $result->fetch(PDO::FETCH_ASSOC);
         if (!$appointment_detail) {
@@ -39,8 +54,8 @@ if (isset($_GET['view']) && is_numeric($_GET['view'])) {
         $viewing_details = false;
     }
     
-    // Process status update if form was submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Process status update if form was submitted (only for business accounts)
+    if ($is_business && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_status = $_POST['status'];
         $valid_statuses = ['pending', 'confirmed', 'cancelled', 'completed'];
         
@@ -64,12 +79,20 @@ if (isset($_GET['view']) && is_numeric($_GET['view'])) {
 
 $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
 $status_options = ['pending', 'cancelled', 'confirmed', 'completed'];
-
-$query = "SELECT * FROM appointments WHERE photographer_id = $user_id";
-if (in_array($status_filter, $status_options)) {
-    $query .= " AND status = '$status_filter'";
+// Build query based on account type
+if ($is_business) {
+    $query = "SELECT * FROM appointments WHERE photographer_id = $user_id";
+} else {
+    $query = "SELECT appointments.*, business_profiles.business_name, accounts.picture 
+             FROM  business_profiles , appointments 
+             LEFT JOIN accounts ON appointments.photographer_id = accounts.id
+             WHERE appointments.user_id = $user_id AND business_profiles.id = accounts.id";
 }
-$query .= " ORDER BY date DESC";
+
+if (in_array($status_filter, $status_options)) {
+    $query .= " AND appointments.status = '$status_filter'";
+}
+$query .= " ORDER BY appointments.created_at DESC";
 
 try {
     $result = $pdo->query($query);
@@ -78,9 +101,14 @@ try {
     die("Query failed: " . $e->getMessage());
 }
 
+// Get status counts
 $status_counts = [];
 try {
-    $count_query = "SELECT status, COUNT(*) as count FROM appointments WHERE photographer_id = $user_id GROUP BY status";
+    if ($is_business) {
+        $count_query = "SELECT status, COUNT(*) as count FROM appointments WHERE photographer_id = $user_id GROUP BY status";
+    } else {
+        $count_query = "SELECT status, COUNT(*) as count FROM appointments WHERE user_id = $user_id GROUP BY status";
+    }
     $count_result = $pdo->query($count_query);
     $status_counts_results = $count_result->fetchAll(PDO::FETCH_ASSOC);
     
@@ -654,11 +682,13 @@ function formatDateTime($date) {
     <?php require('../header.php'); ?>
     
     <div class="container">
-        <!-- Main Navigation -->
+        <!-- Main Navigation (only for business accounts) -->
+        <?php if ($is_business): ?>
         <div class="main-nav">
             <a href="appointments_inbox.php" class="nav-tab <?php echo basename($_SERVER['PHP_SELF']) == 'appointments_inbox.php' ? 'active' : ''; ?>">Appointments</a>
             <a href="services.php" class="nav-tab <?php echo basename($_SERVER['PHP_SELF']) == 'services.php' ? 'active' : ''; ?>">Services</a>
         </div>
+        <?php endif; ?>
         
         <!-- Appointments Section -->
         <div class="section appointments-section active" id="appointments-section">
@@ -674,16 +704,28 @@ function formatDateTime($date) {
                     
                     <div class="detail-content">
                         <div class="detail-info">
+                            <?php if (!$is_business): ?>
+                            <!-- Show photographer info for user accounts -->
+                            <div class="detail-item">
+                                <div class="detail-label">Photographer</div>
+                                <div class="detail-value"><?php echo htmlspecialchars($appointment_detail['business_name']); ?></div>
+                            </div>
+                            <?php else: ?>
+                            <!-- Show client info for business accounts -->
                             <div class="detail-item">
                                 <div class="detail-label">Client Name</div>
                                 <div class="detail-value"><?php echo htmlspecialchars($appointment_detail['full_name']); ?></div>
                             </div>
+                            <?php endif; ?>
+                            
                             <div class="detail-item">
                                 <div class="detail-label">Status</div>
                                 <div class="detail-value status-<?php echo $appointment_detail['status']; ?>">
                                     <?php echo ucfirst($appointment_detail['status']); ?>
                                 </div>
                             </div>
+                            
+                            <?php if ($is_business): ?>
                             <div class="detail-item">
                                 <div class="detail-label">Email</div>
                                 <div class="detail-value"><?php echo htmlspecialchars($appointment_detail['email']); ?></div>
@@ -692,6 +734,8 @@ function formatDateTime($date) {
                                 <div class="detail-label">Phone</div>
                                 <div class="detail-value"><?php echo htmlspecialchars($appointment_detail['phone_number']); ?></div>
                             </div>
+                            <?php endif; ?>
+                            
                             <div class="detail-item">
                                 <div class="detail-label">Date & Time</div>
                                 <div class="detail-value"><?php echo formatDateTime($appointment_detail['date']); ?></div>
@@ -717,7 +761,8 @@ function formatDateTime($date) {
                             <?php endif; ?>
                         </div>
                         
-                        <?php if ($appointment_detail['status'] === 'pending'): ?>
+                        <?php if ($is_business && $appointment_detail['status'] === 'pending'): ?>
+                            <!-- Status update form only for business accounts -->
                             <div class="status-form">
                                 <form method="post">
                                     <div class="form-group">
@@ -741,7 +786,7 @@ function formatDateTime($date) {
                 </div>
             <?php else: ?>
                 <!-- Appointment List View -->
-                <h1>Appointment Bookings</h1>
+                <h1><?php echo $is_business ? 'Appointment Bookings' : 'My Appointments'; ?></h1>
                 
                 <!-- Filter Navigation -->
                 <div class="filter-nav">
@@ -768,7 +813,11 @@ function formatDateTime($date) {
                         <?php foreach ($appointments as $appointment): ?>
                             <div class="appointment-card" onclick="window.location='appointments_inbox.php?view=<?php echo $appointment['id']; ?><?php echo $status_filter ? '&status=' . $status_filter : ''; ?>'">
                                 <div class="appointment-header">
+                                    <?php if ($is_business): ?>
                                     <div class="appointment-name"><?php echo htmlspecialchars($appointment['full_name']); ?></div>
+                                    <?php else: ?>
+                                    <div class="appointment-name"><?php echo htmlspecialchars($appointment['business_name']); ?></div>
+                                    <?php endif; ?>
                                     <div class="appointment-status status-<?php echo $appointment['status']; ?>">
                                         <?php echo ucfirst($appointment['status']); ?>
                                     </div>
