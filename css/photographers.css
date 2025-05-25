@@ -117,7 +117,7 @@
         .card-header {
             position: relative;
             height: 120px;
-            background-color: #0f0f0f;
+            background-color: grey;
         }
         
         .profile-image-cards {
@@ -217,9 +217,12 @@
         }
         
         .tag {
-            background-color: #f1f1f1;
-            color: #333;
+            background-color: #818181;
+            color: azure;
             font-size: 12px;
             padding: 4px 10px;
             border-radius: 15px;
         }
+		.blur-pfp{
+			filter: blur(4px);
+		}

@@ -1069,6 +1069,7 @@ $reviews = $sql_reviews->fetchAll();
   // Convert to objects with start and end Date
   const busyRanges = busySlots.map(slot => {
     const start = new Date(slot.date);
+	
     const end = new Date(start.getTime() + slot.duration * 60000);
     return { start, end };
   });
@@ -1084,11 +1085,11 @@ $reviews = $sql_reviews->fetchAll();
 
     onChange: function (selectedDates, dateStr, instance) {
       const selected = selectedDates[0];
-
+		
       const isOverlapping = busyRanges.some(range =>
         selected >= range.start && selected < range.end
       );
-
+		
       if (isOverlapping) {
         Toastify({
           text: "This time is within a busy period. Please choose another.",
@@ -1101,16 +1102,19 @@ $reviews = $sql_reviews->fetchAll();
         instance.clear();
       }
     },
-
+	
     onDayCreate: function (dObj, dStr, fp, dayElem) {
-      const date = dayElem.dateObj.toISOString().split('T')[0];
+      const date = dayElem.dateObj.toLocaleDateString('en-CA');
+
 
       const slotsForDay = busySlots.filter(slot => slot.date.startsWith(date));
+	  
       if (slotsForDay.length > 0) {
         dayElem.classList.add("busy-day");
-
+		
         const times = slotsForDay.map(slot => {
           const start = new Date(slot.date);
+		  console.log(slot.date);
           const end = new Date(start.getTime() + slot.duration * 60000);
           const format = d => d.toTimeString().substring(0, 5);
           return `${format(start)} - ${format(end)}`;

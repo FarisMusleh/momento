@@ -35,41 +35,175 @@ function safe_divide($a, $b) {
 	<link rel="stylesheet" href="css/navbar-scrolled.css">
     <link rel="stylesheet" href="css/photographers.css">
 	<style>
-		.favorite-btn {
+.photographer-card {
+    font-family: 'Segoe UI', sans-serif;
+    width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    background: white;
+    transition: transform 0.3s ease;
+    margin: 15px;
+}
+
+.photographer-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    position: relative;
+    height: 120px;
+}
+
+.blur-pfp {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+}
+
+.profile-image-cards {
     position: absolute;
-    top: 100px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid white;
+    left: 50%;
+    bottom: -40px;
+    transform: translateX(-50%);
+    object-fit: cover;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 15px;
     right: 25px;
 }
 
 .follow-btn {
-    background-color: #007bff;
-    color: #fff;
+    background: rgba(255,255,255,0.9);
     border: none;
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s;
 }
 
 .follow-btn:hover {
-    background-color: #0056b3;
+    background: #f0f0f0;
     transform: scale(1.05);
 }
 
-.follow-btn:active {
-    transform: scale(0.98);
+.card-content {
+    padding: 30px 20px 20px;
+    text-align: center;
 }
 
-.follow-btn.unfollow {
-    background-color: #dc3545;
-    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+.username {
+    margin: 15px 0 5px;
+    color: #333;
+    font-size: 1.2rem;
 }
 
-.follow-btn.unfollow:hover {
-    background-color: #a71d2a;
+.professional-badge {
+    margin: 5px 0 15px;
 }
+
+.badge {
+    background: #4a6bff;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.verified-badge {
+    color: #4CAF50;
+    margin-left: 5px;
+    font-size: 0.8rem;
+}
+
+.location, .rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 8px 0;
+}
+
+.location svg, .rating svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    fill: currentColor;
+}
+
+.rating {
+    color: #FFA41C;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 15px 0;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tag {
+    background: #a0a0a0;
+    color: azure;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.message-btn, .book-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.message-btn {
+    background: #c0c0c0;
+    color: #333;
+}
+
+.book-btn {
+    background: #4a6bff;
+    color: white;
+}
+
+.message-btn:hover {
+    background: #e0e0e0;
+}
+
+.book-btn:hover {
+    background: #3a5bef;
+    transform: translateY(-2px);
+}
+
 	</style>
 </head>
 <body class = "fade-in">
@@ -101,49 +235,54 @@ function safe_divide($a, $b) {
 
     <!-- Photographer Cards -->
     <div class="row  justify-center">
-        <?php
-        $stmt = $pdo->prepare("
-            SELECT bp.business_name, bp.bio, a.username, a.location, a.picture, bp.total_rate, bp.total_likes, bp.total_reviews, bp.total_views
-            FROM business_profiles bp
-            JOIN accounts a ON bp.id = a.id
-            ORDER BY bp.total_rate DESC, bp.total_likes DESC, bp.total_views DESC
-            LIMIT 20
-        ");
+	<?php
+	$stmt = $pdo->prepare("
+		SELECT bp.business_name, bp.bio, a.username, a.location, a.picture, bp.total_rate, bp.total_likes, bp.total_reviews, bp.total_views, bp.id as photographer_id
+		FROM business_profiles bp
+		JOIN accounts a ON bp.id = a.id
+		ORDER BY bp.total_rate DESC, bp.total_likes DESC, bp.total_views DESC
+	");
+	$stmt->execute();
+	$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($result as $row) {
+		$servicesStmt = $pdo->prepare("SELECT category, price FROM appointment_services WHERE photographer_id = ? LIMIT 3");
+		$servicesStmt->execute([$row['photographer_id']]);
+		$services = $servicesStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($result as $row) {
-echo '
-    <div class="photographer-card">
-        <div class="card-header">
-            <img src="'.$row['picture'].'" alt="Julia Smith" class="profile-image-cards">
-            <div class="favorite-btn">
-				<button class="follow-btn" data-username="$row["username"]">Follow</button>
-			</div>
+		echo '
+		<div class="photographer-card">
+    <div class="card-header">
+        <img src="'.$row['picture'].'" width="296" height="120" class="blur-pfp">
+        <img src="'.$row['picture'].'" alt="'.$row["business_name"].'" class="profile-image-cards">
+        
+    </div>
+    <div class="card-content">
+        <a href="/momento/profile.php?username='.$row['username'].'"><h3 class="username">'.$row["business_name"].'</h3></a>
+        <div class="location">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            '.$row["location"].'
         </div>
-        <div class="card-content">
-            <a href = "/momento/profile.php?username='.$row['username'].'"><h3 class="username">'.$row["business_name"].'</h3></a>
-            <div class="location">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                '.$row["location"].'
-            </div>
-            <div class="rate">$120 / hour</div>
-            <div class="rating">
-                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                '.safe_divide($row['total_rate'],$row['total_reviews']).'&nbsp;('.$row['total_reviews'].' reviews)
-            </div>
-            <div class="divider"></div>
-            <div class="tags">
-                <span class="tag">Portrait</span>
-                <span class="tag">Fashion</span>
-                <span class="tag">Wedding</span>
-            </div>
+        <div class="rating">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            '.safe_divide($row['total_rate'], $row['total_reviews']).'&nbsp;('.$row['total_reviews'].' reviews)
         </div>
-    </div>';
-
+        
+        <div class="tags">';
+        
+        foreach ($services as $service) {
+            echo '<span class="tag">'.htmlspecialchars($service['category']).'</span>';
         }
-        ?>
+        
+        echo '</div>
+        <div class="action-buttons">
+            <button class="message-btn">Message</button>
+            <button class="book-btn">Book Now</button>
+        </div>
+    </div>
+</div>';
+	}
+	?>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
