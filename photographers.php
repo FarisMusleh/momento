@@ -11,6 +11,16 @@ if (isset($_SESSION['data'])) {
 function safe_divide($a, $b) {
     return $b != 0 ? $a / $b : 0;
 }
+$canBook = false;
+if (isset($_SESSION['data']['id'])) {
+	$currentUserId = $_SESSION['data']['id'];
+	$stmtType = $pdo->prepare('SELECT account_type FROM accounts WHERE id = ?');
+	$stmtType->execute([$currentUserId]);
+	$type_a = $stmtType->fetch(PDO::FETCH_ASSOC);
+	if ($type_a && $type_a['account_type'] === 'user') {
+		$canBook = true;
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -276,8 +286,12 @@ function safe_divide($a, $b) {
         
         echo '</div>
         <div class="action-buttons">
-            <button class="message-btn">Message</button>
-            <button class="book-btn">Book Now</button>
+            '; 
+			if ($canBook) {echo '<button class="book-btn" onclick="location.href=\'/momento/appointment/index.php?photographer_id=' . $row["photographer_id"] . '\'">Book Now</button>';}
+            $chatLink = isset($_SESSION['data']['id']) 
+				? '/momento/chat/chat.php?id=' . $row["photographer_id"] 
+				: '/momento/account/login.php';
+			echo '<button class="message-btn" onclick="location.href=\'' . $chatLink . '\'">Message</button>
         </div>
     </div>
 </div>';

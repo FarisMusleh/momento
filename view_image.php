@@ -672,7 +672,7 @@
 		<div class="similar-images">
 		  <h3 class="section-title">
 			<i class="bi bi-grid"></i>
-			Similar Images (Keyword: <?= htmlspecialchars($bestKeyword) ?>)
+			Similar Images
 		  </h3>
 		  <div class="similar-grid">
 			<?php foreach ($similar_image_results as $image): ?>

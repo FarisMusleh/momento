@@ -715,12 +715,12 @@ input:focus {
                 <i class="fas fa-download"></i>
             </a>
 
-            <!-- Like Button -->
+            <!-- Like Button SOOOOOOOOOOOOON
             <?php if(isset($_SESSION['data'])): ?>
                 <button class="btn btn-sm like-btn <?= $btnClass ?>" data-image-id="<?= $image['id'] ?>" onclick="event.stopPropagation();">
                     <i class="bi bi-suit-heart-fill"></i>
                 </button>
-            <?php endif; ?>
+            <?php endif; ?>-->
 
             <!-- Delete (Only for my profile) -->
             <?php if($isMyProfile): ?>

@@ -46,4 +46,5 @@ if (isset($_GET['query'])) {
 		echo "Error: " . $response_data['error'];
 	}
 }
+}
 ?>
