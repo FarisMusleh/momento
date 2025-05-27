@@ -1,4 +1,11 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+	if(!isset($_SESSION['data']['admin']) && $_SESSION['data']['admin']==True){
+		header("location: ../index.php");
+	}
+
 include 'db_connect.php';
 
 $table = $_GET['table'] ?? '';

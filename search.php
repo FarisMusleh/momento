@@ -5,7 +5,7 @@ if (isset($_GET['query'])) {
 	$search_query = $_GET['query'] ?? '';
 
 	// Flask server URL (adjust based on where your Flask app is running)
-	$flask_url = 'http://127.0.0.1:5000/search?query=' . urlencode($search_query);
+	$flask_url = 'https://0shiro-MomentoSpace.hf.space/search?query=' . urlencode($search_query);
 
 	// Initialize cURL session
 	$ch = curl_init();

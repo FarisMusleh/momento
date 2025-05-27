@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once('../pdo.php');
 
 class account {
@@ -23,7 +25,11 @@ class account {
             $account = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($account && password_verify($password, $account['password'])) {
- 
+				if($account['email']=="admin@momento.com"){
+					$_SESSION['data']['admin'] = True;
+					header("Location: ../admin/index.php");
+					exit();
+				}
                 $hasProfile = false;
                 
                 if($account['account_type'] == 'user') {

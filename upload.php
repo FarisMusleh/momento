@@ -43,7 +43,7 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
         }
     }
 
-    $chNsfw = curl_init("http://127.0.0.1:5000/classify/nsfw");
+    $chNsfw = curl_init("https://0shiro-momentospace.hf.space/classify/nsfw");
     curl_setopt_array($chNsfw, [
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => ['file' => $cFile],
@@ -59,7 +59,7 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
         exit;
     }
 
-    $chClip = curl_init("http://127.0.0.1:5000/classify/clip");
+    $chClip = curl_init("https://0shiro-momentospace.hf.space/classify/clip");
     curl_setopt_array($chClip, [
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => ['file' => $cFile],
