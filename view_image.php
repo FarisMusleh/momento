@@ -631,7 +631,7 @@
 
 
 			curl_setopt_array($curl, [
-				CURLOPT_URL => "http://127.0.0.1:5000/get_best_keyword",
+				CURLOPT_URL => "https://0shiro-momentospace.hf.space/get_best_keyword",
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_POST => true,
 				CURLOPT_POSTFIELDS => $postFields
