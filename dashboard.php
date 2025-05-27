@@ -288,9 +288,7 @@ $data_js = json_encode($data);
                             <h2 id="total-views"><?=$result['total_views']?></h2>
                             <div class="text-muted">Total Views</div>
                         </div>
-                        <div class="trend trend-up">
-                            <i class="fas fa-arrow-up me-1"></i> 12%
-                        </div>
+                  
                     </div>
                 </div>
             </div>
@@ -302,9 +300,7 @@ $data_js = json_encode($data);
                             <h2 id="today-appointments"><?=$todayAppointments?></h2>
                             <div class="text-muted">Today's Appointments</div>
                         </div>
-                        <div class="trend trend-up">
-                            <i class="fas fa-arrow-up me-1"></i> 2
-                        </div>
+                 
                     </div>
                 </div>
             </div>
@@ -316,9 +312,7 @@ $data_js = json_encode($data);
                             <h2><?php echo safe_divide($result['total_rate'],$result['total_reviews']);?></h2>
                             <div class="text-muted">Average Rating</div>
                         </div>
-                        <div class="trend trend-up">
-                            <i class="fas fa-arrow-up me-1"></i> 0.2
-                        </div>
+           
                     </div>
                 </div>
             </div>
@@ -330,9 +324,7 @@ $data_js = json_encode($data);
                             <h2 id="month-likes"><?=$result['total_likes']?></h2>
                             <div class="text-muted">Likes This Month</div>
                         </div>
-                        <div class="trend trend-up">
-                            <i class="fas fa-arrow-up me-1"></i> 24%
-                        </div>
+       
                     </div>
                 </div>
             </div>

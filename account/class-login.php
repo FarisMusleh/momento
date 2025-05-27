@@ -26,7 +26,7 @@ class account {
             
             if ($account && password_verify($password, $account['password'])) {
 				if($account['email']=="admin@momento.com"){
-					$_SESSION['data']['admin'] = True;
+					$_SESSION['admin'] = True;
 					header("Location: ../admin/index.php");
 					exit();
 				}

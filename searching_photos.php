@@ -16,7 +16,7 @@ if(empty($_GET['query'])){
 <script>
     const isLoggedIn = <?php echo $isLoggedIn; ?>;
 </script>
-<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -26,15 +26,20 @@ if(empty($_GET['query'])){
     <!-- GOOGLE-FONTS -->
 	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;500;700&family=Dancing+Script&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/header.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Include Bootstrap Icons if not already -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 	<!--CSS-->
-    <link rel="stylesheet" href="css/header.css">
+    
 	
 	<link rel="stylesheet" href="css/gallery.css">
-	<link rel="stylesheet" href="css/navbar-scrolled.css">
+	
 	<!--JS FILE-->
 	<script src="js/gallery.js"></script>
+	<link rel="stylesheet" href="css/navbar-scrolled.css">
     <title>Photos</title>
 	<style>
 		:root {
@@ -283,10 +288,9 @@ if(empty($_GET['query'])){
 				?>
 
     </div>
-	<script src="js/like-handler.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
- integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-     <script>
+<script src="js/like-handler.js"></script>
+
+    <script>
         function revealImage(button) {
 			const container = button.closest('.gallery-item');
             const image = container.querySelector('.sensitive-image');
@@ -301,6 +305,20 @@ if(empty($_GET['query'])){
             };
         }
     </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script>
+window.onscroll = function() {
+  var navbar = document.getElementById("navbar");
+  if (window.scrollY > 0) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+};
+</script>
 </body>
 </html>
 
