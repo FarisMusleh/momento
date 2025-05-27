@@ -153,6 +153,7 @@
         </div>
         <div class="col-md-9 p-4">
             <h2>Dashboard Overview</h2>
+			<a href = "../logout.php" class = "btn btn-primary">logout</a>
             <div class="row g-4 mt-4">
                 <?php
                 $tables = ['accounts', 'images', 'appointments', 'comments', 'reviews'];
