@@ -1,8 +1,8 @@
 // Toggle like/unlike action using AJAX
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.like-btn').forEach(button => {
+    document.querySelectorAll('.like-button').forEach(button => {
         button.addEventListener('click', function () {
-			if (!isLoggedIn) {
+            if (!isLoggedIn) {
                 window.location.href = 'account/login.php';
                 return;
             }
