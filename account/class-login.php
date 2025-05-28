@@ -71,7 +71,7 @@ class account {
                     header("Location: ../index.php");
                     exit();
                 } else {
-          
+					$_SESSION['create_profile_message']= "Logged In Successfully.";
                     $_SESSION['create_profile'] = [
                         'id' => $account['id'],
                         'email' => $account['email'],

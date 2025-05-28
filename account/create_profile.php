@@ -501,16 +501,27 @@ $accountType = $_SESSION['create_profile']['type'] ?? '';
         </form>
     </div>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-	<script>
-Toastify({
-		text: "test",
-		duration: 3000,
-		gravity: "top",
-		position: "right",
-		backgroundColor: "#dc3545", // Red color for error
-		stopOnFocus: true
-	}).showToast();
+<?php
+// At the end of register.php, replace the current toast script with this:
 
-</script>
+if(isset($_SESSION['create_profile_message'])){
+    $message = $_SESSION['create_profile_message'];
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Toastify({
+            text: "' . addslashes($message) . '",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#00ff00", 
+            stopOnFocus: true
+        }).showToast();
+    });
+    </script>';
+    
+    // Clear the session messages
+    unset($_SESSION['create_profile_message']);
+}
+?>
 </body>
 </html>
