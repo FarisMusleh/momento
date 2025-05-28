@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['data'])) {
-    header('location:index.php');
+    echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
     exit();
 }
 $data = $_SESSION['data'];
@@ -25,7 +25,7 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
 
     if (!in_array($fileExt, $allowedExtensions)) {
-        $_SESSION['message'] = "Image not allowed: Invalid file type.";
+        echo json_encode(['status' => 'error', 'message' => 'Image not allowed: Invalid file type.']);
         exit;
     }
 
@@ -37,8 +37,7 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
         $width = $imageInfo[0];
         $height = $imageInfo[1];
         if ($width < 1 || $height < 1) {
-            $_SESSION['message'] = "Image not allowed : Image size too small.";
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            echo json_encode(['status' => 'error', 'message' => 'Image not allowed: Image size too small.']);
             exit();
         }
     }
@@ -55,7 +54,7 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
     $classification = $resultNsfw['label'] ?? 'Unknown';
 
     if (strtolower($classification) === 'nsfw') {
-        $_SESSION['message'] = "Image not allowed: NSFW content detected.";
+        echo json_encode(['status' => 'error', 'message' => 'Image not allowed: NSFW content detected.']);
         exit;
     }
 
@@ -93,34 +92,34 @@ if (isset($_POST['upload']) && isset($_FILES['file'])) {
                 $newFileName,
                 $finalDescription,
                 json_encode($topLabels),
-				$isViolent
+                $isViolent
             ]);
-			
+            
             $categoryCounts = [];
 
-			foreach ($mainCategory as $category => $keywords) {
-				foreach ($topLabels as $label) {
-					if (in_array(strtolower($label), $keywords)) {
-						$categoryCounts[$category] = ($categoryCounts[$category] ?? 0) + 1;
-					}
-				}
-			}
+            foreach ($mainCategory as $category => $keywords) {
+                foreach ($topLabels as $label) {
+                    if (in_array(strtolower($label), $keywords)) {
+                        $categoryCounts[$category] = ($categoryCounts[$category] ?? 0) + 1;
+                    }
+                }
+            }
 
-			foreach ($categoryCounts as $category => $count) {
-				$stmt = $pdo->prepare("INSERT INTO photographer_category_scores (photographer_id, category, score)
-					VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score = score + VALUES(score)");
-				$stmt->execute([$data['id'], $category, $count]);
-			}
-            $_SESSION['message'] = "Image Uploaded Successfully";
-            $_SESSION['color'] = "green";
+            foreach ($categoryCounts as $category => $count) {
+                $stmt = $pdo->prepare("INSERT INTO photographer_category_scores (photographer_id, category, score)
+                    VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE score = score + VALUES(score)");
+                $stmt->execute([$data['id'], $category, $count]);
+            }
+            
+            echo json_encode(['status' => 'success', 'message' => 'Image uploaded successfully']);
+            exit;
         } catch (Exception $e) {
-            $_SESSION['message'] = "File upload failed.";
+            echo json_encode(['status' => 'error', 'message' => 'Database error: File upload failed.']);
             exit;
         }
-        header('Location: profile.php');
-        exit;
     } else {
-        $_SESSION['message'] = "File upload failed.";
+        echo json_encode(['status' => 'error', 'message' => 'File upload failed.']);
+        exit;
     }
 }
 ?>

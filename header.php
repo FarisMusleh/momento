@@ -278,7 +278,7 @@
                             <div class="navbar-dropdown-body"> 
 								<?php if ($account_type['account_type'] === 'business'): ?> 
 								  <a href="/momento/profile.php" class="navbar-menu-item">
-									<svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<svg class="navbar-menu-icon" style="color: #B0B0B0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 									  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
 									  <circle cx="12" cy="7" r="4"></circle>
 									</svg>
@@ -286,26 +286,26 @@
 									<div class="navbar-hover-indicator"></div>
 								  </a> 
 								  <a href="/momento/dashboard.php" class="navbar-menu-item">
-								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" stroke-linecap="round" stroke-linejoin="round">
+								  <svg class="navbar-menu-icon" style="color: #B0B0B0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" stroke-linecap="round" stroke-linejoin="round">
 										<path d="M4 3h6v6H4V3zm0 8h6v10H4V11zm10-8h6v10h-6V3zm0 12h6v6h-6v-6z"/>
 								  </svg>
 								  <span>Dashboard</span>
 								  <div class="navbar-hover-indicator"></div>
 								</a>
 								  <a href="/momento/appointment/services.php" class="navbar-menu-item">
-								<i class="fas fa-concierge-bell" style="color: red; margin-right: 15px;"></i>
+								<i class="fas fa-concierge-bell" style="color: #B0B0B0; margin-right: 15px;"></i>
 								  <span>Services</span>
 								  <div class="navbar-hover-indicator"></div>
 								</a>
 								  <a href="/momento/appointment/appointments_inbox.php" class="navbar-menu-item">
-								  <i class="fas fa-calendar-alt" style="color: red; margin-right: 15px;"></i>
+								  <i class="fas fa-calendar-alt" style="color: #B0B0B0; margin-right: 15px;"></i>
 								  <span> Appointments</span>
 								  <div class="navbar-hover-indicator"></div>
 								</a>
 
 								<?php endif; ?> 
 								<a href="/momento/edit-profile.php" class="navbar-menu-item">
-								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								  <svg class="navbar-menu-icon" style="color: #B0B0B0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 									<circle cx="12" cy="12" r="3"></circle>
 									<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
 								  </svg>
@@ -313,7 +313,7 @@
 								  <div class="navbar-hover-indicator"></div>
 								</a>
 								<a href="/momento/logout.php" class="navbar-menu-item">
-								  <svg class="navbar-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								  <svg class="navbar-menu-icon" style="color: #B0B0B0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 									<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
 									<polyline points="16 17 21 12 16 7"></polyline>
 									<line x1="21" y1="12" x2="9" y2="12"></line>

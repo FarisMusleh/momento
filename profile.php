@@ -807,12 +807,7 @@ input:focus {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <?php
-		if (isset($_SESSION['message'])) {
-			$message = $_SESSION['message'];
-			
-		}
-	?>
+
 	
 	<script src="js/like-handler.js"></script>
 <script>
@@ -1089,92 +1084,144 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.getElementById(`val-${id}`).textContent = value;
 		}
 
-		function processAndUploadImage() {
-			// Disable the upload button
-			document.getElementById('image_upload_button').disabled = true;
-			
-			// Get the canvas and context
-			const canvas = document.getElementById('imageCanvas');
-			const ctx = canvas.getContext('2d');
-			
-			// Set canvas dimensions
-			canvas.width = originalImage.naturalWidth;
-			canvas.height = originalImage.naturalHeight;
-			
-			// Apply filters to the image on canvas
-			ctx.filter = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) grayscale(${filters.grayscale}%) saturate(${filters.saturate}%)`;
-			ctx.drawImage(originalImage, 0, 0);
-			
-			// Convert the canvas to a blob
-			canvas.toBlob(function(blob) {
-				// Create a File object from the blob
-				const filteredFile = new File([blob], "filtered_image.jpg", {type: "image/jpeg"});
-				
-				// Create a FormData object and append the filtered image
-				const formData = new FormData(document.getElementById('uploadForm'));
-				
-				// Replace the original file with the filtered one
-				formData.delete('file');
-				formData.append('file', filteredFile);
-				
-				// Add the upload flag
-				formData.append('upload', 'true');
-				
-					<?php if (isset($message)): ?>
-					Toastify({
-					  text: "<?php echo $message;?>",
-					  duration: 3000,
-					  gravity: "top",
-					  position: "right",
-					  backgroundColor: "#ff4d4d",
-					  stopOnFocus: true
-					}).showToast();
-					<?php endif; $display = "temp";?>
-				fetch('upload.php', {
-					method: 'POST',
-					body: formData
-				})
-				.then(response => {
-					// Redirect to profile page after successful upload
-					window.location.href = '/momento/profile.php';
-				})
-				.catch(error => {
-					console.error('Error uploading image:', error);
-					document.getElementById('image_upload_button').disabled = false;
-				});
-			}, 'image/jpeg', 0.9);
-		}
+function processAndUploadImage() {
+    // Disable the upload button
+    const uploadButton = document.getElementById('image_upload_button');
+    uploadButton.disabled = true;
+    uploadButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+    
+    // Get the canvas and context
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas dimensions
+    canvas.width = originalImage.naturalWidth;
+    canvas.height = originalImage.naturalHeight;
+    
+    // Apply filters to the image on canvas
+    ctx.filter = `brightness(${filters.brightness}%) contrast(${filters.contrast}%) grayscale(${filters.grayscale}%) saturate(${filters.saturate}%)`;
+    ctx.drawImage(originalImage, 0, 0);
+    
+    // Convert the canvas to a blob
+    canvas.toBlob(function(blob) {
+        // Create a File object from the blob
+        const filteredFile = new File([blob], "filtered_image.jpg", {type: "image/jpeg"});
+        
+        // Create a FormData object and append the filtered image
+        const formData = new FormData(document.getElementById('uploadForm'));
+        
+        // Replace the original file with the filtered one
+        formData.delete('file');
+        formData.append('file', filteredFile);
+        
+        // Add the upload flag
+        formData.append('upload', 'true');
+        
+        fetch('upload.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Check if upload was successful
+            if (data.status === 'success') {
+                // Store success message in sessionStorage
+                sessionStorage.setItem('uploadSuccess', 'true');
+                
+                // Close the modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Reset the form
+                document.getElementById('uploadForm').reset();
+                
+                // Reload the page immediately
+                window.location.reload();
+            } else {
+                // Show error toast immediately for errors
+                Toastify({
+                    text: data.message || "Upload failed. Please try again.",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#dc3545", // Red color for error
+                    stopOnFocus: true
+                }).showToast();
+                
+                // Re-enable the button
+                uploadButton.disabled = false;
+                uploadButton.innerHTML = 'Upload';
+            }
+        })
+        .catch(error => {
+            console.error('Error uploading image:', error);
+            
+            // Show error toast immediately for network errors
+            Toastify({
+                text: "Network error. Please check your connection.",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#dc3545", // Red color for error
+                stopOnFocus: true
+            }).showToast();
+            
+            // Re-enable the button
+            uploadButton.disabled = false;
+            uploadButton.innerHTML = 'Upload';
+        });
+    }, 'image/jpeg', 0.9);
+}
 
-		// Set up event listeners when the DOM is loaded
-		document.addEventListener('DOMContentLoaded', function() {
-			// Brightness slider
-			document.getElementById('brightness').addEventListener('input', function(e) {
-				filters.brightness = e.target.value;
-				updateSliderValue('brightness', e.target.value);
-				applyFilters();
-			});
-			
-			// Contrast slider
-			document.getElementById('contrast').addEventListener('input', function(e) {
-				filters.contrast = e.target.value;
-				updateSliderValue('contrast', e.target.value);
-				applyFilters();
-			});
-			
-			// Grayscale slider
-			document.getElementById('grayscale').addEventListener('input', function(e) {
-				filters.grayscale = e.target.value;
-				updateSliderValue('grayscale', e.target.value);
-				applyFilters();
-			});
-			
-			// Saturation slider
-			document.getElementById('saturate').addEventListener('input', function(e) {
-				filters.saturate = e.target.value;
-				updateSliderValue('saturate', e.target.value);
-				applyFilters();
-			});
-		});
+// Add this script to check for success message on page load:
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if upload was successful (from sessionStorage)
+    if (sessionStorage.getItem('uploadSuccess') === 'true') {
+        // Remove the flag
+        sessionStorage.removeItem('uploadSuccess');
+        
+        // Show success toast after page loads
+        Toastify({
+            text: "Image Uploaded Successfully!",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#28a745", // Green color for success
+            stopOnFocus: true
+        }).showToast();
+    }
+    
+    // Your existing DOMContentLoaded code for sliders...
+    // Brightness slider
+    document.getElementById('brightness').addEventListener('input', function(e) {
+        filters.brightness = e.target.value;
+        updateSliderValue('brightness', e.target.value);
+        applyFilters();
+    });
+    
+    // Contrast slider
+    document.getElementById('contrast').addEventListener('input', function(e) {
+        filters.contrast = e.target.value;
+        updateSliderValue('contrast', e.target.value);
+        applyFilters();
+    });
+    
+    // Grayscale slider
+    document.getElementById('grayscale').addEventListener('input', function(e) {
+        filters.grayscale = e.target.value;
+        updateSliderValue('grayscale', e.target.value);
+        applyFilters();
+    });
+    
+    // Saturation slider
+    document.getElementById('saturate').addEventListener('input', function(e) {
+        filters.saturate = e.target.value;
+        updateSliderValue('saturate', e.target.value);
+        applyFilters();
+    });
+});
     </script>
 </body>
 </html>

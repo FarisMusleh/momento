@@ -442,9 +442,11 @@
 			cursor: not-allowed !important;
 		}
     </style>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
+
     <div class="auth-container">
         <div class="auth-hero">
             <div class="auth-hero-content">
@@ -531,9 +533,6 @@
                             </button>
                         </div>
                         
-                   <!--      <div class="form-footer">
-                            <p>Already have an account? <a href="signin.html">Sign In</a></p>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -638,7 +637,31 @@
 		  });
 		  
     </script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<?php
+// At the end of register.php, replace the current toast script with this:
 
+if(isset($_SESSION['register_message'])){
+    $message = $_SESSION['register_message'];
+    $color = isset($_SESSION['color']) ? $_SESSION['color'] : '#dc3545';
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Toastify({
+            text: "' . addslashes($message) . '",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "' . $color . '", 
+            stopOnFocus: true
+        }).showToast();
+    });
+    </script>';
+    
+    // Clear the session messages
+    unset($_SESSION['register_message']);
+    unset($_SESSION['color']);
+}
+?>
 
 
 

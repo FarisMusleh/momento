@@ -204,8 +204,10 @@ $accountType = $_SESSION['create_profile']['type'] ?? '';
             border-bottom: 1px solid #ddd;
         }
     </style>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
+
     <div class="container">
         <div class="logo" style="font-family:Dancing Script">Momento</div>
         
@@ -498,5 +500,17 @@ $accountType = $_SESSION['create_profile']['type'] ?? '';
             <button type="submit">Complete Profile</button>
         </form>
     </div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<script>
+Toastify({
+		text: "test",
+		duration: 3000,
+		gravity: "top",
+		position: "right",
+		backgroundColor: "#dc3545", // Red color for error
+		stopOnFocus: true
+	}).showToast();
+
+</script>
 </body>
 </html>

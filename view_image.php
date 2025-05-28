@@ -23,19 +23,7 @@
 
 	$sql_comments->execute([intval($_GET['id'])]);
 	$comments = $sql_comments->fetchAll();
-	
-	function timeAgo($datetime) {
-    $now = new DateTime();
-    $commentTime = new DateTime($datetime);
-    $diff = $now->diff($commentTime);
 
-    if ($diff->y > 0) return $diff->y . ' year' . ($diff->y > 1 ? 's' : '') . ' ago';
-    if ($diff->m > 0) return $diff->m . ' month' . ($diff->m > 1 ? 's' : '') . ' ago';
-    if ($diff->d > 0) return $diff->d . ' day' . ($diff->d > 1 ? 's' : '') . ' ago';
-    if ($diff->h > 0) return $diff->h . ' hour' . ($diff->h > 1 ? 's' : '') . ' ago';
-    if ($diff->i > 0) return $diff->i . ' minute' . ($diff->i > 1 ? 's' : '') . ' ago';
-    return 'just now';
-	}
 	
 	require('queries/view_counter.php');
 ?>
@@ -591,7 +579,7 @@
             <div class="comment">
               <div class="comment-header">
                 <span class="comment-user"><?=$comment['username']?></span>
-                <span class="comment-time"><?php echo timeAgo($comment['created_at']);?></span>
+                <span class="comment-time" data-timestamp="<?=$comment['created_at']?>">
               </div>
               <p class="comment-text"><?=$comment['comment']?></p>
 			  <?php
@@ -764,18 +752,22 @@
   <!-- Scripts -->
   <script>
 const isLogged = <?php if($data){echo "true";}else{echo "false";}?> 
+
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.like-comment-btn').forEach(button => {
-    button.addEventListener('click', function () {
+  // Use event delegation for like comment buttons
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.like-comment-btn')) {
+      const button = e.target.closest('.like-comment-btn');
+      
       if (!isLogged) {
         window.location.href = 'account/login.php';
         return;
       }
 
-      const commentId = this.dataset.commentId;
-      const action = this.classList.contains('liked') ? 'unlike' : 'like';
-      const counter = this.querySelector('.comment-like-counter');
-      const btn = this;
+      const commentId = button.dataset.commentId;
+      const action = button.classList.contains('liked') ? 'unlike' : 'like';
+      const counter = button.querySelector('.comment-like-counter');
+      const btn = button;
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', 'like_comment.php', true);
@@ -783,32 +775,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       xhr.onload = function () {
         if (xhr.status === 200) {
-			let count = parseInt(counter.textContent);
-			const icon = btn.querySelector('i');
-			if (action === 'like') {
-			  btn.classList.add('liked');
-			  icon.classList.remove('bi-heart');
-			  icon.classList.add('bi-heart-fill');
-			  counter.textContent = count + 1;
-			} else {
-			  btn.classList.remove('liked');
-			  icon.classList.remove('bi-heart-fill');
-			  icon.classList.add('bi-heart');
-			  counter.textContent = Math.max(0, count - 1);
-			}
+          let count = parseInt(counter.textContent);
+          const icon = btn.querySelector('i');
+          if (action === 'like') {
+            btn.classList.add('liked');
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+            counter.textContent = count + 1;
+          } else {
+            btn.classList.remove('liked');
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+            counter.textContent = Math.max(0, count - 1);
+          }
         }
       };
 
       xhr.send(`comment_id=${commentId}&action=${action}`);
-    });
+    }
   });
 });
 
-
-  
-  
-  
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const likeButton = document.querySelector('.action-btn.like-btn');
   if (!likeButton) return;
 
@@ -842,18 +830,19 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.send(`image_id=${imageId}&action=${action}`);
   });
 });
-  
+
 const imageId = <?= json_encode($_GET['id']) ?>; 
-  // Comment functionality
+
+// Comment functionality
 const commentForm = document.getElementById('commentForm');
 const commentInput = document.getElementById('commentInput');
 const commentsList = document.getElementById('commentsList');
 const commentCount = document.getElementById('commentCount');
 
 commentForm.addEventListener('submit', (e) => {
-	if(!isLogged){
-			window.location.href = '/momento/account/login.php';
-	}
+  if(!isLogged){
+    window.location.href = '/momento/account/login.php';
+  }
   e.preventDefault();
   const text = commentInput.value.trim();
   if (!text) return;
@@ -878,7 +867,10 @@ commentForm.addEventListener('submit', (e) => {
         </div>
         <p class="comment-text">${data.comment.text}</p>
         <div class="comment-actions">
-          <button class="comment-action like-comment-btn"><i class="bi bi-heart"></i> Like <span class="comment-like-counter">0</span></button>
+          <button class="comment-action like-comment-btn" data-comment-id="${data.comment.id}">
+            <i class="bi bi-heart"></i> Like&nbsp;
+            <span class="comment-like-counter">0</span>
+          </button>
         </div>
       `;
       commentsList.prepend(newComment);
@@ -895,71 +887,159 @@ commentForm.addEventListener('submit', (e) => {
   });
 });
 
+// Share functionality
+const shareButton = document.getElementById('shareButton');
+const shareTooltip = document.getElementById('shareTooltip');
+
+shareButton.addEventListener('click', () => {
+  navigator.clipboard.writeText(window.location.href);
+  shareTooltip.classList.add('visible');
+  
+  setTimeout(() => {
+    shareTooltip.classList.remove('visible');
+  }, 2000);
+});
+
+// Download functionality
+const downloadButton = document.getElementById('downloadButton');
+
+if(isLogged){
+  downloadButton.addEventListener('click', () => {
+    window.location.href = '/momento/download_handler.php?imageId=<?= $_GET['id'] ?>';
+  });
+} else {
+  downloadButton.addEventListener('click', () => {
+    window.location.href = '/momento/account/login.php';
+  });
+}
+
+// Dark mode toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    const icon = darkModeToggle.querySelector('i');
     
-    // Share functionality
-    const shareButton = document.getElementById('shareButton');
-    const shareTooltip = document.getElementById('shareTooltip');
+    if (body.classList.contains('dark-mode')) {
+      icon.classList.remove('bi-moon');
+      icon.classList.add('bi-sun');
+    } else {
+      icon.classList.remove('bi-sun');
+      icon.classList.add('bi-moon');
+    }
+  });
+}
+
+// Lightbox functionality
+const mainImage = document.getElementById('mainImage');
+const lightbox = document.getElementById('imageLightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+
+mainImage.addEventListener('click', () => {
+  lightboxImg.src = mainImage.src;
+  lightbox.classList.add('active');
+});
+
+lightboxClose.addEventListener('click', () => {
+  lightbox.classList.remove('active');
+});
+
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) {
+    lightbox.classList.remove('active');
+  }
+});
+
+
+// Add this JavaScript function for client-side time formatting
+function timeAgo(timestamp) {
+    const now = new Date();
+    const commentTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - commentTime) / 1000);
     
-    shareButton.addEventListener('click', () => {
-      navigator.clipboard.writeText(window.location.href);
-      shareTooltip.classList.add('visible');
-      
-      setTimeout(() => {
-        shareTooltip.classList.remove('visible');
-      }, 2000);
-    });
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        day: 86400,
+        hour: 3600,
+        minute: 60
+    };
     
-    // Download functionality
-    const downloadButton = document.getElementById('downloadButton');
-    
-	if(isLogged){
-    downloadButton.addEventListener('click', () => {
-      window.location.href = '/momento/download_handler.php?imageId=<?= $_GET['id'] ?>';
-    });
-    }else{
-		downloadButton.addEventListener('click', () => {
-      window.location.href = '/momento/account/login.php';
-    });
-	}
-    // Dark mode toggle
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-    
-    if (darkModeToggle) {
-      darkModeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const icon = darkModeToggle.querySelector('i');
-        
-        if (body.classList.contains('dark-mode')) {
-          icon.classList.remove('bi-moon');
-          icon.classList.add('bi-sun');
-        } else {
-          icon.classList.remove('bi-sun');
-          icon.classList.add('bi-moon');
+    for (const [unit, seconds] of Object.entries(intervals)) {
+        const interval = Math.floor(diffInSeconds / seconds);
+        if (interval >= 1) {
+            return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
         }
-      });
     }
     
-    // Lightbox functionality
-    const mainImage = document.getElementById('mainImage');
-    const lightbox = document.getElementById('imageLightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxClose = document.getElementById('lightboxClose');
-    
-    mainImage.addEventListener('click', () => {
-      lightboxImg.src = mainImage.src;
-      lightbox.classList.add('active');
+    return 'just now';
+}
+
+// Function to update all timestamps on page load
+function updateAllTimestamps() {
+    document.querySelectorAll('[data-timestamp]').forEach(element => {
+        const timestamp = element.getAttribute('data-timestamp');
+        element.textContent = timeAgo(timestamp);
     });
-    
-    lightboxClose.addEventListener('click', () => {
-      lightbox.classList.remove('active');
-    });
-    
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        lightbox.classList.remove('active');
-      }
-    });
+}
+
+// Update comment form submission to use client-side time
+commentForm.addEventListener('submit', (e) => {
+  if(!isLogged){
+    window.location.href = '/momento/account/login.php';
+  }
+  e.preventDefault();
+  const text = commentInput.value.trim();
+  if (!text) return;
+
+  fetch('add_comment.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      comment: text,
+      image_id: imageId
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const newComment = document.createElement('div');
+      newComment.className = 'comment';
+      // Use client-side time calculation
+      const timeDisplay = timeAgo(data.comment.timestamp);
+      
+      newComment.innerHTML = `
+        <div class="comment-header">
+          <span class="comment-user">${data.comment.user}</span>
+          <span class="comment-time" data-timestamp="${data.comment.timestamp}">${timeDisplay}</span>
+        </div>
+        <p class="comment-text">${data.comment.text}</p>
+        <div class="comment-actions">
+          <button class="comment-action like-comment-btn" data-comment-id="${data.comment.id}">
+            <i class="bi bi-heart"></i> Like&nbsp;
+            <span class="comment-like-counter">0</span>
+          </button>
+        </div>
+      `;
+      commentsList.prepend(newComment);
+      commentInput.value = '';
+      const count = commentsList.querySelectorAll('.comment').length;
+      commentCount.textContent = `${count}`;
+    }
+  })
+  .catch(err => {
+    console.error('Error:', err);
+  });
+});
+
+// Update timestamps every minute
+setInterval(updateAllTimestamps, 60000);
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', updateAllTimestamps);
   </script>
 </body>
 </html>

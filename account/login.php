@@ -15,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momento | Member Access</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -255,9 +256,11 @@
             }
         }
     </style>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
+
     <div class="auth-container">
         <div class="auth-hero">
             <div class="auth-hero-content">
@@ -323,5 +326,49 @@
         </div>
     </div>
 </body>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<?php
+// At the end of register.php, replace the current toast script with this:
 
+if(isset($_SESSION['login_create'])){
+    $message = $_SESSION['login_create'];
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Toastify({
+            text: "' . addslashes($message) . '",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#00FF00", 
+            stopOnFocus: true
+        }).showToast();
+    });
+    </script>';
+    
+    // Clear the session messages
+    unset($_SESSION['login_create']);
+}
+?>
+<?php
+// At the end of register.php, replace the current toast script with this:
+
+if(isset($_SESSION['invalid_info'])){
+    $message = $_SESSION['invalid_info'];
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Toastify({
+            text: "' . addslashes($message) . '",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#dc3545", 
+            stopOnFocus: true
+        }).showToast();
+    });
+    </script>';
+    
+    // Clear the session messages
+    unset($_SESSION['invalid_info']);
+}
+?>
 </html>
