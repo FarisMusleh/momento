@@ -1,2 +1,1 @@
-This is our university project. 
-You can see pictures that you may like with thier photographers info, and you can buy a session with that photographer.
+This is our university project. You can view pictures you may like, along with the photographers' information, and you can book a session with them.
